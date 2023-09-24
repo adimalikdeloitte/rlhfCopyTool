@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Annotator Dashboard</title>
+    <!-- Bootstrap CSS Link -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div id="alertContainer" class="container mt-4"></div>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-6">
+          <h1>Dashboard</h1>
+        </div>
+        <div class="col-6" style="text-align: right">
+          <a class="btn btn-primary" href="create_annotation.html">
+            New Annotation
+          </a>
+          <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <!-- Annotator Info -->
+      <div class="card">
+        <div class="card-header">Annotator Information</div>
+        <div class="card-body">
+          <p><strong>Email:</strong> <span id="email">XXXX</span></p>
+          <p><strong>Name:</strong> <span id="name">XXXXX</span></p>
+          <p>
+            <strong>Date of Joining:</strong>
+            <span id="joiningDate">XXXX</span>
+          </p>
+          <p>
+            <strong>Designation:</strong>
+            <span id="designation">XXXX</span>
+          </p>
+          <p><strong>Language:</strong> <span id="language">XXXX</span></p>
+          <p><strong>Role:</strong> <span id="role">XXXX</span></p>
+        </div>
+      </div>
+
+      <!-- Annotations List -->
+      <div class="card mt-4 mb-4">
+        <div class="card-header">Annotations</div>
+        <ul class="list-group list-group-flush" id="annotationList"></ul>
+      </div>
+    </div>
+
+    <!-- Bootstrap & jQuery JS Links -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+
+    <script>
+      function formatDate(dateString) {
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        const nth = (d) => {
+          if (d > 3 && d < 21) return "th";
+          switch (d % 10) {
+            case 1:
+              return "st";
+            case 2:
+              return "nd";
+            case 3:
+              return "rd";
+            default:
+              return "th";
+          }
+        };
+
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+
+        return `${day}${nth(day)} ${month} ${year}`;
+      }
+
+      $(document).ready(function () {
+        // Create a new instance of XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Configure the request type, URL, and asynchronous flag
+        xhr.open(
+          "POST",
+          "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
+          true
+        );
+
+        // Set the request header for content-type
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        // Define the callback for when the request has completed
+        xhr.onload = function () {
+          const response = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 400) {
+            // The request was successful! Handle the response here.
+
+            const annotations = response.message;
+            const annotationListContainer =
+              document.getElementById("annotationList");
+            annotations?.map((annotation) => {
+              // Create the main <li> element
+              const li = document.createElement("li");
+              li.className = "list-group-item";
+
+              // Create the Batch # content
+              const batchStrong = document.createElement("strong");
+              batchStrong.textContent = "Batch #: ";
+              li.appendChild(batchStrong);
+              li.appendChild(document.createTextNode(annotation.batchNumber));
+
+              li.appendChild(document.createTextNode(" | "));
+
+              // Create the Prompt content
+              const promptStrong = document.createElement("strong");
+              promptStrong.textContent = "Prompt: ";
+              li.appendChild(promptStrong);
+              li.appendChild(document.createTextNode(annotation.prompt));
+
+              // // Create the button
+              // const btn = document.createElement("button");
+              // btn.className = "btn btn-primary ml-2";
+              // btn.textContent = "Open";
+              // btn.onclick = function () {
+              //   openAnnotationDetails("batchId");
+              // };
+              // li.appendChild(btn);
+
+              // append li to annotation list
+              annotationListContainer.appendChild(li);
+            });
+          } else {
+            // The request failed with a status code outside the range [200, 400).
+            // Handle the error here.
+            console.error(
+              "Request failed: " + xhr.status + " " + xhr.statusText
+            );
+            showFailAlert(response.message);
+          }
+        };
+
+        // Define the callback for network errors
+        xhr.onerror = function () {
+          console.error("Network error occurred.");
+          showFailAlert(xhr.message);
+        };
+
+        var data = JSON.stringify({
+          field: "annotatorEmail",
+          value: localStorage.getItem("annotatorEmail"),
+        });
+        xhr.send(data);
+      });
+
+      $(document).ready(function () {
+        // Create a new instance of XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Configure the request type, URL, and asynchronous flag
+        xhr.open(
+          "POST",
+          "https://rmcopypastetoolbackend.onrender.com/api/employee/filter",
+          true
+        );
+
+        // Set the request header for content-type
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        // Define the callback for when the request has completed
+        xhr.onload = function () {
+          const response = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 400) {
+            // The request was successful! Handle the response here.
+            document.getElementById("email").innerText =
+              response.message[0]?.annotatorEmail;
+            document.getElementById("name").innerText =
+              response.message[0]?.annotatorName;
+            document.getElementById("role").innerText =
+              response.message[0]?.annotatorRole;
+            document.getElementById("joiningDate").innerText = formatDate(
+              response.message[0]?.dateOfJoining
+            );
+            document.getElementById("designation").innerText =
+              response.message[0]?.designation;
+          } else {
+            // The request failed with a status code outside the range [200, 400).
+            // Handle the error here.
+            console.error(
+              "Request failed: " + xhr.status + " " + xhr.statusText
+            );
+            showFailAlert(response.message);
+          }
+        };
+
+        // Define the callback for network errors
+        xhr.onerror = function () {
+          console.error("Network error occurred.");
+          showFailAlert(xhr.message);
+        };
+
+        var data = JSON.stringify({
+          field: "annotatorEmail",
+          value: localStorage.getItem("annotatorEmail"),
+        });
+        xhr.send(data);
+      });
+    </script>
+  </body>
+</html>

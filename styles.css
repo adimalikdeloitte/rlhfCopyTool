@@ -1,0 +1,9 @@
+/* Add any additional styles here */
+body {
+  font-family: Arial, sans-serif;
+}
+
+.btn-group,
+.btn-group-vertical {
+  width: 100%;
+}
