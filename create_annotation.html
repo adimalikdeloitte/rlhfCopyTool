@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="alertContainer" class="container mt-4"></div>
+    <div id="alertContainerCreateAnnotation" class="container mt-4"></div>
     <div class="container mt-5">
       <div class="row">
         <div class="col-6">
@@ -35,7 +35,7 @@
 
         <div class="form-group">
           <label for="prompt">Prompt</label>
-          <input type="text" class="form-control" id="prompt" />
+          <textarea rows="3" class="form-control" id="prompt"></textarea>
         </div>
 
         <label>Task Type</label>
@@ -109,1380 +109,7 @@
           </div>
         </div>
 
-        <button
-          class="btn btn-primary"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseCompletionA"
-          aria-expanded="false"
-          aria-controls="collapseCompletionA"
-        >
-          Completion A
-        </button>
-
-        <div class="collapse mt-3" id="collapseCompletionA">
-          <div class="form-group">
-            <label for="completionA">Completion A</label>
-            <textarea
-              class="form-control"
-              id="completionA"
-              rows="10"
-            ></textarea>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label>Does the code/text follows the instructions given?</label>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq1A"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq1A"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionAJustificationQ1"
-                aria-expanded="false"
-                aria-controls="collapseCompletionAJustificationQ1"
-              >
-                Provide justification for Q1
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionAJustificationQ1"
-              >
-                <textarea
-                  id="completionAJustificationQ1"
-                  style="width: 100%"
-                  rows="5"
-                  placeholder="URL of official documentation / other supporting research"
-                ></textarea>
-
-                <select
-                  id="justificationReasonYesCompletionAQ1"
-                  multiple="multiple"
-                >
-                  <option value="Text explanation has all correct statements">
-                    Text explanation has all correct statements
-                  </option>
-                  <option
-                    value="Text has additional irrelevant correct information"
-                  >
-                    Text has additional irrelevant correct information
-                  </option>
-                  <option value="Code is correct as per prompt">
-                    Code is correct as per prompt
-                  </option>
-                  <option value="IDE Output is correct as per prompt">
-                    IDE Output is correct as per prompt
-                  </option>
-                  <option
-                    value="Mentioned output in completion is also correct"
-                  >
-                    Mentioned output in completion is also correct
-                  </option>
-                  <option
-                    value="Code and text are solving the problem with specified/standard approach"
-                  >
-                    Code and text are solving the problem with
-                    specified/standard approach
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionAQ1"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Text explanation has one/many incorrect statement- “mention statement”"
-                  >
-                    Text explanation has one/many incorrect statement- “mention
-                    statement”
-                  </option>
-                  <option
-                    value="Text has additional/irrelevant incorrect information"
-                  >
-                    Text has additional/irrelevant incorrect information
-                  </option>
-                  <option
-                    value="Code is incorrect(approach) and not as per prompt"
-                  >
-                    Code is incorrect(approach) and not as per prompt
-                  </option>
-                  <option value="Code has logical issue">
-                    Code has logical issue
-                  </option>
-                  <option value="IDE Output is incorrect as per prompt">
-                    IDE Output is incorrect as per prompt
-                  </option>
-                  <option value="Mentioned output is incorrect">
-                    Mentioned output is incorrect
-                  </option>
-                  <option
-                    value="Code and text are solving the problem but with different/unconventional approach"
-                  >
-                    Code and text are solving the problem but with
-                    different/unconventional approach
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label>Is the code executable?</label>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2A"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2A"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2A"
-                  value="3"
-                />
-                <label class="form-check-label">NA</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionAJustificationQ2"
-                aria-expanded="false"
-                aria-controls="collapseCompletionAJustificationQ2"
-              >
-                Provide justification for Q2
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionAJustificationQ2"
-              >
-                <textarea
-                  id="completionAJustificationQ2"
-                  style="width: 100%"
-                  rows="5"
-                  placeholder="Mention IDE"
-                ></textarea>
-
-                <select
-                  id="justificationReasonYesCompletionAQ2"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided code is executable without any addition/modification"
-                  >
-                    Provided code is executable without any
-                    addition/modification
-                  </option>
-                  <option
-                    value="Provided code is executable with added imports/variable initialization/class definition or declaration"
-                  >
-                    Provided code is executable with added imports/variable
-                    initialization/class definition or declaration
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionAQ2"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided code is executable by providing additional approach (function/method which is not mentioned in completion or prompt)"
-                  >
-                    Provided code is executable by providing additional approach
-                    (function/method which is not mentioned in completion or
-                    prompt)
-                  </option>
-                  <option
-                    value="Provided code has any kind of run time error (syntax error/attribute error etc.)"
-                  >
-                    Provided code has any kind of run time error (syntax
-                    error/attribute error etc.)
-                  </option>
-                  <option
-                    value="Provided code has dependency on some other integration"
-                  >
-                    Provided code has dependency on some other integration
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Is the code well commented?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3A"
-                value="1"
-              />
-              <label class="form-check-label"
-                >means code is not documented at all</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3A"
-                value="2"
-              />
-              <label class="form-check-label"
-                >means code contain certain comments, but not enough</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3A"
-                value="3"
-              />
-              <label class="form-check-label"
-                >means code is excessively documented</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3A"
-                value="4"
-              />
-              <label class="form-check-label"
-                >means code is well-documented (well-commented , indentation ,
-                proper logger statements )</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3A"
-                value="5"
-              />
-              <label class="form-check-label"
-                >NA (code doesn't exist or comments not required)</label
-              >
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Are the variable names understandable in the code?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4A"
-                value="1"
-              />
-              <label class="form-check-label">Yes</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4A"
-                value="2"
-              />
-              <label class="form-check-label">No</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4A"
-                value="3"
-              />
-              <label class="form-check-label">NA (code doesn't exist)</label>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Does the code cover exceptional handling?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5A"
-                value="1"
-              />
-              <label class="form-check-label">Yes</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5A"
-                value="2"
-              />
-              <label class="form-check-label">No</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5A"
-                value="3"
-              />
-              <label class="form-check-label">NA (code doesn't exist)</label>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label
-                >Is text explanation clear or aligned well with the code?</label
-              >
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq6A"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq6A"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionAJustificationQ6"
-                aria-expanded="false"
-                aria-controls="collapseCompletionAJustificationQ6"
-              >
-                Provide justification for Q6
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionAJustificationQ6"
-              >
-                <select
-                  id="justificationReasonYesCompletionAQ6"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided text is having only correct statements and that too about the given code/approach/prompt solution"
-                  >
-                    Provided text is having only correct statements and that too
-                    about the given code/approach/prompt solution
-                  </option>
-                  <option
-                    value="Provided text mention about key concept used in the code irrespective of prompt alignment or not"
-                  >
-                    Provided text mention about key concept used in the code
-                    irrespective of prompt alignment or not
-                  </option>
-                  <option
-                    value="Provided text is having additional information other than the prompt solution"
-                  >
-                    Provided text is having additional information other than
-                    the prompt solution
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionAQ6"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided text is having any incorrect statement about the prompt approach/code steps/functionality – mention single/multiple statements which is/are incorrect"
-                  >
-                    Provided text is having any incorrect statement about the
-                    prompt approach/code steps/functionality – mention
-                    single/multiple statements which is/are incorrect
-                  </option>
-                  <option
-                    value="Provided text is having additional information and is incorrect/misleading/confusing"
-                  >
-                    Provided text is having additional information and is
-                    incorrect/misleading/confusing
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label
-              >Rate the completion from 1-7. 1 being poor and 7 being
-              excellent:</label
-            >
-
-            <input type="number" min="0" max="7" id="rankingCompletionA" />
-          </div>
-        </div>
-
-        <button
-          class="btn btn-primary"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseCompletionB"
-          aria-expanded="false"
-          aria-controls="collapseCompletionB"
-        >
-          Completion B
-        </button>
-
-        <div class="collapse mt-3" id="collapseCompletionB">
-          <div class="form-group">
-            <label for="completionB">Completion B</label>
-            <textarea
-              class="form-control"
-              id="completionB"
-              rows="10"
-            ></textarea>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label>Does the code/text follows the instructions given?</label>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq1B"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq1B"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionBJustificationQ1"
-                aria-expanded="false"
-                aria-controls="collapseCompletionBJustificationQ1"
-              >
-                Provide justification for Q1
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionBJustificationQ1"
-              >
-                <textarea
-                  id="completionBJustificationQ1"
-                  style="width: 100%"
-                  rows="5"
-                  placeholder="URL of official documentation / other supporting research"
-                ></textarea>
-
-                <select
-                  id="justificationReasonYesCompletionBQ1"
-                  multiple="multiple"
-                >
-                  <option value="Text explanation has all correct statements">
-                    Text explanation has all correct statements
-                  </option>
-                  <option
-                    value="Text has additional irrelevant correct information"
-                  >
-                    Text has additional irrelevant correct information
-                  </option>
-                  <option value="Code is correct as per prompt">
-                    Code is correct as per prompt
-                  </option>
-                  <option value="IDE Output is correct as per prompt">
-                    IDE Output is correct as per prompt
-                  </option>
-                  <option
-                    value="Mentioned output in completion is also correct"
-                  >
-                    Mentioned output in completion is also correct
-                  </option>
-                  <option
-                    value="Code and text are solving the problem with specified/standard approach"
-                  >
-                    Code and text are solving the problem with
-                    specified/standard approach
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionBQ1"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Text explanation has one/many incorrect statement- “mention statement”"
-                  >
-                    Text explanation has one/many incorrect statement- “mention
-                    statement”
-                  </option>
-                  <option
-                    value="Text has additional/irrelevant incorrect information"
-                  >
-                    Text has additional/irrelevant incorrect information
-                  </option>
-                  <option
-                    value="Code is incorrect(approach) and not as per prompt"
-                  >
-                    Code is incorrect(approach) and not as per prompt
-                  </option>
-                  <option value="Code has logical issue">
-                    Code has logical issue
-                  </option>
-                  <option value="IDE Output is incorrect as per prompt">
-                    IDE Output is incorrect as per prompt
-                  </option>
-                  <option value="Mentioned output is incorrect">
-                    Mentioned output is incorrect
-                  </option>
-                  <option
-                    value="Code and text are solving the problem but with different/unconventional approach"
-                  >
-                    Code and text are solving the problem but with
-                    different/unconventional approach
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label>Is the code executable?</label>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2B"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2B"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2B"
-                  value="3"
-                />
-                <label class="form-check-label">NA</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionBJustificationQ2"
-                aria-expanded="false"
-                aria-controls="collapseCompletionBJustificationQ2"
-              >
-                Provide justification for Q2
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionBJustificationQ2"
-              >
-                <textarea
-                  id="completionBJustificationQ2"
-                  style="width: 100%"
-                  rows="5"
-                  placeholder="Mention IDE"
-                ></textarea>
-
-                <select
-                  id="justificationReasonYesCompletionBQ2"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided code is executable without any addition/modification"
-                  >
-                    Provided code is executable without any
-                    addition/modification
-                  </option>
-                  <option
-                    value="Provided code is executable with added imports/variable initialization/class definition or declaration"
-                  >
-                    Provided code is executable with added imports/variable
-                    initialization/class definition or declaration
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionBQ2"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided code is executable by providing additional approach (function/method which is not mentioned in completion or prompt)"
-                  >
-                    Provided code is executable by providing additional approach
-                    (function/method which is not mentioned in completion or
-                    prompt)
-                  </option>
-                  <option
-                    value="Provided code has any kind of run time error (syntax error/attribute error etc.)"
-                  >
-                    Provided code has any kind of run time error (syntax
-                    error/attribute error etc.)
-                  </option>
-                  <option
-                    value="Provided code has dependency on some other integration"
-                  >
-                    Provided code has dependency on some other integration
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Is the code well commented?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3B"
-                value="1"
-              />
-              <label class="form-check-label"
-                >means code is not documented at all</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3B"
-                value="2"
-              />
-              <label class="form-check-label"
-                >means code contain certain comments, but not enough</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3B"
-                value="3"
-              />
-              <label class="form-check-label"
-                >means code is excessively documented</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3B"
-                value="4"
-              />
-              <label class="form-check-label"
-                >means code is well-documented (well-commented , indentation ,
-                proper logger statements )</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3B"
-                value="5"
-              />
-              <label class="form-check-label"
-                >NA (code doesn't exist or comments not required)</label
-              >
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Are the variable names understandable in the code?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4B"
-                value="1"
-              />
-              <label class="form-check-label">Yes</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4B"
-                value="2"
-              />
-              <label class="form-check-label">No</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4B"
-                value="3"
-              />
-              <label class="form-check-label">NA (code doesn't exist)</label>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Does the code cover exceptional handling?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5B"
-                value="1"
-              />
-              <label class="form-check-label">Yes</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5B"
-                value="2"
-              />
-              <label class="form-check-label">No</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5B"
-                value="3"
-              />
-              <label class="form-check-label">NA (code doesn't exist)</label>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label
-                >Is text explanation clear or aligned well with the code?</label
-              >
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq6B"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq6B"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionBJustificationQ6"
-                aria-expanded="false"
-                aria-controls="collapseCompletionBJustificationQ6"
-              >
-                Provide justification for Q6
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionBJustificationQ6"
-              >
-                <select
-                  id="justificationReasonYesCompletionBQ6"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided text is having only correct statements and that too about the given code/approach/prompt solution"
-                  >
-                    Provided text is having only correct statements and that too
-                    about the given code/approach/prompt solution
-                  </option>
-                  <option
-                    value="Provided text mention about key concept used in the code irrespective of prompt alignment or not"
-                  >
-                    Provided text mention about key concept used in the code
-                    irrespective of prompt alignment or not
-                  </option>
-                  <option
-                    value="Provided text is having additional information other than the prompt solution"
-                  >
-                    Provided text is having additional information other than
-                    the prompt solution
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionBQ6"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided text is having any incorrect statement about the prompt approach/code steps/functionality – mention single/multiple statements which is/are incorrect"
-                  >
-                    Provided text is having any incorrect statement about the
-                    prompt approach/code steps/functionality – mention
-                    single/multiple statements which is/are incorrect
-                  </option>
-                  <option
-                    value="Provided text is having additional information and is incorrect/misleading/confusing"
-                  >
-                    Provided text is having additional information and is
-                    incorrect/misleading/confusing
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label
-              >Rate the completion from 1-7. 1 being poor and 7 being
-              excellent:</label
-            >
-
-            <input type="number" min="0" max="7" id="rankingCompletionB" />
-          </div>
-        </div>
-
-        <button
-          class="btn btn-primary"
-          type="button"
-          data-toggle="collapse"
-          data-target="#collapseCompletionC"
-          aria-expanded="false"
-          aria-controls="collapseCompletionC"
-        >
-          Completion C
-        </button>
-
-        <div class="collapse mt-3" id="collapseCompletionC">
-          <div class="form-group">
-            <label for="completionC">Completion C</label>
-            <textarea
-              class="form-control"
-              id="completionC"
-              rows="10"
-            ></textarea>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label>Does the code/text follows the instructions given?</label>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq1C"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq1C"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionCJustificationQ1"
-                aria-expanded="false"
-                aria-controls="collapseCompletionCJustificationQ1"
-              >
-                Provide justification for Q1
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionCJustificationQ1"
-              >
-                <textarea
-                  id="completionCJustificationQ1"
-                  style="width: 100%"
-                  rows="5"
-                  placeholder="URL of official documentation / other supporting research"
-                ></textarea>
-
-                <select
-                  id="justificationReasonYesCompletionCQ1"
-                  multiple="multiple"
-                >
-                  <option value="Text explanation has all correct statements">
-                    Text explanation has all correct statements
-                  </option>
-                  <option
-                    value="Text has additional irrelevant correct information"
-                  >
-                    Text has additional irrelevant correct information
-                  </option>
-                  <option value="Code is correct as per prompt">
-                    Code is correct as per prompt
-                  </option>
-                  <option value="IDE Output is correct as per prompt">
-                    IDE Output is correct as per prompt
-                  </option>
-                  <option
-                    value="Mentioned output in completion is also correct"
-                  >
-                    Mentioned output in completion is also correct
-                  </option>
-                  <option
-                    value="Code and text are solving the problem with specified/standard approach"
-                  >
-                    Code and text are solving the problem with
-                    specified/standard approach
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionCQ1"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Text explanation has one/many incorrect statement- “mention statement”"
-                  >
-                    Text explanation has one/many incorrect statement- “mention
-                    statement”
-                  </option>
-                  <option
-                    value="Text has additional/irrelevant incorrect information"
-                  >
-                    Text has additional/irrelevant incorrect information
-                  </option>
-                  <option
-                    value="Code is incorrect(approach) and not as per prompt"
-                  >
-                    Code is incorrect(approach) and not as per prompt
-                  </option>
-                  <option value="Code has logical issue">
-                    Code has logical issue
-                  </option>
-                  <option value="IDE Output is incorrect as per prompt">
-                    IDE Output is incorrect as per prompt
-                  </option>
-                  <option value="Mentioned output is incorrect">
-                    Mentioned output is incorrect
-                  </option>
-                  <option
-                    value="Code and text are solving the problem but with different/unconventional approach"
-                  >
-                    Code and text are solving the problem but with
-                    different/unconventional approach
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label>Is the code executable?</label>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2C"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2C"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq2C"
-                  value="3"
-                />
-                <label class="form-check-label">NA</label>
-              </div>
-            </div>
-
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionCJustificationQ2"
-                aria-expanded="false"
-                aria-controls="collapseCompletionCJustificationQ2"
-              >
-                Provide justification for Q2
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionCJustificationQ2"
-              >
-                <textarea
-                  id="completionCJustificationQ2"
-                  style="width: 100%"
-                  rows="5"
-                  placeholder="Mention IDE"
-                ></textarea>
-
-                <select
-                  id="justificationReasonYesCompletionCQ2"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided code is executable without any addition/modification"
-                  >
-                    Provided code is executable without any
-                    addition/modification
-                  </option>
-                  <option
-                    value="Provided code is executable with added imports/variable initialization/class definition or declaration"
-                  >
-                    Provided code is executable with added imports/variable
-                    initialization/class definition or declaration
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionCQ2"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided code is executable by providing additional approach (function/method which is not mentioned in completion or prompt)"
-                  >
-                    Provided code is executable by providing additional approach
-                    (function/method which is not mentioned in completion or
-                    prompt)
-                  </option>
-                  <option
-                    value="Provided code has any kind of run time error (syntax error/attribute error etc.)"
-                  >
-                    Provided code has any kind of run time error (syntax
-                    error/attribute error etc.)
-                  </option>
-                  <option
-                    value="Provided code has dependency on some other integration"
-                  >
-                    Provided code has dependency on some other integration
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Is the code well commented?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3C"
-                value="1"
-              />
-              <label class="form-check-label"
-                >means code is not documented at all</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3C"
-                value="2"
-              />
-              <label class="form-check-label"
-                >means code contain certain comments, but not enough</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3C"
-                value="3"
-              />
-              <label class="form-check-label"
-                >means code is excessively documented</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3C"
-                value="4"
-              />
-              <label class="form-check-label"
-                >means code is well-documented (well-commented , indentation ,
-                proper logger statements )</label
-              >
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq3C"
-                value="5"
-              />
-              <label class="form-check-label"
-                >NA (code doesn't exist or comments not required)</label
-              >
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Are the variable names understandable in the code?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4C"
-                value="1"
-              />
-              <label class="form-check-label">Yes</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4C"
-                value="2"
-              />
-              <label class="form-check-label">No</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq4C"
-                value="3"
-              />
-              <label class="form-check-label">NA (code doesn't exist)</label>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label>Does the code cover exceptional handling?</label>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5C"
-                value="1"
-              />
-              <label class="form-check-label">Yes</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5C"
-                value="2"
-              />
-              <label class="form-check-label">No</label>
-            </div>
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="radio"
-                name="mcq5C"
-                value="3"
-              />
-              <label class="form-check-label">NA (code doesn't exist)</label>
-            </div>
-          </div>
-
-          <div class="row mt-3">
-            <div class="col-6">
-              <label
-                >Is text explanation clear or aligned well with the code?</label
-              >
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq6C"
-                  value="1"
-                />
-                <label class="form-check-label">Yes</label>
-              </div>
-              <div class="form-check">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="mcq6C"
-                  value="2"
-                />
-                <label class="form-check-label">No</label>
-              </div>
-            </div>
-            <div class="col-6">
-              <button
-                class="btn btn-primary"
-                type="button"
-                data-toggle="collapse"
-                data-target="#collapseCompletionCJustificationQ6"
-                aria-expanded="false"
-                aria-controls="collapseCompletionCJustificationQ6"
-              >
-                Provide justification for Q6
-              </button>
-
-              <div
-                class="collapse mt-3"
-                id="collapseCompletionCJustificationQ6"
-              >
-                <select
-                  id="justificationReasonYesCompletionCQ6"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided text is having only correct statements and that too about the given code/approach/prompt solution"
-                  >
-                    Provided text is having only correct statements and that too
-                    about the given code/approach/prompt solution
-                  </option>
-                  <option
-                    value="Provided text mention about key concept used in the code irrespective of prompt alignment or not"
-                  >
-                    Provided text mention about key concept used in the code
-                    irrespective of prompt alignment or not
-                  </option>
-                  <option
-                    value="Provided text is having additional information other than the prompt solution"
-                  >
-                    Provided text is having additional information other than
-                    the prompt solution
-                  </option>
-                </select>
-
-                <select
-                  id="justificationReasonNoCompletionCQ6"
-                  multiple="multiple"
-                >
-                  <option
-                    value="Provided text is having any incorrect statement about the prompt approach/code steps/functionality – mention single/multiple statements which is/are incorrect"
-                  >
-                    Provided text is having any incorrect statement about the
-                    prompt approach/code steps/functionality – mention
-                    single/multiple statements which is/are incorrect
-                  </option>
-                  <option
-                    value="Provided text is having additional information and is incorrect/misleading/confusing"
-                  >
-                    Provided text is having additional information and is
-                    incorrect/misleading/confusing
-                  </option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <label
-              >Rate the completion from 1-7. 1 being poor and 7 being
-              excellent:</label
-            >
-
-            <input type="number" min="0" max="7" id="rankingCompletionC" />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="ranking">Ranking</label>
-          <input type="text" class="form-control" id="ranking" />
-        </div>
-
-        <div class="form-group">
-          <label for="reason">Reason for Ranking</label>
-          <textarea class="form-control" id="reason"></textarea>
-        </div>
-
-        <label>Rejected</label>
+        <label>Reject this annotation?</label>
         <div class="form-group">
           <div class="form-check form-check-inline">
             <input
@@ -1491,7 +118,7 @@
               name="rejected"
               value="true"
             />
-            <label class="form-check-label">True</label>
+            <label class="form-check-label">Yes</label>
           </div>
           <div class="form-check form-check-inline">
             <input
@@ -1500,25 +127,1422 @@
               name="rejected"
               value="false"
             />
-            <label class="form-check-label">False</label>
+            <label class="form-check-label">No</label>
+          </div>
+          <br />
+          <br />
+
+          <ul class="nav nav-tabs" id="myTabs">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#section1"
+                >Completion A</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#section2"
+                >Completion B</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#section3"
+                >Completion C</a
+              >
+            </li>
+          </ul>
+
+          <div class="tab-content">
+            <div id="section1" class="tab-pane fade show active">
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  id="completionA"
+                  rows="10"
+                ></textarea>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label
+                    >Does the code/text follows the instructions given?</label
+                  >
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq1A"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq1A"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionAJustificationQ1"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionAJustificationQ1"
+                  >
+                    Provide justification for Q1
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionAJustificationQ1"
+                  >
+                    <textarea
+                      id="completionAJustificationQ1"
+                      style="width: 100%"
+                      rows="5"
+                      placeholder="URL of official documentation / other supporting research"
+                    ></textarea>
+
+                    <select
+                      id="justificationReasonYesCompletionAQ1"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Text explanation has all correct statements"
+                      >
+                        Text explanation has all correct statements
+                      </option>
+                      <option
+                        value="Text has additional irrelevant correct information"
+                      >
+                        Text has additional irrelevant correct information
+                      </option>
+                      <option value="Code is correct as per prompt">
+                        Code is correct as per prompt
+                      </option>
+                      <option value="IDE Output is correct as per prompt">
+                        IDE Output is correct as per prompt
+                      </option>
+                      <option
+                        value="Mentioned output in completion is also correct"
+                      >
+                        Mentioned output in completion is also correct
+                      </option>
+                      <option
+                        value="Code and text are solving the problem with specified/standard approach"
+                      >
+                        Code and text are solving the problem with
+                        specified/standard approach
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionAQ1"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Text explanation has one/many incorrect statement- “mention statement”"
+                      >
+                        Text explanation has one/many incorrect statement-
+                        “mention statement”
+                      </option>
+                      <option
+                        value="Text has additional/irrelevant incorrect information"
+                      >
+                        Text has additional/irrelevant incorrect information
+                      </option>
+                      <option
+                        value="Code is incorrect(approach) and not as per prompt"
+                      >
+                        Code is incorrect(approach) and not as per prompt
+                      </option>
+                      <option value="Code has logical issue">
+                        Code has logical issue
+                      </option>
+                      <option value="IDE Output is incorrect as per prompt">
+                        IDE Output is incorrect as per prompt
+                      </option>
+                      <option value="Mentioned output is incorrect">
+                        Mentioned output is incorrect
+                      </option>
+                      <option
+                        value="Code and text are solving the problem but with different/unconventional approach"
+                      >
+                        Code and text are solving the problem but with
+                        different/unconventional approach
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Is the code executable?</label>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2A"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2A"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2A"
+                      value="3"
+                    />
+                    <label class="form-check-label">NA</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionAJustificationQ2"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionAJustificationQ2"
+                  >
+                    Provide justification for Q2
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionAJustificationQ2"
+                  >
+                    <textarea
+                      id="completionAJustificationQ2"
+                      style="width: 100%"
+                      rows="5"
+                      placeholder="Mention Code output or Errors generated while execution"
+                    ></textarea>
+
+                    <select
+                      id="justificationReasonYesCompletionAQ2"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided code is executable without any addition/modification"
+                      >
+                        Provided code is executable without any
+                        addition/modification
+                      </option>
+                      <option
+                        value="Provided code is executable with added imports/variable initialization/class definition or declaration"
+                      >
+                        Provided code is executable with added imports/variable
+                        initialization/class definition or declaration
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionAQ2"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided code is executable by providing additional approach (function/method which is not mentioned in completion or prompt)"
+                      >
+                        Provided code is executable by providing additional
+                        approach (function/method which is not mentioned in
+                        completion or prompt)
+                      </option>
+                      <option
+                        value="Provided code has any kind of run time error (syntax error/attribute error etc.)"
+                      >
+                        Provided code has any kind of run time error (syntax
+                        error/attribute error etc.)
+                      </option>
+                      <option
+                        value="Provided code has dependency on some other integration"
+                      >
+                        Provided code has dependency on some other integration
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label>Is the code well commented?</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3A"
+                    value="1"
+                  />
+                  <label class="form-check-label"
+                    >means code is not documented at all</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3A"
+                    value="2"
+                  />
+                  <label class="form-check-label"
+                    >means code contain certain comments, but not enough</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3A"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >means code is excessively documented</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3A"
+                    value="4"
+                  />
+                  <label class="form-check-label"
+                    >means code is well-documented (well-commented , indentation
+                    , proper logger statements )</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3A"
+                    value="5"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist or comments not required)</label
+                  >
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label
+                  >Are the variable names understandable in the code?</label
+                >
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4A"
+                    value="1"
+                  />
+                  <label class="form-check-label">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4A"
+                    value="2"
+                  />
+                  <label class="form-check-label">No</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4A"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist)</label
+                  >
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label>Does the code cover exceptional handling?</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5A"
+                    value="1"
+                  />
+                  <label class="form-check-label">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5A"
+                    value="2"
+                  />
+                  <label class="form-check-label">No</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5A"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist)</label
+                  >
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label
+                    >Is text explanation clear or aligned well with the
+                    code?</label
+                  >
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq6A"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq6A"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionAJustificationQ6"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionAJustificationQ6"
+                  >
+                    Provide justification for Q6
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionAJustificationQ6"
+                  >
+                    <select
+                      id="justificationReasonYesCompletionAQ6"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided text is having only correct statements and that too about the given code/approach/prompt solution"
+                      >
+                        Provided text is having only correct statements and that
+                        too about the given code/approach/prompt solution
+                      </option>
+                      <option
+                        value="Provided text mention about key concept used in the code irrespective of prompt alignment or not"
+                      >
+                        Provided text mention about key concept used in the code
+                        irrespective of prompt alignment or not
+                      </option>
+                      <option
+                        value="Provided text is having additional information other than the prompt solution"
+                      >
+                        Provided text is having additional information other
+                        than the prompt solution
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionAQ6"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided text is having any incorrect statement about the prompt approach/code steps/functionality – mention single/multiple statements which is/are incorrect"
+                      >
+                        Provided text is having any incorrect statement about
+                        the prompt approach/code steps/functionality – mention
+                        single/multiple statements which is/are incorrect
+                      </option>
+                      <option
+                        value="Provided text is having additional information and is incorrect/misleading/confusing"
+                      >
+                        Provided text is having additional information and is
+                        incorrect/misleading/confusing
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label
+                  >Rate the completion from 1-7. 1 being poor and 7 being
+                  excellent:</label
+                >
+
+                <input type="number" min="0" max="7" id="rankingCompletionA" />
+              </div>
+            </div>
+            <div id="section2" class="tab-pane fade">
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  id="completionB"
+                  rows="10"
+                ></textarea>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label
+                    >Does the code/text follows the instructions given?</label
+                  >
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq1B"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq1B"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionBJustificationQ1"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionBJustificationQ1"
+                  >
+                    Provide justification for Q1
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionBJustificationQ1"
+                  >
+                    <textarea
+                      id="completionBJustificationQ1"
+                      style="width: 100%"
+                      rows="5"
+                      placeholder="URL of official documentation / other supporting research"
+                    ></textarea>
+
+                    <select
+                      id="justificationReasonYesCompletionBQ1"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Text explanation has all correct statements"
+                      >
+                        Text explanation has all correct statements
+                      </option>
+                      <option
+                        value="Text has additional irrelevant correct information"
+                      >
+                        Text has additional irrelevant correct information
+                      </option>
+                      <option value="Code is correct as per prompt">
+                        Code is correct as per prompt
+                      </option>
+                      <option value="IDE Output is correct as per prompt">
+                        IDE Output is correct as per prompt
+                      </option>
+                      <option
+                        value="Mentioned output in completion is also correct"
+                      >
+                        Mentioned output in completion is also correct
+                      </option>
+                      <option
+                        value="Code and text are solving the problem with specified/standard approach"
+                      >
+                        Code and text are solving the problem with
+                        specified/standard approach
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionBQ1"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Text explanation has one/many incorrect statement- “mention statement”"
+                      >
+                        Text explanation has one/many incorrect statement-
+                        “mention statement”
+                      </option>
+                      <option
+                        value="Text has additional/irrelevant incorrect information"
+                      >
+                        Text has additional/irrelevant incorrect information
+                      </option>
+                      <option
+                        value="Code is incorrect(approach) and not as per prompt"
+                      >
+                        Code is incorrect(approach) and not as per prompt
+                      </option>
+                      <option value="Code has logical issue">
+                        Code has logical issue
+                      </option>
+                      <option value="IDE Output is incorrect as per prompt">
+                        IDE Output is incorrect as per prompt
+                      </option>
+                      <option value="Mentioned output is incorrect">
+                        Mentioned output is incorrect
+                      </option>
+                      <option
+                        value="Code and text are solving the problem but with different/unconventional approach"
+                      >
+                        Code and text are solving the problem but with
+                        different/unconventional approach
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Is the code executable?</label>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2B"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2B"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2B"
+                      value="3"
+                    />
+                    <label class="form-check-label">NA</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionBJustificationQ2"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionBJustificationQ2"
+                  >
+                    Provide justification for Q2
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionBJustificationQ2"
+                  >
+                    <textarea
+                      id="completionBJustificationQ2"
+                      style="width: 100%"
+                      rows="5"
+                      placeholder="Mention Code output or Errors generated while execution"
+                    ></textarea>
+
+                    <select
+                      id="justificationReasonYesCompletionBQ2"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided code is executable without any addition/modification"
+                      >
+                        Provided code is executable without any
+                        addition/modification
+                      </option>
+                      <option
+                        value="Provided code is executable with added imports/variable initialization/class definition or declaration"
+                      >
+                        Provided code is executable with added imports/variable
+                        initialization/class definition or declaration
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionBQ2"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided code is executable by providing additional approach (function/method which is not mentioned in completion or prompt)"
+                      >
+                        Provided code is executable by providing additional
+                        approach (function/method which is not mentioned in
+                        completion or prompt)
+                      </option>
+                      <option
+                        value="Provided code has any kind of run time error (syntax error/attribute error etc.)"
+                      >
+                        Provided code has any kind of run time error (syntax
+                        error/attribute error etc.)
+                      </option>
+                      <option
+                        value="Provided code has dependency on some other integration"
+                      >
+                        Provided code has dependency on some other integration
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label>Is the code well commented?</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3B"
+                    value="1"
+                  />
+                  <label class="form-check-label"
+                    >means code is not documented at all</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3B"
+                    value="2"
+                  />
+                  <label class="form-check-label"
+                    >means code contain certain comments, but not enough</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3B"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >means code is excessively documented</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3B"
+                    value="4"
+                  />
+                  <label class="form-check-label"
+                    >means code is well-documented (well-commented , indentation
+                    , proper logger statements )</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3B"
+                    value="5"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist or comments not required)</label
+                  >
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label
+                  >Are the variable names understandable in the code?</label
+                >
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4B"
+                    value="1"
+                  />
+                  <label class="form-check-label">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4B"
+                    value="2"
+                  />
+                  <label class="form-check-label">No</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4B"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist)</label
+                  >
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label>Does the code cover exceptional handling?</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5B"
+                    value="1"
+                  />
+                  <label class="form-check-label">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5B"
+                    value="2"
+                  />
+                  <label class="form-check-label">No</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5B"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist)</label
+                  >
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label
+                    >Is text explanation clear or aligned well with the
+                    code?</label
+                  >
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq6B"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq6B"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionBJustificationQ6"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionBJustificationQ6"
+                  >
+                    Provide justification for Q6
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionBJustificationQ6"
+                  >
+                    <select
+                      id="justificationReasonYesCompletionBQ6"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided text is having only correct statements and that too about the given code/approach/prompt solution"
+                      >
+                        Provided text is having only correct statements and that
+                        too about the given code/approach/prompt solution
+                      </option>
+                      <option
+                        value="Provided text mention about key concept used in the code irrespective of prompt alignment or not"
+                      >
+                        Provided text mention about key concept used in the code
+                        irrespective of prompt alignment or not
+                      </option>
+                      <option
+                        value="Provided text is having additional information other than the prompt solution"
+                      >
+                        Provided text is having additional information other
+                        than the prompt solution
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionBQ6"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided text is having any incorrect statement about the prompt approach/code steps/functionality – mention single/multiple statements which is/are incorrect"
+                      >
+                        Provided text is having any incorrect statement about
+                        the prompt approach/code steps/functionality – mention
+                        single/multiple statements which is/are incorrect
+                      </option>
+                      <option
+                        value="Provided text is having additional information and is incorrect/misleading/confusing"
+                      >
+                        Provided text is having additional information and is
+                        incorrect/misleading/confusing
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label
+                  >Rate the completion from 1-7. 1 being poor and 7 being
+                  excellent:</label
+                >
+
+                <input type="number" min="0" max="7" id="rankingCompletionB" />
+              </div>
+            </div>
+            <div id="section3" class="tab-pane fade">
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  id="completionC"
+                  rows="10"
+                ></textarea>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label
+                    >Does the code/text follows the instructions given?</label
+                  >
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq1C"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq1C"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionCJustificationQ1"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionCJustificationQ1"
+                  >
+                    Provide justification for Q1
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionCJustificationQ1"
+                  >
+                    <textarea
+                      id="completionCJustificationQ1"
+                      style="width: 100%"
+                      rows="5"
+                      placeholder="URL of official documentation / other supporting research"
+                    ></textarea>
+
+                    <select
+                      id="justificationReasonYesCompletionCQ1"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Text explanation has all correct statements"
+                      >
+                        Text explanation has all correct statements
+                      </option>
+                      <option
+                        value="Text has additional irrelevant correct information"
+                      >
+                        Text has additional irrelevant correct information
+                      </option>
+                      <option value="Code is correct as per prompt">
+                        Code is correct as per prompt
+                      </option>
+                      <option value="IDE Output is correct as per prompt">
+                        IDE Output is correct as per prompt
+                      </option>
+                      <option
+                        value="Mentioned output in completion is also correct"
+                      >
+                        Mentioned output in completion is also correct
+                      </option>
+                      <option
+                        value="Code and text are solving the problem with specified/standard approach"
+                      >
+                        Code and text are solving the problem with
+                        specified/standard approach
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionCQ1"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Text explanation has one/many incorrect statement- “mention statement”"
+                      >
+                        Text explanation has one/many incorrect statement-
+                        “mention statement”
+                      </option>
+                      <option
+                        value="Text has additional/irrelevant incorrect information"
+                      >
+                        Text has additional/irrelevant incorrect information
+                      </option>
+                      <option
+                        value="Code is incorrect(approach) and not as per prompt"
+                      >
+                        Code is incorrect(approach) and not as per prompt
+                      </option>
+                      <option value="Code has logical issue">
+                        Code has logical issue
+                      </option>
+                      <option value="IDE Output is incorrect as per prompt">
+                        IDE Output is incorrect as per prompt
+                      </option>
+                      <option value="Mentioned output is incorrect">
+                        Mentioned output is incorrect
+                      </option>
+                      <option
+                        value="Code and text are solving the problem but with different/unconventional approach"
+                      >
+                        Code and text are solving the problem but with
+                        different/unconventional approach
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label>Is the code executable?</label>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2C"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2C"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq2C"
+                      value="3"
+                    />
+                    <label class="form-check-label">NA</label>
+                  </div>
+                </div>
+
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionCJustificationQ2"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionCJustificationQ2"
+                  >
+                    Provide justification for Q2
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionCJustificationQ2"
+                  >
+                    <textarea
+                      id="completionCJustificationQ2"
+                      style="width: 100%"
+                      rows="5"
+                      placeholder="Mention Code output or Errors generated while execution"
+                    ></textarea>
+
+                    <select
+                      id="justificationReasonYesCompletionCQ2"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided code is executable without any addition/modification"
+                      >
+                        Provided code is executable without any
+                        addition/modification
+                      </option>
+                      <option
+                        value="Provided code is executable with added imports/variable initialization/class definition or declaration"
+                      >
+                        Provided code is executable with added imports/variable
+                        initialization/class definition or declaration
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionCQ2"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided code is executable by providing additional approach (function/method which is not mentioned in completion or prompt)"
+                      >
+                        Provided code is executable by providing additional
+                        approach (function/method which is not mentioned in
+                        completion or prompt)
+                      </option>
+                      <option
+                        value="Provided code has any kind of run time error (syntax error/attribute error etc.)"
+                      >
+                        Provided code has any kind of run time error (syntax
+                        error/attribute error etc.)
+                      </option>
+                      <option
+                        value="Provided code has dependency on some other integration"
+                      >
+                        Provided code has dependency on some other integration
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label>Is the code well commented?</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3C"
+                    value="1"
+                  />
+                  <label class="form-check-label"
+                    >means code is not documented at all</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3C"
+                    value="2"
+                  />
+                  <label class="form-check-label"
+                    >means code contain certain comments, but not enough</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3C"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >means code is excessively documented</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3C"
+                    value="4"
+                  />
+                  <label class="form-check-label"
+                    >means code is well-documented (well-commented , indentation
+                    , proper logger statements )</label
+                  >
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq3C"
+                    value="5"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist or comments not required)</label
+                  >
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label
+                  >Are the variable names understandable in the code?</label
+                >
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4C"
+                    value="1"
+                  />
+                  <label class="form-check-label">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4C"
+                    value="2"
+                  />
+                  <label class="form-check-label">No</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq4C"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist)</label
+                  >
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label>Does the code cover exceptional handling?</label>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5C"
+                    value="1"
+                  />
+                  <label class="form-check-label">Yes</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5C"
+                    value="2"
+                  />
+                  <label class="form-check-label">No</label>
+                </div>
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="radio"
+                    name="mcq5C"
+                    value="3"
+                  />
+                  <label class="form-check-label"
+                    >NA (code doesn't exist)</label
+                  >
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-6">
+                  <label
+                    >Is text explanation clear or aligned well with the
+                    code?</label
+                  >
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq6C"
+                      value="1"
+                    />
+                    <label class="form-check-label">Yes</label>
+                  </div>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input"
+                      type="radio"
+                      name="mcq6C"
+                      value="2"
+                    />
+                    <label class="form-check-label">No</label>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary"
+                    type="button"
+                    data-toggle="collapse"
+                    data-target="#collapseCompletionCJustificationQ6"
+                    aria-expanded="false"
+                    aria-controls="collapseCompletionCJustificationQ6"
+                  >
+                    Provide justification for Q6
+                  </button>
+
+                  <div
+                    class="collapse mt-3"
+                    id="collapseCompletionCJustificationQ6"
+                  >
+                    <select
+                      id="justificationReasonYesCompletionCQ6"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided text is having only correct statements and that too about the given code/approach/prompt solution"
+                      >
+                        Provided text is having only correct statements and that
+                        too about the given code/approach/prompt solution
+                      </option>
+                      <option
+                        value="Provided text mention about key concept used in the code irrespective of prompt alignment or not"
+                      >
+                        Provided text mention about key concept used in the code
+                        irrespective of prompt alignment or not
+                      </option>
+                      <option
+                        value="Provided text is having additional information other than the prompt solution"
+                      >
+                        Provided text is having additional information other
+                        than the prompt solution
+                      </option>
+                    </select>
+
+                    <select
+                      id="justificationReasonNoCompletionCQ6"
+                      multiple="multiple"
+                    >
+                      <option
+                        value="Provided text is having any incorrect statement about the prompt approach/code steps/functionality – mention single/multiple statements which is/are incorrect"
+                      >
+                        Provided text is having any incorrect statement about
+                        the prompt approach/code steps/functionality – mention
+                        single/multiple statements which is/are incorrect
+                      </option>
+                      <option
+                        value="Provided text is having additional information and is incorrect/misleading/confusing"
+                      >
+                        Provided text is having additional information and is
+                        incorrect/misleading/confusing
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <label
+                  >Rate the completion from 1-7. 1 being poor and 7 being
+                  excellent:</label
+                >
+
+                <input type="number" min="0" max="7" id="rankingCompletionC" />
+              </div>
+            </div>
+          </div>
+
+          <br />
+          <br />
+
+          <div class="form-group">
+            <label for="ranking">Ranking</label>
+            <input type="text" class="form-control" id="ranking" />
+          </div>
+
+          <div class="form-group">
+            <label for="reason">Reason for Ranking</label>
+            <textarea class="form-control" id="reason"></textarea>
           </div>
         </div>
 
         <button
           type="button"
-          class="btn btn-success mb-5"
+          class="btn btn-success mb-3"
           onclick="runChecks()"
         >
           Run Checks
         </button>
 
         <button
+          style="display: none"
           type="button"
-          class="btn btn-primary mb-5"
+          id="submitBtn"
+          class="btn btn-primary mb-3"
           onclick="submitAnnotation()"
         >
           Submit
         </button>
+        <br />
+        <strong>* Please run checks to enable the submit button</strong>
       </form>
 
       <h3>Checks</h3>
@@ -1534,5 +1558,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 
     <script src="script.js"></script>
+
+    <script>
+      if (
+        localStorage.getItem("loggedIn") === undefined ||
+        localStorage.getItem("annotatorEmail") === undefined ||
+        localStorage.getItem("loggedIn") === null ||
+        localStorage.getItem("annotatorEmail") === null
+      ) {
+        location.href = "/index.html";
+      }
+    </script>
   </body>
 </html>

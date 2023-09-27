@@ -38,20 +38,150 @@ function showSuccessAlert(message) {
   }, 3000);
 }
 
-// function openAnnotationDetails(batchId) {
-//   // TODO: Navigate to the annotation details page using the batch ID
-//   console.log("Open details for:", batchId);
-//   window.location.href = "annotation_details.html?batchId=" + batchId; // Sample redirect
-// }
+function showFailAlertDashboard(message) {
+  const alertHTML = `
+      <div id="failAlertDashboard" class="alert alert-danger alert-dismissible fade show" role="alert">
+        ${message}
+      </div>
+    `;
+
+  const alertContainer = document.getElementById("alertContainerDashboard");
+  alertContainer.innerHTML = "";
+  alertContainer.insertAdjacentHTML("beforeend", alertHTML);
+
+  setTimeout(function () {
+    const failAlert = document.getElementById("failAlertDashboard");
+    if (failAlert) {
+      failAlert.classList.remove("show");
+      failAlert.classList.add("fade");
+    }
+  }, 3000);
+}
+
+function showSuccessAlertDashboard(message) {
+  const alertHTML = `
+      <div id="successAlertDashboard" class="alert alert-primary alert-dismissible fade show" role="alert">
+        ${message}
+      </div>
+    `;
+
+  const alertContainer = document.getElementById("alertContainerDashboard");
+  alertContainer.innerHTML = "";
+  alertContainer.insertAdjacentHTML("beforeend", alertHTML);
+
+  setTimeout(function () {
+    const successAlert = document.getElementById("successAlertDashboard");
+    if (successAlert) {
+      successAlert.classList.remove("show");
+      successAlert.classList.add("fade");
+    }
+  }, 3000);
+}
+
+function showFailAlertCreateAnnotation(message) {
+  const alertHTML = `
+      <div id="failAlertCreateAnnotation" class="alert alert-danger alert-dismissible fade show" role="alert">
+        ${message}
+      </div>
+    `;
+
+  const alertContainer = document.getElementById(
+    "alertContainerCreateAnnotation"
+  );
+  alertContainer.innerHTML = "";
+  alertContainer.insertAdjacentHTML("beforeend", alertHTML);
+
+  setTimeout(function () {
+    const failAlert = document.getElementById("failAlertCreateAnnotation");
+    if (failAlert) {
+      failAlert.classList.remove("show");
+      failAlert.classList.add("fade");
+    }
+  }, 3000);
+}
+
+function showSuccessAlertCreateAnnotation(message) {
+  const alertHTML = `
+      <div id="successAlertCreateAnnotation" class="alert alert-primary alert-dismissible fade show" role="alert">
+        ${message}
+      </div>
+    `;
+
+  const alertContainer = document.getElementById(
+    "alertContainerCreateAnnotation"
+  );
+  alertContainer.innerHTML = "";
+  alertContainer.insertAdjacentHTML("beforeend", alertHTML);
+
+  setTimeout(function () {
+    const successAlert = document.getElementById(
+      "successAlertCreateAnnotation"
+    );
+    if (successAlert) {
+      successAlert.classList.remove("show");
+      successAlert.classList.add("fade");
+    }
+  }, 3000);
+}
+
+function openAnnotationDetails(annotationId) {
+  // TODO: Navigate to the annotation details page using the batch ID
+  console.log("Open details for:", annotationId);
+  window.location.href = "create_annotation.html?id=" + annotationId; // Sample redirect
+}
+
+function deleteAnnotation(annotationId) {
+  console.log(annotationId);
+
+  fetch(
+    `https://rmcopypastetoolbackend.onrender.com/api/annotations/${annotationId}`,
+    {
+      method: "DELETE",
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      showSuccessAlertDashboard("Annotation deleted successfully !");
+      setTimeout(() => {
+        window.location.href = "/dashboard.html";
+      }, 3000);
+    })
+    .catch((error) => {
+      console.log(
+        "There was a problem with the fetch operation:",
+        error.message
+      );
+    });
+}
 
 $(document).ready(function () {
   // activate multi-select for reasoning
   $("#justificationReasonYesCompletionAQ1").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionAQ1").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionAQ1").next(".btn-group").hide();
@@ -59,10 +189,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionAQ2").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionAQ2").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionAQ2").next(".btn-group").hide();
@@ -70,10 +214,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionAQ6").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionAQ6").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionAQ6").next(".btn-group").hide();
@@ -81,10 +239,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionBQ1").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionBQ1").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionBQ1").next(".btn-group").hide();
@@ -92,10 +264,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionBQ2").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionBQ2").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionBQ2").next(".btn-group").hide();
@@ -103,10 +289,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionBQ6").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionBQ6").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionBQ6").next(".btn-group").hide();
@@ -114,10 +314,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionCQ1").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionCQ1").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionCQ1").next(".btn-group").hide();
@@ -125,10 +339,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionCQ2").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionCQ2").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionCQ2").next(".btn-group").hide();
@@ -136,10 +364,24 @@ $(document).ready(function () {
 
   $("#justificationReasonYesCompletionCQ6").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonNoCompletionCQ6").multiselect({
     includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
   });
 
   $("#justificationReasonYesCompletionCQ6").next(".btn-group").hide();
@@ -468,6 +710,7 @@ function checkEmpty() {
     emptyFields.push("Rejection");
   }
 
+  // selected yes for Q1 A
   if (document.querySelector('input[name="mcq1A"]:checked')?.value === "1") {
     if ($("#completionAJustificationQ1").val() === "") {
       emptyFields.push("Completion A Q1 Justification URL");
@@ -478,6 +721,48 @@ function checkEmpty() {
     }
   }
 
+  // selected no for Q1 A
+  if (document.querySelector('input[name="mcq1A"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionAQ1").val().join(", ") === "") {
+      emptyFields.push("Completion A Q1 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q2 A
+  if (document.querySelector('input[name="mcq2A"]:checked')?.value === "1") {
+    if ($("#completionAJustificationQ2").val() === "") {
+      emptyFields.push(
+        "Completion A Q2 Justification OUTPUT/ERROR not provided"
+      );
+    }
+
+    if ($("#justificationReasonYesCompletionAQ2").val().join(", ") === "") {
+      emptyFields.push("Completion A Q2 Justification Reasons");
+    }
+  }
+
+  // selected no for Q2 A
+  if (document.querySelector('input[name="mcq2A"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionAQ2").val().join(", ") === "") {
+      emptyFields.push("Completion A Q2 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q6 A
+  if (document.querySelector('input[name="mcq6A"]:checked')?.value === "1") {
+    if ($("#justificationReasonYesCompletionAQ6").val().join(", ") === "") {
+      emptyFields.push("Completion A Q6 Justification Reasons");
+    }
+  }
+
+  // selected no for Q6 A
+  if (document.querySelector('input[name="mcq6A"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionAQ6").val().join(", ") === "") {
+      emptyFields.push("Completion A Q6 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q1 B
   if (document.querySelector('input[name="mcq1B"]:checked')?.value === "1") {
     if ($("#completionBJustificationQ1").val() === "") {
       emptyFields.push("Completion B Q1 Justification URL");
@@ -488,6 +773,48 @@ function checkEmpty() {
     }
   }
 
+  // selected no for Q1 B
+  if (document.querySelector('input[name="mcq1B"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionBQ1").val().join(", ") === "") {
+      emptyFields.push("Completion B Q1 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q2 B
+  if (document.querySelector('input[name="mcq2B"]:checked')?.value === "1") {
+    if ($("#completionBJustificationQ2").val() === "") {
+      emptyFields.push(
+        "Completion B Q2 Justification OUTPUT/ERROR not provided"
+      );
+    }
+
+    if ($("#justificationReasonYesCompletionBQ2").val().join(", ") === "") {
+      emptyFields.push("Completion B Q2 Justification Reasons");
+    }
+  }
+
+  // selected no for Q2 B
+  if (document.querySelector('input[name="mcq2B"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionBQ2").val().join(", ") === "") {
+      emptyFields.push("Completion B Q2 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q6 B
+  if (document.querySelector('input[name="mcq6B"]:checked')?.value === "1") {
+    if ($("#justificationReasonYesCompletionBQ6").val().join(", ") === "") {
+      emptyFields.push("Completion B Q6 Justification Reasons");
+    }
+  }
+
+  // selected no for Q6 B
+  if (document.querySelector('input[name="mcq6B"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionBQ6").val().join(", ") === "") {
+      emptyFields.push("Completion B Q6 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q1 C
   if (document.querySelector('input[name="mcq1C"]:checked')?.value === "1") {
     if ($("#completionCJustificationQ1").val() === "") {
       emptyFields.push("Completion C Q1 Justification URL");
@@ -498,10 +825,53 @@ function checkEmpty() {
     }
   }
 
+  // selected no for Q1 C
+  if (document.querySelector('input[name="mcq1C"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionCQ1").val().join(", ") === "") {
+      emptyFields.push("Completion C Q1 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q2 C
+  if (document.querySelector('input[name="mcq2C"]:checked')?.value === "1") {
+    if ($("#completionCJustificationQ2").val() === "") {
+      emptyFields.push(
+        "Completion C Q2 Justification OUTPUT/ERROR not provided"
+      );
+    }
+
+    if ($("#justificationReasonYesCompletionCQ2").val().join(", ") === "") {
+      emptyFields.push("Completion C Q2 Justification Reasons");
+    }
+  }
+
+  // selected no for Q2 C
+  if (document.querySelector('input[name="mcq2C"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionCQ2").val().join(", ") === "") {
+      emptyFields.push("Completion C Q2 Justification Reasons");
+    }
+  }
+
+  // selected yes for Q6 C
+  if (document.querySelector('input[name="mcq6C"]:checked')?.value === "1") {
+    if ($("#justificationReasonYesCompletionCQ6").val().join(", ") === "") {
+      emptyFields.push("Completion C Q6 Justification Reasons");
+    }
+  }
+
+  // selected no for Q6 C
+  if (document.querySelector('input[name="mcq6C"]:checked')?.value === "2") {
+    if ($("#justificationReasonNoCompletionCQ6").val().join(", ") === "") {
+      emptyFields.push("Completion C Q6 Justification Reasons");
+    }
+  }
+
   if (emptyFields.length === 0) {
     return true;
   } else {
-    alert("Please fill the following empty fields: " + emptyFields.join(", "));
+    showFailAlertCreateAnnotation(
+      "Please fill the following empty fields: " + emptyFields.join(", ")
+    );
     return false;
   }
 }
@@ -509,6 +879,133 @@ function checkEmpty() {
 // Auto fill date, annotatorEmail, and language
 let today = new Date().toISOString().split("T")[0];
 let annotatorEmail = localStorage.getItem("annotatorEmail");
+
+const params = new Proxy(new URLSearchParams(window.location.search), {
+  get: (searchParams, prop) => searchParams.get(prop),
+});
+
+// Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+
+let _id = params["id"]; // "some_value"
+
+if (_id != null) {
+  showSuccessAlertCreateAnnotation("Loading annotation...");
+  fetch(`https://rmcopypastetoolbackend.onrender.com/api/annotations/${_id}`, {
+    method: "GET",
+
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+
+    .then((data) => {
+      if (data.success === true) {
+        let ann = data.message;
+
+        // fill top level data
+        document.querySelector(
+          `[name="language"][value="${ann.language}"]`
+        ).checked = true;
+
+        document.getElementById("batchNumber").value = ann.batchNumber;
+
+        document.getElementById("prompt").value = ann.prompt;
+
+        document.querySelector(
+          `[name="taskType"][value="${ann.taskType}"]`
+        ).checked = true;
+
+        document.getElementById("ranking").value = ann.ranking;
+
+        document.getElementById("reason").value = ann.reasoning;
+
+        document.querySelector(
+          `[name="rejected"][value="${ann.rejected}"]`
+        ).checked = true;
+
+        // fill completions
+        ann.completions.map((comp, idx) => {
+          const alpha = String.fromCharCode(idx + 65);
+
+          // fill completion text
+          document.getElementById(`completion${alpha}`).value =
+            comp.completionText;
+
+          // fill main mcq questions for Completions
+          Object.keys(comp.completionQuestions)
+            .slice(0, -1)
+            .map((Key, qidx) => {
+              document.querySelector(
+                `input[name="mcq${qidx + 1}${alpha}"][value="${
+                  comp.completionQuestions[Key]
+                }"]`
+              ).checked = true;
+            });
+
+          // fill Q1 justification URL
+          document.getElementById(`completion${alpha}JustificationQ1`).value =
+            comp.completionReasoningURLs[`urlForQ1${alpha}`];
+
+          // fill Q2 justification output / errors
+          document.getElementById(`completion${alpha}JustificationQ2`).value =
+            comp.completionReasoningURLs[`urlForQ2${alpha}`];
+
+          if (Object.keys(comp.completionReasoning).length === 3) {
+            let ques = ["1", "2", "6"];
+
+            Object.keys(comp.completionReasoning).map((k, jidx) => {
+              let i = ques[jidx],
+                selectElement;
+
+              if (comp.completionQuestions[`Q${i}`] === "1") {
+                // make the selections visible
+                $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                  .next(".btn-group")
+                  .show();
+                let arr = comp.completionReasoning[k].split(", ");
+
+                // pre select the choices
+                arr.map((reason) => {
+                  $(
+                    `#justificationReasonYesCompletion${alpha}Q${i}`
+                  ).multiselect("select", reason);
+                });
+              } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                // hide the URL boxes
+                $(`#completion${alpha}JustificationQ${i}`).hide();
+                // make the selections visible
+                $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                  .next(".btn-group")
+                  .show();
+                let arr = comp.completionReasoning[k].split(", ");
+
+                // pre select the choices
+                arr.map((reason) => {
+                  $(
+                    `#justificationReasonNoCompletion${alpha}Q${i}`
+                  ).multiselect("select", reason);
+                });
+              } else {
+                // return;
+              }
+            });
+          }
+
+          document.getElementById(`rankingCompletion${alpha}`).value = Number(
+            comp.completionQuestions.rank
+          );
+        });
+      } else {
+        showFailAlertCreateAnnotation("Some error occurred");
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 3000);
+      }
+    })
+
+    .catch((error) => console.error("Error:", error));
+}
 
 function submitAnnotation() {
   if (checkEmpty()) {
@@ -598,8 +1095,8 @@ function submitAnnotation() {
     }
 
     const completionA = {
-      completionAText: document.getElementById("completionA").value,
-      completionAQuestions: {
+      completionText: document.getElementById("completionA").value,
+      completionQuestions: {
         Q1: document.querySelector('input[name="mcq1A"]:checked').value,
         Q2: document.querySelector('input[name="mcq2A"]:checked').value,
         Q3: document.querySelector('input[name="mcq3A"]:checked').value,
@@ -620,8 +1117,8 @@ function submitAnnotation() {
     };
 
     const completionB = {
-      completionAText: document.getElementById("completionB").value,
-      completionAQuestions: {
+      completionText: document.getElementById("completionB").value,
+      completionQuestions: {
         Q1: document.querySelector('input[name="mcq1B"]:checked').value,
         Q2: document.querySelector('input[name="mcq2B"]:checked').value,
         Q3: document.querySelector('input[name="mcq3B"]:checked').value,
@@ -642,8 +1139,8 @@ function submitAnnotation() {
     };
 
     const completionC = {
-      completionAText: document.getElementById("completionC").value,
-      completionAQuestions: {
+      completionText: document.getElementById("completionC").value,
+      completionQuestions: {
         Q1: document.querySelector('input[name="mcq1C"]:checked').value,
         Q2: document.querySelector('input[name="mcq2C"]:checked').value,
         Q3: document.querySelector('input[name="mcq3C"]:checked').value,
@@ -680,20 +1177,60 @@ function submitAnnotation() {
     };
 
     // Send POST request
-    fetch("https://rmcopypastetoolbackend.onrender.com/api/annotations/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
+    // fetch("https://rmcopypastetoolbackend.onrender.com/api/annotations/", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(formData),
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     alert("New annotation created successfully !");
+    //     setTimeout(() => {
+    //       window.location.href = "/dashboard.html";
+    //     }, 3000);
+    //   })
+    //   .catch((error) => console.error("Error:", error));
+
+    let endpoint = "",
+      method = "POST",
+      redirect = "./dashboard.html",
+      alertMessage = "New annotation created successfully !";
+
+    if (_id != null) {
+      endpoint = _id;
+
+      method = "PATCH";
+
+      redirect = `./create_annotation.html?id=${_id}`;
+
+      alertMessage = "Annotation updated succesfully !";
+    }
+
+    // Send POST request
+
+    fetch(
+      `https://rmcopypastetoolbackend.onrender.com/api/annotations/${endpoint}`,
+
+      {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    )
       .then((response) => response.json())
+
       .then((data) => {
-        alert("New annotation created successfully !");
+        showSuccessAlertCreateAnnotation(alertMessage);
+
         setTimeout(() => {
-          window.location.href = "/dashboard.html";
+          window.location.href = redirect;
         }, 3000);
       })
+
       .catch((error) => console.error("Error:", error));
   }
 }
@@ -997,6 +1534,8 @@ function checkRankingString() {
 
 function runChecks() {
   if (checkEmpty()) {
+    showSuccessAlertCreateAnnotation("Run checks successful !");
+    document.getElementById("submitBtn").style.display = "inline-block";
     const errorListContainer = document.getElementById("errorList");
     errorListContainer.innerHTML = "";
 
