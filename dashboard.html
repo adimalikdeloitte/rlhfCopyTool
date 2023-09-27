@@ -43,11 +43,9 @@
           </p>
           <p>
             <strong>Designation:</strong>
-            <span id="designation">XXXX</span>
+            <span id="designation">Loading ...</span>
           </p>
-          <p>
-            <strong>Language:</strong> <span id="language">Loading ...</span>
-          </p>
+          <p><strong>Language:</strong> <span id="language">XXXX</span></p>
           <p><strong>Role:</strong> <span id="role">Loading ...</span></p>
         </div>
       </div>
@@ -114,6 +112,7 @@
     <script src="script.js"></script>
 
     <script>
+      let annotatorDetails = {};
       if (
         localStorage.getItem("loggedIn") === undefined ||
         localStorage.getItem("annotatorEmail") === undefined ||
@@ -170,108 +169,12 @@
       }
 
       $(document).ready(function () {
+        showSuccessAlertDashboard("Loading details ...");
+
         $(".dropdown-menu a").click(function () {
           $("#filterDropdownMenuButton").text($(this).text());
         });
 
-        showSuccessAlertDashboard("Loading details ...");
-        // Create a new instance of XMLHttpRequest
-        var xhr = new XMLHttpRequest();
-
-        // Configure the request type, URL, and asynchronous flag
-        xhr.open(
-          "POST",
-          "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
-          true
-        );
-
-        // Set the request header for content-type
-        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
-        // Define the callback for when the request has completed
-        xhr.onload = function () {
-          const response = JSON.parse(xhr.responseText);
-          if (xhr.status >= 200 && xhr.status < 400) {
-            // The request was successful! Handle the response here.
-
-            const annotations = response.message;
-            const annotationListContainer =
-              document.getElementById("annotationList");
-            annotations?.map((annotation) => {
-              // Create the main <li> element
-              const li = document.createElement("li");
-              li.className = "list-group-item";
-
-              // Create the Batch # content
-              const annotationId = document.createElement("p");
-              annotationId.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
-                annotation._id
-              } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
-                annotation.date
-              )} </span> <br />`;
-
-              li.appendChild(annotationId);
-
-              const batchStrong = document.createElement("strong");
-              batchStrong.textContent = "Batch #: ";
-              li.appendChild(batchStrong);
-              li.appendChild(document.createTextNode(annotation.batchNumber));
-
-              li.appendChild(document.createTextNode(" | "));
-
-              // Create the Prompt content
-              const promptStrong = document.createElement("strong");
-              promptStrong.textContent = "Prompt: ";
-              li.appendChild(promptStrong);
-              li.appendChild(
-                document.createTextNode(annotation.prompt.slice(0, 100) + "...")
-              );
-
-              // Create the edit button
-              const btn = document.createElement("button");
-              btn.className = "btn btn-primary ml-2";
-              btn.textContent = "Edit";
-              btn.onclick = function () {
-                openAnnotationDetails(annotation._id);
-              };
-              li.appendChild(btn);
-
-              // Create the edit button
-              const btnDelete = document.createElement("button");
-              btnDelete.className = "btn btn-danger ml-2";
-              btnDelete.textContent = "Delete";
-              btnDelete.onclick = function () {
-                deleteAnnotation(annotation._id);
-              };
-              li.appendChild(btnDelete);
-
-              // append li to annotation list
-              annotationListContainer.appendChild(li);
-            });
-          } else {
-            // The request failed with a status code outside the range [200, 400).
-            // Handle the error here.
-            console.error(
-              "Request failed: " + xhr.status + " " + xhr.statusText
-            );
-            showFailAlertDashboard(response.message);
-          }
-        };
-
-        // Define the callback for network errors
-        xhr.onerror = function () {
-          console.error("Network error occurred.");
-          showFailAlertDashboard(xhr.message);
-        };
-
-        var data = JSON.stringify({
-          field: "annotatorEmail",
-          value: localStorage.getItem("annotatorEmail"),
-        });
-        xhr.send(data);
-      });
-
-      $(document).ready(function () {
         // Create a new instance of XMLHttpRequest
         var xhr = new XMLHttpRequest();
 
@@ -301,6 +204,137 @@
             );
             document.getElementById("designation").innerText =
               response.message[0]?.designation;
+
+            annotatorDetails = response.message[0];
+
+            // annotation request start ------------------------------
+            // Create a new instance of XMLHttpRequest
+            var xhrAnnotations = new XMLHttpRequest();
+
+            // Configure the request type, URL, and asynchronous flag
+            xhrAnnotations.open(
+              "POST",
+              "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
+              true
+            );
+
+            // Set the request header for content-type
+            xhrAnnotations.setRequestHeader(
+              "Content-Type",
+              "application/json;charset=UTF-8"
+            );
+
+            // Define the callback for when the request has completed
+            xhrAnnotations.onload = function () {
+              const response = JSON.parse(xhrAnnotations.responseText);
+              if (xhrAnnotations.status >= 200 && xhrAnnotations.status < 400) {
+                // The request was successful! Handle the response here.
+
+                const annotations = response.message;
+                const annotationListContainer =
+                  document.getElementById("annotationList");
+                annotations?.map((annotation) => {
+                  // Create the main <li> element
+                  const li = document.createElement("li");
+                  li.className = "list-group-item";
+
+                  // Create the Batch # content
+                  const annotationId = document.createElement("p");
+                  annotationId.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
+                    annotation._id
+                  } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
+                    annotation.date
+                  )} </span> <span class="mr-4"><strong> Annotator Email: </strong> ${
+                    annotation.annotatorEmail
+                  } </span> <br />`;
+
+                  li.appendChild(annotationId);
+
+                  const batchStrong = document.createElement("strong");
+                  batchStrong.textContent = "Batch #: ";
+                  li.appendChild(batchStrong);
+                  li.appendChild(
+                    document.createTextNode(annotation.batchNumber)
+                  );
+
+                  li.appendChild(document.createTextNode(" | "));
+
+                  // Create the Prompt content
+                  const promptStrong = document.createElement("strong");
+                  promptStrong.textContent = "Prompt: ";
+                  li.appendChild(promptStrong);
+                  li.appendChild(
+                    document.createTextNode(
+                      annotation.prompt.slice(0, 200) + " ......."
+                    )
+                  );
+
+                  const lineBreak = document.createElement("br");
+                  li.appendChild(lineBreak);
+
+                  // Create the open button
+                  const btn = document.createElement("button");
+                  btn.className = "btn btn-primary mt-2";
+                  btn.textContent = "Open";
+                  btn.onclick = function () {
+                    openAnnotationDetails(annotation._id);
+                  };
+                  li.appendChild(btn);
+
+                  if (annotatorDetails.annotatorRole !== "primary") {
+                    // Create the edit button
+                    const btn = document.createElement("button");
+                    btn.className = "btn btn-primary ml-2 mt-2";
+                    btn.textContent = "Edit";
+                    btn.onclick = function () {
+                      editAnnotation(annotation._id);
+                    };
+                    li.appendChild(btn);
+
+                    // Create the edit button
+                    const btnDelete = document.createElement("button");
+                    btnDelete.className = "btn btn-danger ml-2 mt-2";
+                    btnDelete.textContent = "Delete";
+                    btnDelete.onclick = function () {
+                      deleteAnnotation(annotation._id);
+                    };
+                    li.appendChild(btnDelete);
+                  }
+
+                  // append li to annotation list
+                  annotationListContainer.appendChild(li);
+                });
+              } else {
+                // The request failed with a status code outside the range [200, 400).
+                // Handle the error here.
+                console.error(
+                  "Request failed: " +
+                    xhrAnnotations.status +
+                    " " +
+                    xhrAnnotations.statusText
+                );
+                showFailAlertDashboard(response.message);
+              }
+            };
+
+            // Define the callback for network errors
+            xhrAnnotations.onerror = function () {
+              console.error("Network error occurred.");
+              showFailAlertDashboard(xhrAnnotations.message);
+            };
+
+            var dataAnnotations = JSON.stringify({
+              field: "annotatorEmail",
+              value: localStorage.getItem("annotatorEmail"),
+            });
+
+            if (annotatorDetails.annotatorRole === "primary") {
+              xhrAnnotations.send(dataAnnotations);
+            } else {
+              xhrAnnotations.send();
+            }
+
+            // annotation request end --------------------------------
           } else {
             // The request failed with a status code outside the range [200, 400).
             // Handle the error here.

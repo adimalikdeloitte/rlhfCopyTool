@@ -124,10 +124,15 @@ function showSuccessAlertCreateAnnotation(message) {
   }, 3000);
 }
 
+function editAnnotation(annotationId) {
+  // TODO: Navigate to the annotation details page using the batch ID
+  window.location.href = "create_annotation.html?id=" + annotationId; // Sample redirect
+}
+
 function openAnnotationDetails(annotationId) {
   // TODO: Navigate to the annotation details page using the batch ID
-  console.log("Open details for:", annotationId);
-  window.location.href = "create_annotation.html?id=" + annotationId; // Sample redirect
+  window.location.href =
+    "create_annotation.html?id=" + annotationId + "&view=true"; // Sample redirect
 }
 
 function deleteAnnotation(annotationId) {
@@ -887,12 +892,16 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
 
 let _id = params["id"]; // "some_value"
+let view = params["view"];
+
+if (view !== null) {
+  document.getElementById("submitBtn").style.display = "none";
+}
 
 if (_id != null) {
   showSuccessAlertCreateAnnotation("Loading annotation...");
   fetch(`https://rmcopypastetoolbackend.onrender.com/api/annotations/${_id}`, {
     method: "GET",
-
     headers: {
       "Content-Type": "application/json",
     },
@@ -1003,7 +1012,6 @@ if (_id != null) {
         }, 3000);
       }
     })
-
     .catch((error) => console.error("Error:", error));
 }
 
@@ -1176,37 +1184,17 @@ function submitAnnotation() {
         "true",
     };
 
-    // Send POST request
-    // fetch("https://rmcopypastetoolbackend.onrender.com/api/annotations/", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(formData),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     alert("New annotation created successfully !");
-    //     setTimeout(() => {
-    //       window.location.href = "/dashboard.html";
-    //     }, 3000);
-    //   })
-    //   .catch((error) => console.error("Error:", error));
-
     let endpoint = "",
       method = "POST",
       redirect = "./dashboard.html",
       alertMessage = "New annotation created successfully !";
 
-    if (_id != null) {
-      endpoint = _id;
-
-      method = "PATCH";
-
-      redirect = `./create_annotation.html?id=${_id}`;
-
-      alertMessage = "Annotation updated succesfully !";
-    }
+    // if (_id != null) {
+    //   endpoint = _id;
+    //   method = "PATCH";
+    //   redirect = `./create_annotation.html?id=${_id}`;
+    //   alertMessage = "Annotation updated succesfully !";
+    // }
 
     // Send POST request
 
@@ -1535,7 +1523,10 @@ function checkRankingString() {
 function runChecks() {
   if (checkEmpty()) {
     showSuccessAlertCreateAnnotation("Run checks successful !");
-    document.getElementById("submitBtn").style.display = "inline-block";
+    if (view === null) {
+      document.getElementById("submitBtn").style.display = "inline-block";
+    }
+
     const errorListContainer = document.getElementById("errorList");
     errorListContainer.innerHTML = "";
 
