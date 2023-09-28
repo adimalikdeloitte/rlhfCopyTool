@@ -882,7 +882,6 @@ function checkEmpty() {
 }
 
 // Auto fill date, annotatorEmail, and language
-let today = new Date().toISOString().split("T")[0];
 let annotatorEmail = localStorage.getItem("annotatorEmail");
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -1170,7 +1169,7 @@ function submitAnnotation() {
 
     // Collect form data
     let formData = {
-      date: today,
+      date: new Date(),
       annotatorEmail: annotatorEmail,
       language: document.querySelector('input[name="language"]:checked').value,
       batchNumber: document.getElementById("batchNumber").value,
