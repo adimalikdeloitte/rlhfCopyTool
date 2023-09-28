@@ -98,8 +98,92 @@
       </div>
       <div class="card mt-4 mb-4">
         <div class="card-header">Annotations</div>
-        <ul class="list-group list-group-flush" id="annotationList"></ul>
+        <ul class="list-group list-group-flush" id="annotationList">
+          <span class="text-center p-4">No Annotations to display here</span>
+        </ul>
       </div>
+
+      <strong style="opacity: 0.6"
+        >Showing 20 records on this page, jump to the pages using the buttons
+        below</strong
+      >
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=1">1</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=2">2</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=3">3</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=4">4</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=5">5</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=6">6</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=7">7</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=8">8</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=9">9</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=10">10</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=11">11</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=12">12</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=1">13</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=2">14</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=3">15</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=4">16</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=5">17</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=6">18</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=7">19</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=8">20</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=9">21</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=10">22</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=11">23</a>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="./dashboard.html?pageNumber=12">24</a>
+          </li>
+          <!-- Add more page numbers as needed -->
+        </ul>
+      </nav>
     </div>
 
     <!-- Bootstrap & jQuery JS Links -->
@@ -128,44 +212,6 @@
 
       function searchByFilter() {
         console.log("Reset annotation list");
-      }
-
-      function formatDate(dateString) {
-        const months = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-
-        const nth = (d) => {
-          if (d > 3 && d < 21) return "th";
-          switch (d % 10) {
-            case 1:
-              return "st";
-            case 2:
-              return "nd";
-            case 3:
-              return "rd";
-            default:
-              return "th";
-          }
-        };
-
-        const date = new Date(dateString);
-        const day = date.getDate();
-        const month = months[date.getMonth()];
-        const year = date.getFullYear();
-
-        return `${day}${nth(day)} ${month} ${year}`;
       }
 
       $(document).ready(function () {
@@ -208,15 +254,36 @@
             annotatorDetails = response.message[0];
 
             // annotation request start ------------------------------
+            showSuccessAlertDashboard("Loading annotations ...");
             // Create a new instance of XMLHttpRequest
             var xhrAnnotations = new XMLHttpRequest();
 
-            // Configure the request type, URL, and asynchronous flag
-            xhrAnnotations.open(
-              "POST",
-              "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
-              true
+            const params = new Proxy(
+              new URLSearchParams(window.location.search),
+              {
+                get: (searchParams, prop) => searchParams.get(prop),
+              }
             );
+
+            let pageNumber = params["pageNumber"];
+            if (pageNumber === undefined || pageNumber === null) {
+              pageNumber = 1;
+            }
+
+            // Configure the request type, URL, and asynchronous flag
+            if (annotatorDetails.annotatorRole === "primary") {
+              xhrAnnotations.open(
+                "POST",
+                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+                true
+              );
+            } else {
+              xhrAnnotations.open(
+                "GET",
+                `https://rmcopypastetoolbackend.onrender.com/api/annotations/?page=${pageNumber}`,
+                true
+              );
+            }
 
             // Set the request header for content-type
             xhrAnnotations.setRequestHeader(
@@ -233,22 +300,27 @@
                 const annotations = response.message;
                 const annotationListContainer =
                   document.getElementById("annotationList");
+                if (annotations !== undefined) {
+                  annotationListContainer.innerHTML = "";
+                }
                 annotations?.map((annotation) => {
                   // Create the main <li> element
                   const li = document.createElement("li");
                   li.className = "list-group-item";
 
                   // Create the Batch # content
-                  const annotationId = document.createElement("p");
-                  annotationId.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
-                    annotation._id
+                  const annotationDetails = document.createElement("p");
+                  annotationDetails.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
+                    annotation.annotationId
                   } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
                     annotation.date
-                  )} </span> <span class="mr-4"><strong> Annotator Email: </strong> ${
+                  )} </span>  <br /> <span class="mr-4"><strong>Task Type:</strong> ${
+                    annotation.taskType
+                  }</span><span class="mr-4"><strong> Annotator Email: </strong> ${
                     annotation.annotatorEmail
-                  } </span> <br />`;
+                  } </span><br />`;
 
-                  li.appendChild(annotationId);
+                  li.appendChild(annotationDetails);
 
                   const batchStrong = document.createElement("strong");
                   batchStrong.textContent = "Batch #: ";

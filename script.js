@@ -154,7 +154,7 @@ function deleteAnnotation(annotationId) {
       console.log(data);
       showSuccessAlertDashboard("Annotation deleted successfully !");
       setTimeout(() => {
-        window.location.href = "/dashboard.html";
+        window.location.href = "/dashboard.html?pageNumber=1";
       }, 3000);
     })
     .catch((error) => {
@@ -619,7 +619,7 @@ $(document).ready(function () {
         // The request was successful! Handle the response here.
         if (response.message === "Login successful") {
           setTimeout(() => {
-            window.location.href = "/dashboard.html";
+            window.location.href = "/dashboard.html?pageNumber=1";
           }, 3000);
 
           showSuccessAlert(response.message);
@@ -673,35 +673,35 @@ function checkEmpty() {
     emptyFields.push("Language");
   }
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     if ($(`input[name="mcq${i}A"]:checked`).length <= 0) {
       emptyFields.push(`MCQ ${i} of Completion A`);
     }
   }
 
-  if ($("#rankingCompletionA").val() === "") {
-    emptyFields.push("Rating of Completion A");
-  }
+  // if ($("#rankingCompletionA").val() === "") {
+  //   emptyFields.push("Rating of Completion A");
+  // }
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     if ($(`input[name="mcq${i}B"]:checked`).length <= 0) {
       emptyFields.push(`MCQ ${i} of Completion B`);
     }
   }
 
-  if ($("#rankingCompletionB").val() === "") {
-    emptyFields.push("Rating of Completion B");
-  }
+  // if ($("#rankingCompletionB").val() === "") {
+  //   emptyFields.push("Rating of Completion B");
+  // }
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 1; i <= 7; i++) {
     if ($(`input[name="mcq${i}C"]:checked`).length <= 0) {
       emptyFields.push(`MCQ ${i} of Completion C`);
     }
   }
 
-  if ($("#rankingCompletionC").val() === "") {
-    emptyFields.push("Rating of Completion C");
-  }
+  // if ($("#rankingCompletionC").val() === "") {
+  //   emptyFields.push("Rating of Completion C");
+  // }
 
   if ($("#ranking").val() === "") {
     emptyFields.push("Ranking");
@@ -881,6 +881,44 @@ function checkEmpty() {
   }
 }
 
+function formatDate(dateString) {
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const nth = (d) => {
+    if (d > 3 && d < 21) return "th";
+    switch (d % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${day}${nth(day)} ${month} ${year}`;
+}
+
 // Auto fill date, annotatorEmail, and language
 let annotatorEmail = localStorage.getItem("annotatorEmail");
 
@@ -892,6 +930,8 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 let _id = params["id"]; // "some_value"
 let view = params["view"];
+let currentAnnotationId;
+let currentEmailId;
 
 if (view !== null) {
   document.getElementById("submitBtn").style.display = "none";
@@ -932,6 +972,9 @@ if (_id != null) {
           `[name="rejected"][value="${ann.rejected}"]`
         ).checked = true;
 
+        currentAnnotationId = ann.annotationId;
+        currentEmailId = ann.annotatorEmail;
+
         // fill completions
         ann.completions.map((comp, idx) => {
           const alpha = String.fromCharCode(idx + 65);
@@ -941,15 +984,13 @@ if (_id != null) {
             comp.completionText;
 
           // fill main mcq questions for Completions
-          Object.keys(comp.completionQuestions)
-            .slice(0, -1)
-            .map((Key, qidx) => {
-              document.querySelector(
-                `input[name="mcq${qidx + 1}${alpha}"][value="${
-                  comp.completionQuestions[Key]
-                }"]`
-              ).checked = true;
-            });
+          Object.keys(comp.completionQuestions).map((Key, qidx) => {
+            document.querySelector(
+              `input[name="mcq${qidx + 1}${alpha}"][value="${
+                comp.completionQuestions[Key]
+              }"]`
+            ).checked = true;
+          });
 
           // fill Q1 justification URL
           document.getElementById(`completion${alpha}JustificationQ1`).value =
@@ -999,15 +1040,119 @@ if (_id != null) {
               }
             });
           }
-
-          document.getElementById(`rankingCompletion${alpha}`).value = Number(
-            comp.completionQuestions.rank
-          );
         });
+
+        // call an API to check for reviews by searching for annotations with same Annotation ID
+        showSuccessAlertCreateAnnotation(
+          "Loading reviews for this annotation ..."
+        );
+        var xhrReviews = new XMLHttpRequest();
+
+        // Configure the request type, URL, and asynchronous flag
+        xhrReviews.open(
+          "POST",
+          "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
+          true
+        );
+
+        // Set the request header for content-type
+        xhrReviews.setRequestHeader(
+          "Content-Type",
+          "application/json;charset=UTF-8"
+        );
+
+        // Define the callback for when the request has completed
+        xhrReviews.onload = function () {
+          const response = JSON.parse(xhrReviews.responseText);
+          if (xhrReviews.status >= 200 && xhrReviews.status < 400) {
+            // The request was successful! Handle the response here.
+
+            const annotations = response.message;
+            const annotationListContainer =
+              document.getElementById("reviewList");
+            annotationListContainer.innerHTML = "";
+            annotations?.map((annotation) => {
+              if (annotation._id !== _id) {
+                // Create the main <li> element
+                const li = document.createElement("li");
+                li.className = "list-group-item";
+
+                // Create the Batch # content
+                const annotationDetails = document.createElement("p");
+                annotationDetails.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
+                  annotation.annotationId
+                } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
+                  annotation.date
+                )} </span>  <br /> <span class="mr-4"><strong>Task Type:</strong> ${
+                  annotation.taskType
+                }</span><span class="mr-4"><strong> Annotator Email: </strong> ${
+                  annotation.annotatorEmail
+                } </span><br />`;
+
+                li.appendChild(annotationDetails);
+
+                const batchStrong = document.createElement("strong");
+                batchStrong.textContent = "Batch #: ";
+                li.appendChild(batchStrong);
+                li.appendChild(document.createTextNode(annotation.batchNumber));
+
+                li.appendChild(document.createTextNode(" | "));
+
+                // Create the Prompt content
+                const promptStrong = document.createElement("strong");
+                promptStrong.textContent = "Prompt: ";
+                li.appendChild(promptStrong);
+                li.appendChild(
+                  document.createTextNode(
+                    annotation.prompt.slice(0, 200) + " ......."
+                  )
+                );
+
+                const lineBreak = document.createElement("br");
+                li.appendChild(lineBreak);
+
+                // Create the open button
+                const btn = document.createElement("button");
+                btn.className = "btn btn-primary mt-2";
+                btn.textContent = "Open";
+                btn.onclick = function () {
+                  openAnnotationDetails(annotation._id);
+                };
+                li.appendChild(btn);
+
+                // append li to annotation list
+                annotationListContainer.appendChild(li);
+              }
+            });
+          } else {
+            // The request failed with a status code outside the range [200, 400).
+            // Handle the error here.
+            console.error(
+              "Request failed: " +
+                xhrReviews.status +
+                " " +
+                xhrReviews.statusText
+            );
+            showFailAlertDashboard(response.message);
+          }
+        };
+
+        // Define the callback for network errors
+        xhrReviews.onerror = function () {
+          console.error("Network error occurred.");
+          showFailAlertDashboard(xhrReviews.message);
+        };
+
+        var dataAnnotations = JSON.stringify({
+          field: "annotationId",
+          value: currentAnnotationId,
+        });
+
+        xhrReviews.send(dataAnnotations);
       } else {
         showFailAlertCreateAnnotation("Some error occurred");
         setTimeout(() => {
-          window.location.href = "dashboard.html";
+          window.location.href = "dashboard.html?pageNumber=1";
         }, 3000);
       }
     })
@@ -1110,7 +1255,8 @@ function submitAnnotation() {
         Q4: document.querySelector('input[name="mcq4A"]:checked').value,
         Q5: document.querySelector('input[name="mcq5A"]:checked').value,
         Q6: document.querySelector('input[name="mcq6A"]:checked').value,
-        rank: document.getElementById("rankingCompletionA").value,
+        // rank: document.getElementById("rankingCompletionA").value,
+        Q7: document.querySelector('input[name="mcq7A"]:checked').value,
       },
       completionReasoning: {
         reasonForQ1A,
@@ -1132,7 +1278,8 @@ function submitAnnotation() {
         Q4: document.querySelector('input[name="mcq4B"]:checked').value,
         Q5: document.querySelector('input[name="mcq5B"]:checked').value,
         Q6: document.querySelector('input[name="mcq6B"]:checked').value,
-        rank: document.getElementById("rankingCompletionB").value,
+        // rank: document.getElementById("rankingCompletionB").value,
+        Q7: document.querySelector('input[name="mcq7B"]:checked').value,
       },
       completionReasoning: {
         reasonForQ1B,
@@ -1154,7 +1301,8 @@ function submitAnnotation() {
         Q4: document.querySelector('input[name="mcq4C"]:checked').value,
         Q5: document.querySelector('input[name="mcq5C"]:checked').value,
         Q6: document.querySelector('input[name="mcq6C"]:checked').value,
-        rank: document.getElementById("rankingCompletionC").value,
+        // rank: document.getElementById("rankingCompletionC").value,
+        Q7: document.querySelector('input[name="mcq7C"]:checked').value,
       },
       completionReasoning: {
         reasonForQ1C,
@@ -1185,15 +1333,17 @@ function submitAnnotation() {
 
     let endpoint = "",
       method = "POST",
-      redirect = "./dashboard.html",
+      redirect = "./dashboard.html?pageNumber=1",
       alertMessage = "New annotation created successfully !";
 
-    // if (_id != null) {
-    //   endpoint = _id;
-    //   method = "PATCH";
-    //   redirect = `./create_annotation.html?id=${_id}`;
-    //   alertMessage = "Annotation updated succesfully !";
-    // }
+    if (_id != null) {
+      formData["annotationId"] = currentAnnotationId;
+      if (annotatorEmail === currentEmailId) {
+        endpoint = _id;
+        method = "PATCH";
+        alertMessage = "Annotation updated successfully !";
+      }
+    }
 
     // Send POST request
 
@@ -1482,9 +1632,12 @@ function checkRating(completions) {
 }
 
 function checkSameRatingVsRanking() {
-  const ratingA = document.getElementById("rankingCompletionA").value;
-  const ratingB = document.getElementById("rankingCompletionB").value;
-  const ratingC = document.getElementById("rankingCompletionC").value;
+  // const ratingA = document.getElementById("rankingCompletionA").value;
+  // const ratingB = document.getElementById("rankingCompletionB").value;
+  // const ratingC = document.getElementById("rankingCompletionC").value;
+  const ratingA = document.querySelector('input[name="mcq7A"]:checked').value;
+  const ratingB = document.querySelector('input[name="mcq7B"]:checked').value;
+  const ratingC = document.querySelector('input[name="mcq7C"]:checked').value;
   const ranking = document.getElementById("ranking").value;
 
   if (
@@ -1592,7 +1745,8 @@ function runChecks() {
           {
             question:
               "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-            answer: document.getElementById("rankingCompletionA").value,
+            // answer: document.getElementById("rankingCompletionA").value,
+            answer: document.querySelector('input[name="mcq7A"]:checked').value,
           },
         ],
       },
@@ -1657,7 +1811,8 @@ function runChecks() {
           {
             question:
               "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-            answer: document.getElementById("rankingCompletionB").value,
+            // answer: document.getElementById("rankingCompletionB").value,
+            answer: document.querySelector('input[name="mcq7B"]:checked').value,
           },
         ],
       },
@@ -1722,7 +1877,8 @@ function runChecks() {
           {
             question:
               "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-            answer: document.getElementById("rankingCompletionC").value,
+            // answer: document.getElementById("rankingCompletionC").value,
+            answer: document.querySelector('input[name="mcq7C"]:checked').value,
           },
         ],
       },
