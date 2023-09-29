@@ -1006,9 +1006,48 @@ if (_id != null) {
             Object.keys(comp.completionReasoning).map((k, jidx) => {
               let i = ques[jidx],
                 selectElement;
-
               if (comp.completionQuestions[`Q${i}`] === "1") {
                 // make the selections visible
+                console.log(`#justificationReasonYesCompletion${alpha}Q${i}`);
+                $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                  .next(".btn-group")
+                  .show();
+                let arr = comp.completionReasoning[k].split(", ");
+
+                // pre select the choices
+                arr.map((reason) => {
+                  $(
+                    `#justificationReasonYesCompletion${alpha}Q${i}`
+                  ).multiselect("select", reason);
+                });
+              } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                // hide the URL boxes
+                $(`#completion${alpha}JustificationQ${i}`).hide();
+                // make the selections visible
+                $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                  .next(".btn-group")
+                  .show();
+                let arr = comp.completionReasoning[k].split(", ");
+
+                // pre select the choices
+                arr.map((reason) => {
+                  $(
+                    `#justificationReasonNoCompletion${alpha}Q${i}`
+                  ).multiselect("select", reason);
+                });
+              } else {
+                // return;
+              }
+            });
+          } else if (Object.keys(comp.completionReasoning).length === 2) {
+            let ques = ["1", "2"];
+
+            Object.keys(comp.completionReasoning).map((k, jidx) => {
+              let i = ques[jidx],
+                selectElement;
+              if (comp.completionQuestions[`Q${i}`] === "1") {
+                // make the selections visible
+                console.log(`#justificationReasonYesCompletion${alpha}Q${i}`);
                 $(`#justificationReasonYesCompletion${alpha}Q${i}`)
                   .next(".btn-group")
                   .show();
