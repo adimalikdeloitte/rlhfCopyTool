@@ -225,7 +225,11 @@
         var xhr = new XMLHttpRequest();
 
         // Configure the request type, URL, and asynchronous flag
-        xhr.open("POST", "http://localhost:3000/api/employee/filter", true);
+        xhr.open(
+          "POST",
+          "https://rmcopypastetoolbackend.onrender.com/api/employee/filter",
+          true
+        );
 
         // Set the request header for content-type
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -279,13 +283,13 @@
             if (annotatorDetails.annotatorRole === "primary") {
               xhrAnnotations.open(
                 "POST",
-                `http://localhost:3000/api/annotations/filter?page=${pageNumber}`,
+                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
                 true
               );
             } else {
               xhrAnnotations.open(
                 "GET",
-                `http://localhost:3000/api/annotations/?page=${pageNumber}`,
+                `https://rmcopypastetoolbackend.onrender.com/api/annotations/?page=${pageNumber}`,
                 true
               );
             }

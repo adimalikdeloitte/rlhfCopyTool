@@ -136,9 +136,12 @@ function openAnnotationDetails(annotationId) {
 }
 
 function deleteAnnotation(annotationId) {
-  fetch(`http://localhost:3000/api/annotations/${annotationId}`, {
-    method: "DELETE",
-  })
+  fetch(
+    `https://rmcopypastetoolbackend.onrender.com/api/annotations/${annotationId}`,
+    {
+      method: "DELETE",
+    }
+  )
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -662,7 +665,11 @@ $(document).ready(function () {
     var xhr = new XMLHttpRequest();
 
     // Configure the request type, URL, and asynchronous flag
-    xhr.open("POST", "http://localhost:3000/api/employee/login", true);
+    xhr.open(
+      "POST",
+      "https://rmcopypastetoolbackend.onrender.com/api/employee/login",
+      true
+    );
 
     // Set the request header for content-type
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -1015,7 +1022,7 @@ if (view !== null) {
 
 if (_id != null) {
   showSuccessAlertCreateAnnotation("Loading annotation...");
-  fetch(`http://localhost:3000/api/annotations/${_id}`, {
+  fetch(`https://rmcopypastetoolbackend.onrender.com/api/annotations/${_id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -1196,7 +1203,7 @@ if (_id != null) {
         // Configure the request type, URL, and asynchronous flag
         xhrReviews.open(
           "POST",
-          "http://localhost:3000/api/annotations/filter",
+          "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
           true
         );
 
@@ -1654,7 +1661,7 @@ function submitAnnotation() {
     // Send POST request
 
     fetch(
-      `http://localhost:3000/api/annotations/${endpoint}`,
+      `https://rmcopypastetoolbackend.onrender.com/api/annotations/${endpoint}`,
 
       {
         method,
