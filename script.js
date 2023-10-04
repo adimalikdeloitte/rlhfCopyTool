@@ -136,14 +136,9 @@ function openAnnotationDetails(annotationId) {
 }
 
 function deleteAnnotation(annotationId) {
-  console.log(annotationId);
-
-  fetch(
-    `https://rmcopypastetoolbackend.onrender.com/api/annotations/${annotationId}`,
-    {
-      method: "DELETE",
-    }
-  )
+  fetch(`http://localhost:3000/api/annotations/${annotationId}`, {
+    method: "DELETE",
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -151,19 +146,21 @@ function deleteAnnotation(annotationId) {
       return response.json();
     })
     .then((data) => {
-      console.log(data);
       showSuccessAlertDashboard("Annotation deleted successfully !");
       setTimeout(() => {
         window.location.href = "/dashboard.html?pageNumber=1";
       }, 3000);
     })
     .catch((error) => {
-      console.log(
+      showFailAlertDashboard(
         "There was a problem with the fetch operation:",
         error.message
       );
     });
 }
+
+const nonRejectedItems = document.querySelectorAll(".nonRejectedItems");
+const rejectedItems = document.querySelectorAll(".rejectedItems");
 
 $(document).ready(function () {
   // activate multi-select for reasoning
@@ -392,6 +389,68 @@ $(document).ready(function () {
   $("#justificationReasonYesCompletionCQ6").next(".btn-group").hide();
   $("#justificationReasonNoCompletionCQ6").next(".btn-group").hide();
 
+  $("#rejectionReasonDropdown").multiselect({
+    includeSelectAllOption: true,
+    buttonText: function (options, select) {
+      if (options.length === 0) {
+        return "None selected";
+      } else if (options.length > 0) {
+        return options.length + " selected";
+      }
+    },
+  });
+
+  // listen for rejection button
+  // Select all radio buttons with the name "rejected"
+  const rejectedMcq = document.querySelectorAll(
+    'input[type="radio"][name="rejected"]'
+  );
+
+  rejectedItems.forEach((element) => {
+    element.style.display = "none";
+  });
+
+  // Loop through each radio button and add the event listener
+  rejectedMcq.forEach(function (radio) {
+    radio.addEventListener("change", function () {
+      if (this.checked) {
+        // Perform action based on the selected value
+        if (this.value === "true") {
+          console.log("Rejected");
+          document.getElementById("submitBtn").style.display = "inline-block";
+          document.getElementById("runChecksBtn").style.display = "none";
+          rejectedItems.forEach((element) => {
+            element.style.display = "block";
+          });
+          nonRejectedItems.forEach((element) => {
+            element.style.display = "none";
+          });
+
+          // if role is primary, don't show confirm rejection button
+          if (localStorage.getItem("annotatorRole") === "primary") {
+            document.getElementById("confirmRejectionContainer").style.display =
+              "none";
+          } else {
+            document.getElementById("confirmRejectionContainer").style.display =
+              "block";
+          }
+
+          // if role is secondary, show the confirm rejection button
+        } else if (this.value === "false") {
+          document.getElementById("runChecksBtn").style.display =
+            "inline-block";
+          console.log("Not Rejected");
+          rejectedItems.forEach((element) => {
+            element.style.display = "none";
+          });
+          nonRejectedItems.forEach((element) => {
+            element.style.display = "block";
+          });
+        }
+      }
+    });
+  });
+
   // fill options based on radio selected
   // Select all radio buttons with the name "mcq1A"
   const mcq1A = document.querySelectorAll('input[type="radio"][name="mcq1A"]');
@@ -603,11 +662,7 @@ $(document).ready(function () {
     var xhr = new XMLHttpRequest();
 
     // Configure the request type, URL, and asynchronous flag
-    xhr.open(
-      "POST",
-      "https://rmcopypastetoolbackend.onrender.com/api/employee/login",
-      true
-    );
+    xhr.open("POST", "http://localhost:3000/api/employee/login", true);
 
     // Set the request header for content-type
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -673,201 +728,222 @@ function checkEmpty() {
     emptyFields.push("Language");
   }
 
-  for (let i = 1; i <= 7; i++) {
-    if ($(`input[name="mcq${i}A"]:checked`).length <= 0) {
-      emptyFields.push(`MCQ ${i} of Completion A`);
-    }
-  }
-
-  // if ($("#rankingCompletionA").val() === "") {
-  //   emptyFields.push("Rating of Completion A");
-  // }
-
-  for (let i = 1; i <= 7; i++) {
-    if ($(`input[name="mcq${i}B"]:checked`).length <= 0) {
-      emptyFields.push(`MCQ ${i} of Completion B`);
-    }
-  }
-
-  // if ($("#rankingCompletionB").val() === "") {
-  //   emptyFields.push("Rating of Completion B");
-  // }
-
-  for (let i = 1; i <= 7; i++) {
-    if ($(`input[name="mcq${i}C"]:checked`).length <= 0) {
-      emptyFields.push(`MCQ ${i} of Completion C`);
-    }
-  }
-
-  // if ($("#rankingCompletionC").val() === "") {
-  //   emptyFields.push("Rating of Completion C");
-  // }
-
-  if ($("#ranking").val() === "") {
-    emptyFields.push("Ranking");
-  }
-
-  if ($("#reason").val() === "") {
-    emptyFields.push("Reason for Ranking");
-  }
-
   if ($(`input[name="rejected"]:checked`).length <= 0) {
     emptyFields.push("Rejection");
   }
 
-  // selected yes for Q1 A
-  if (document.querySelector('input[name="mcq1A"]:checked')?.value === "1") {
-    if ($("#completionAJustificationQ1").val() === "") {
-      emptyFields.push("Completion A Q1 Justification URL");
-    }
-
-    if ($("#justificationReasonYesCompletionAQ1").val().join(", ") === "") {
-      emptyFields.push("Completion A Q1 Justification Reasons");
-    }
+  if (document.getElementById("completionA").value === "") {
+    emptyFields.push("Completion A text");
   }
 
-  // selected no for Q1 A
-  if (document.querySelector('input[name="mcq1A"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionAQ1").val().join(", ") === "") {
-      emptyFields.push("Completion A Q1 Justification Reasons");
-    }
+  if (document.getElementById("completionB").value === "") {
+    emptyFields.push("Completion B text");
   }
 
-  // selected yes for Q2 A
-  if (document.querySelector('input[name="mcq2A"]:checked')?.value === "1") {
-    if ($("#completionAJustificationQ2").val() === "") {
-      emptyFields.push(
-        "Completion A Q2 Justification OUTPUT/ERROR not provided"
-      );
-    }
-
-    if ($("#justificationReasonYesCompletionAQ2").val().join(", ") === "") {
-      emptyFields.push("Completion A Q2 Justification Reasons");
-    }
+  if (document.getElementById("completionC").value === "") {
+    emptyFields.push("Completion C text");
   }
 
-  // selected no for Q2 A
-  if (document.querySelector('input[name="mcq2A"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionAQ2").val().join(", ") === "") {
-      emptyFields.push("Completion A Q2 Justification Reasons");
-    }
-  }
-
-  // selected yes for Q6 A
-  if (document.querySelector('input[name="mcq6A"]:checked')?.value === "1") {
-    if ($("#justificationReasonYesCompletionAQ6").val().join(", ") === "") {
-      emptyFields.push("Completion A Q6 Justification Reasons");
-    }
-  }
-
-  // selected no for Q6 A
-  if (document.querySelector('input[name="mcq6A"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionAQ6").val().join(", ") === "") {
-      emptyFields.push("Completion A Q6 Justification Reasons");
-    }
-  }
-
-  // selected yes for Q1 B
-  if (document.querySelector('input[name="mcq1B"]:checked')?.value === "1") {
-    if ($("#completionBJustificationQ1").val() === "") {
-      emptyFields.push("Completion B Q1 Justification URL");
+  if (
+    document.querySelector('input[name="rejected"]:checked')?.value === "false"
+  ) {
+    for (let i = 1; i <= 7; i++) {
+      if ($(`input[name="mcq${i}A"]:checked`).length <= 0) {
+        emptyFields.push(`MCQ ${i} of Completion A`);
+      }
     }
 
-    if ($("#justificationReasonYesCompletionBQ1").val().join(", ") === "") {
-      emptyFields.push("Completion B Q1 Justification Reasons");
-    }
-  }
-
-  // selected no for Q1 B
-  if (document.querySelector('input[name="mcq1B"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionBQ1").val().join(", ") === "") {
-      emptyFields.push("Completion B Q1 Justification Reasons");
-    }
-  }
-
-  // selected yes for Q2 B
-  if (document.querySelector('input[name="mcq2B"]:checked')?.value === "1") {
-    if ($("#completionBJustificationQ2").val() === "") {
-      emptyFields.push(
-        "Completion B Q2 Justification OUTPUT/ERROR not provided"
-      );
+    for (let i = 1; i <= 7; i++) {
+      if ($(`input[name="mcq${i}B"]:checked`).length <= 0) {
+        emptyFields.push(`MCQ ${i} of Completion B`);
+      }
     }
 
-    if ($("#justificationReasonYesCompletionBQ2").val().join(", ") === "") {
-      emptyFields.push("Completion B Q2 Justification Reasons");
-    }
-  }
-
-  // selected no for Q2 B
-  if (document.querySelector('input[name="mcq2B"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionBQ2").val().join(", ") === "") {
-      emptyFields.push("Completion B Q2 Justification Reasons");
-    }
-  }
-
-  // selected yes for Q6 B
-  if (document.querySelector('input[name="mcq6B"]:checked')?.value === "1") {
-    if ($("#justificationReasonYesCompletionBQ6").val().join(", ") === "") {
-      emptyFields.push("Completion B Q6 Justification Reasons");
-    }
-  }
-
-  // selected no for Q6 B
-  if (document.querySelector('input[name="mcq6B"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionBQ6").val().join(", ") === "") {
-      emptyFields.push("Completion B Q6 Justification Reasons");
-    }
-  }
-
-  // selected yes for Q1 C
-  if (document.querySelector('input[name="mcq1C"]:checked')?.value === "1") {
-    if ($("#completionCJustificationQ1").val() === "") {
-      emptyFields.push("Completion C Q1 Justification URL");
+    for (let i = 1; i <= 7; i++) {
+      if ($(`input[name="mcq${i}C"]:checked`).length <= 0) {
+        emptyFields.push(`MCQ ${i} of Completion C`);
+      }
     }
 
-    if ($("#justificationReasonYesCompletionCQ1").val().join(", ") === "") {
-      emptyFields.push("Completion C Q1 Justification Reasons");
-    }
-  }
-
-  // selected no for Q1 C
-  if (document.querySelector('input[name="mcq1C"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionCQ1").val().join(", ") === "") {
-      emptyFields.push("Completion C Q1 Justification Reasons");
-    }
-  }
-
-  // selected yes for Q2 C
-  if (document.querySelector('input[name="mcq2C"]:checked')?.value === "1") {
-    if ($("#completionCJustificationQ2").val() === "") {
-      emptyFields.push(
-        "Completion C Q2 Justification OUTPUT/ERROR not provided"
-      );
+    if ($("#ranking").val() === "") {
+      emptyFields.push("Ranking");
     }
 
-    if ($("#justificationReasonYesCompletionCQ2").val().join(", ") === "") {
-      emptyFields.push("Completion C Q2 Justification Reasons");
+    if ($("#reason").val() === "") {
+      emptyFields.push("Reason for Ranking");
     }
-  }
 
-  // selected no for Q2 C
-  if (document.querySelector('input[name="mcq2C"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionCQ2").val().join(", ") === "") {
-      emptyFields.push("Completion C Q2 Justification Reasons");
+    // selected yes for Q1 A
+    if (document.querySelector('input[name="mcq1A"]:checked')?.value === "1") {
+      if ($("#completionAJustificationQ1").val() === "") {
+        emptyFields.push("Completion A Q1 Justification URL");
+      }
+
+      if ($("#justificationReasonYesCompletionAQ1").val().join(", ") === "") {
+        emptyFields.push("Completion A Q1 Justification Reasons");
+      }
     }
-  }
 
-  // selected yes for Q6 C
-  if (document.querySelector('input[name="mcq6C"]:checked')?.value === "1") {
-    if ($("#justificationReasonYesCompletionCQ6").val().join(", ") === "") {
-      emptyFields.push("Completion C Q6 Justification Reasons");
+    // selected no for Q1 A
+    if (document.querySelector('input[name="mcq1A"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionAQ1").val().join(", ") === "") {
+        emptyFields.push("Completion A Q1 Justification Reasons");
+      }
     }
-  }
 
-  // selected no for Q6 C
-  if (document.querySelector('input[name="mcq6C"]:checked')?.value === "2") {
-    if ($("#justificationReasonNoCompletionCQ6").val().join(", ") === "") {
-      emptyFields.push("Completion C Q6 Justification Reasons");
+    // selected yes for Q2 A
+    if (document.querySelector('input[name="mcq2A"]:checked')?.value === "1") {
+      if ($("#completionAJustificationQ2").val() === "") {
+        emptyFields.push(
+          "Completion A Q2 Justification OUTPUT/ERROR not provided"
+        );
+      }
+
+      if ($("#justificationReasonYesCompletionAQ2").val().join(", ") === "") {
+        emptyFields.push("Completion A Q2 Justification Reasons");
+      }
+    }
+
+    // selected no for Q2 A
+    if (document.querySelector('input[name="mcq2A"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionAQ2").val().join(", ") === "") {
+        emptyFields.push("Completion A Q2 Justification Reasons");
+      }
+    }
+
+    // selected yes for Q6 A
+    if (document.querySelector('input[name="mcq6A"]:checked')?.value === "1") {
+      if ($("#justificationReasonYesCompletionAQ6").val().join(", ") === "") {
+        emptyFields.push("Completion A Q6 Justification Reasons");
+      }
+    }
+
+    // selected no for Q6 A
+    if (document.querySelector('input[name="mcq6A"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionAQ6").val().join(", ") === "") {
+        emptyFields.push("Completion A Q6 Justification Reasons");
+      }
+    }
+
+    // selected yes for Q1 B
+    if (document.querySelector('input[name="mcq1B"]:checked')?.value === "1") {
+      if ($("#completionBJustificationQ1").val() === "") {
+        emptyFields.push("Completion B Q1 Justification URL");
+      }
+
+      if ($("#justificationReasonYesCompletionBQ1").val().join(", ") === "") {
+        emptyFields.push("Completion B Q1 Justification Reasons");
+      }
+    }
+
+    // selected no for Q1 B
+    if (document.querySelector('input[name="mcq1B"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionBQ1").val().join(", ") === "") {
+        emptyFields.push("Completion B Q1 Justification Reasons");
+      }
+    }
+
+    // selected yes for Q2 B
+    if (document.querySelector('input[name="mcq2B"]:checked')?.value === "1") {
+      if ($("#completionBJustificationQ2").val() === "") {
+        emptyFields.push(
+          "Completion B Q2 Justification OUTPUT/ERROR not provided"
+        );
+      }
+
+      if ($("#justificationReasonYesCompletionBQ2").val().join(", ") === "") {
+        emptyFields.push("Completion B Q2 Justification Reasons");
+      }
+    }
+
+    // selected no for Q2 B
+    if (document.querySelector('input[name="mcq2B"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionBQ2").val().join(", ") === "") {
+        emptyFields.push("Completion B Q2 Justification Reasons");
+      }
+    }
+
+    // selected yes for Q6 B
+    if (document.querySelector('input[name="mcq6B"]:checked')?.value === "1") {
+      if ($("#justificationReasonYesCompletionBQ6").val().join(", ") === "") {
+        emptyFields.push("Completion B Q6 Justification Reasons");
+      }
+    }
+
+    // selected no for Q6 B
+    if (document.querySelector('input[name="mcq6B"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionBQ6").val().join(", ") === "") {
+        emptyFields.push("Completion B Q6 Justification Reasons");
+      }
+    }
+
+    // selected yes for Q1 C
+    if (document.querySelector('input[name="mcq1C"]:checked')?.value === "1") {
+      if ($("#completionCJustificationQ1").val() === "") {
+        emptyFields.push("Completion C Q1 Justification URL");
+      }
+
+      if ($("#justificationReasonYesCompletionCQ1").val().join(", ") === "") {
+        emptyFields.push("Completion C Q1 Justification Reasons");
+      }
+    }
+
+    // selected no for Q1 C
+    if (document.querySelector('input[name="mcq1C"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionCQ1").val().join(", ") === "") {
+        emptyFields.push("Completion C Q1 Justification Reasons");
+      }
+    }
+
+    // selected yes for Q2 C
+    if (document.querySelector('input[name="mcq2C"]:checked')?.value === "1") {
+      if ($("#completionCJustificationQ2").val() === "") {
+        emptyFields.push(
+          "Completion C Q2 Justification OUTPUT/ERROR not provided"
+        );
+      }
+
+      if ($("#justificationReasonYesCompletionCQ2").val().join(", ") === "") {
+        emptyFields.push("Completion C Q2 Justification Reasons");
+      }
+    }
+
+    // selected no for Q2 C
+    if (document.querySelector('input[name="mcq2C"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionCQ2").val().join(", ") === "") {
+        emptyFields.push("Completion C Q2 Justification Reasons");
+      }
+    }
+
+    // selected yes for Q6 C
+    if (document.querySelector('input[name="mcq6C"]:checked')?.value === "1") {
+      if ($("#justificationReasonYesCompletionCQ6").val().join(", ") === "") {
+        emptyFields.push("Completion C Q6 Justification Reasons");
+      }
+    }
+
+    // selected no for Q6 C
+    if (document.querySelector('input[name="mcq6C"]:checked')?.value === "2") {
+      if ($("#justificationReasonNoCompletionCQ6").val().join(", ") === "") {
+        emptyFields.push("Completion C Q6 Justification Reasons");
+      }
+    }
+  } else if (
+    document.querySelector('input[name="rejected"]:checked')?.value === "true"
+  ) {
+    if ($("#rejectionReasonDropdown").val().join(", ") === "") {
+      emptyFields.push("Rejection reason");
+    }
+
+    if (localStorage.getItem("annotatorRole") !== "primary") {
+      if (
+        document.querySelector('input[name="confirmRejection"]:checked')
+          ?.value !== "true" ||
+        document.querySelector('input[name="confirmRejection"]:checked')
+          ?.value !== "false"
+      ) {
+        emptyFields.push("Confirm the rejection");
+      }
     }
   }
 
@@ -939,7 +1015,7 @@ if (view !== null) {
 
 if (_id != null) {
   showSuccessAlertCreateAnnotation("Loading annotation...");
-  fetch(`https://rmcopypastetoolbackend.onrender.com/api/annotations/${_id}`, {
+  fetch(`http://localhost:3000/api/annotations/${_id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -983,101 +1059,131 @@ if (_id != null) {
           document.getElementById(`completion${alpha}`).value =
             comp.completionText;
 
-          // fill main mcq questions for Completions
-          Object.keys(comp.completionQuestions).map((Key, qidx) => {
+          if (ann.rejected === false) {
+            // fill main mcq questions for Completions
+            Object.keys(comp.completionQuestions).map((Key, qidx) => {
+              document.querySelector(
+                `input[name="mcq${qidx + 1}${alpha}"][value="${
+                  comp.completionQuestions[Key]
+                }"]`
+              ).checked = true;
+            });
+
+            // fill Q1 justification URL
+            document.getElementById(`completion${alpha}JustificationQ1`).value =
+              comp.completionReasoningURLs[`urlForQ1${alpha}`];
+
+            // fill Q2 justification output / errors
+            document.getElementById(`completion${alpha}JustificationQ2`).value =
+              comp.completionReasoningURLs[`urlForQ2${alpha}`];
+
+            if (Object.keys(comp.completionReasoning).length === 3) {
+              let ques = ["1", "2", "6"];
+
+              Object.keys(comp.completionReasoning).map((k, jidx) => {
+                let i = ques[jidx],
+                  selectElement;
+                if (comp.completionQuestions[`Q${i}`] === "1") {
+                  // make the selections visible
+                  $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                    .next(".btn-group")
+                    .show();
+                  let arr = comp.completionReasoning[k].split(", ");
+
+                  // pre select the choices
+                  arr.map((reason) => {
+                    $(
+                      `#justificationReasonYesCompletion${alpha}Q${i}`
+                    ).multiselect("select", reason);
+                  });
+                } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                  // hide the URL boxes
+                  $(`#completion${alpha}JustificationQ${i}`).hide();
+                  // make the selections visible
+                  $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                    .next(".btn-group")
+                    .show();
+                  let arr = comp.completionReasoning[k].split(", ");
+
+                  // pre select the choices
+                  arr.map((reason) => {
+                    $(
+                      `#justificationReasonNoCompletion${alpha}Q${i}`
+                    ).multiselect("select", reason);
+                  });
+                } else {
+                  // return;
+                }
+              });
+            } else if (Object.keys(comp.completionReasoning).length === 2) {
+              let ques = ["1", "2"];
+
+              Object.keys(comp.completionReasoning).map((k, jidx) => {
+                let i = ques[jidx],
+                  selectElement;
+                if (comp.completionQuestions[`Q${i}`] === "1") {
+                  // make the selections visible
+                  $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                    .next(".btn-group")
+                    .show();
+                  let arr = comp.completionReasoning[k].split(", ");
+
+                  // pre select the choices
+                  arr.map((reason) => {
+                    $(
+                      `#justificationReasonYesCompletion${alpha}Q${i}`
+                    ).multiselect("select", reason);
+                  });
+                } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                  // hide the URL boxes
+                  $(`#completion${alpha}JustificationQ${i}`).hide();
+                  // make the selections visible
+                  $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                    .next(".btn-group")
+                    .show();
+                  let arr = comp.completionReasoning[k].split(", ");
+
+                  // pre select the choices
+                  arr.map((reason) => {
+                    $(
+                      `#justificationReasonNoCompletion${alpha}Q${i}`
+                    ).multiselect("select", reason);
+                  });
+                } else {
+                  // return;
+                }
+              });
+            }
+          } else {
+            document.getElementById("runChecksBtn").style.display = "none";
+            if (
+              view !== "true" &&
+              localStorage.getItem("annotatorRole") === "primary"
+            ) {
+              document.getElementById("submitBtn").style.display = "none";
+            } else {
+              document.getElementById("submitBtn").style.display =
+                "inline-block";
+            }
+            rejectedItems.forEach((element) => {
+              element.style.display = "block";
+            });
+            nonRejectedItems.forEach((element) => {
+              element.style.display = "none";
+            });
+
+            // make the selections visible
+            $(`#rejectionReasonDropdown`).next(".btn-group").show();
+            let arr = ann?.reasonForRejection?.split(", ");
+
+            // pre select the choices
+            arr.map((reason) => {
+              $(`#rejectionReasonDropdown`).multiselect("select", reason);
+            });
+
             document.querySelector(
-              `input[name="mcq${qidx + 1}${alpha}"][value="${
-                comp.completionQuestions[Key]
-              }"]`
+              `input[name="confirmRejection"][value="${ann?.rejectionConfirmedByReviewer}"]`
             ).checked = true;
-          });
-
-          // fill Q1 justification URL
-          document.getElementById(`completion${alpha}JustificationQ1`).value =
-            comp.completionReasoningURLs[`urlForQ1${alpha}`];
-
-          // fill Q2 justification output / errors
-          document.getElementById(`completion${alpha}JustificationQ2`).value =
-            comp.completionReasoningURLs[`urlForQ2${alpha}`];
-
-          if (Object.keys(comp.completionReasoning).length === 3) {
-            let ques = ["1", "2", "6"];
-
-            Object.keys(comp.completionReasoning).map((k, jidx) => {
-              let i = ques[jidx],
-                selectElement;
-              if (comp.completionQuestions[`Q${i}`] === "1") {
-                // make the selections visible
-                console.log(`#justificationReasonYesCompletion${alpha}Q${i}`);
-                $(`#justificationReasonYesCompletion${alpha}Q${i}`)
-                  .next(".btn-group")
-                  .show();
-                let arr = comp.completionReasoning[k].split(", ");
-
-                // pre select the choices
-                arr.map((reason) => {
-                  $(
-                    `#justificationReasonYesCompletion${alpha}Q${i}`
-                  ).multiselect("select", reason);
-                });
-              } else if (comp.completionQuestions[`Q${i}`] === "2") {
-                // hide the URL boxes
-                $(`#completion${alpha}JustificationQ${i}`).hide();
-                // make the selections visible
-                $(`#justificationReasonNoCompletion${alpha}Q${i}`)
-                  .next(".btn-group")
-                  .show();
-                let arr = comp.completionReasoning[k].split(", ");
-
-                // pre select the choices
-                arr.map((reason) => {
-                  $(
-                    `#justificationReasonNoCompletion${alpha}Q${i}`
-                  ).multiselect("select", reason);
-                });
-              } else {
-                // return;
-              }
-            });
-          } else if (Object.keys(comp.completionReasoning).length === 2) {
-            let ques = ["1", "2"];
-
-            Object.keys(comp.completionReasoning).map((k, jidx) => {
-              let i = ques[jidx],
-                selectElement;
-              if (comp.completionQuestions[`Q${i}`] === "1") {
-                // make the selections visible
-                console.log(`#justificationReasonYesCompletion${alpha}Q${i}`);
-                $(`#justificationReasonYesCompletion${alpha}Q${i}`)
-                  .next(".btn-group")
-                  .show();
-                let arr = comp.completionReasoning[k].split(", ");
-
-                // pre select the choices
-                arr.map((reason) => {
-                  $(
-                    `#justificationReasonYesCompletion${alpha}Q${i}`
-                  ).multiselect("select", reason);
-                });
-              } else if (comp.completionQuestions[`Q${i}`] === "2") {
-                // hide the URL boxes
-                $(`#completion${alpha}JustificationQ${i}`).hide();
-                // make the selections visible
-                $(`#justificationReasonNoCompletion${alpha}Q${i}`)
-                  .next(".btn-group")
-                  .show();
-                let arr = comp.completionReasoning[k].split(", ");
-
-                // pre select the choices
-                arr.map((reason) => {
-                  $(
-                    `#justificationReasonNoCompletion${alpha}Q${i}`
-                  ).multiselect("select", reason);
-                });
-              } else {
-                // return;
-              }
-            });
           }
         });
 
@@ -1090,7 +1196,7 @@ if (_id != null) {
         // Configure the request type, URL, and asynchronous flag
         xhrReviews.open(
           "POST",
-          "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
+          "http://localhost:3000/api/annotations/filter",
           true
         );
 
@@ -1208,167 +1314,328 @@ function submitAnnotation() {
       reasonForQ6B,
       reasonForQ1C,
       reasonForQ2C,
-      reasonForQ6C;
+      reasonForQ6C,
+      formData,
+      completionA,
+      completionB,
+      completionC;
 
-    // reasoning completion A
-    if (document.querySelector('input[name="mcq1A"]:checked').value === "1") {
-      reasonForQ1A = $("#justificationReasonYesCompletionAQ1").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq1A"]:checked').value === "2"
+    if (
+      document.querySelector('input[name="rejected"]:checked').value === "false"
     ) {
-      reasonForQ1A = $("#justificationReasonNoCompletionAQ1").val().join(", ");
-    }
+      console.log("file not rejected");
+      // file not rejected, submit annotations accordingly
+      // reasoning completion A
+      if (document.querySelector('input[name="mcq1A"]:checked').value === "1") {
+        reasonForQ1A = $("#justificationReasonYesCompletionAQ1")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq1A"]:checked').value === "2"
+      ) {
+        reasonForQ1A = $("#justificationReasonNoCompletionAQ1")
+          .val()
+          .join(", ");
+      }
 
-    if (document.querySelector('input[name="mcq2A"]:checked').value === "1") {
-      reasonForQ2A = $("#justificationReasonYesCompletionAQ2").val().join(", ");
+      if (document.querySelector('input[name="mcq2A"]:checked').value === "1") {
+        reasonForQ2A = $("#justificationReasonYesCompletionAQ2")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq2A"]:checked').value === "2"
+      ) {
+        reasonForQ2A = $("#justificationReasonNoCompletionAQ2")
+          .val()
+          .join(", ");
+      }
+
+      if (document.querySelector('input[name="mcq6A"]:checked').value === "1") {
+        reasonForQ6A = $("#justificationReasonYesCompletionAQ6")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq6A"]:checked').value === "2"
+      ) {
+        reasonForQ6A = $("#justificationReasonNoCompletionAQ6")
+          .val()
+          .join(", ");
+      }
+
+      // reasoning completion B
+      if (document.querySelector('input[name="mcq1B"]:checked').value === "1") {
+        reasonForQ1B = $("#justificationReasonYesCompletionBQ1")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq1B"]:checked').value === "2"
+      ) {
+        reasonForQ1B = $("#justificationReasonNoCompletionBQ1")
+          .val()
+          .join(", ");
+      }
+
+      if (document.querySelector('input[name="mcq2B"]:checked').value === "1") {
+        reasonForQ2B = $("#justificationReasonYesCompletionBQ2")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq2B"]:checked').value === "2"
+      ) {
+        reasonForQ2B = $("#justificationReasonNoCompletionBQ2")
+          .val()
+          .join(", ");
+      }
+
+      if (document.querySelector('input[name="mcq6B"]:checked').value === "1") {
+        reasonForQ6B = $("#justificationReasonYesCompletionBQ6")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq6B"]:checked').value === "2"
+      ) {
+        reasonForQ6B = $("#justificationReasonNoCompletionBQ6")
+          .val()
+          .join(", ");
+      }
+
+      // reasoning completion C
+      if (document.querySelector('input[name="mcq1C"]:checked').value === "1") {
+        reasonForQ1C = $("#justificationReasonYesCompletionCQ1")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq1C"]:checked').value === "2"
+      ) {
+        reasonForQ1C = $("#justificationReasonNoCompletionCQ1")
+          .val()
+          .join(", ");
+      }
+
+      if (document.querySelector('input[name="mcq2C"]:checked').value === "1") {
+        reasonForQ2C = $("#justificationReasonYesCompletionCQ2")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq2C"]:checked').value === "2"
+      ) {
+        reasonForQ2C = $("#justificationReasonNoCompletionCQ2")
+          .val()
+          .join(", ");
+      }
+
+      if (document.querySelector('input[name="mcq6C"]:checked').value === "1") {
+        reasonForQ6C = $("#justificationReasonYesCompletionCQ6")
+          .val()
+          .join(", ");
+      } else if (
+        document.querySelector('input[name="mcq6C"]:checked').value === "2"
+      ) {
+        reasonForQ6C = $("#justificationReasonNoCompletionCQ6")
+          .val()
+          .join(", ");
+      }
+
+      completionA = {
+        completionText: document.getElementById("completionA").value,
+        completionQuestions: {
+          Q1: document.querySelector('input[name="mcq1A"]:checked').value,
+          Q2: document.querySelector('input[name="mcq2A"]:checked').value,
+          Q3: document.querySelector('input[name="mcq3A"]:checked').value,
+          Q4: document.querySelector('input[name="mcq4A"]:checked').value,
+          Q5: document.querySelector('input[name="mcq5A"]:checked').value,
+          Q6: document.querySelector('input[name="mcq6A"]:checked').value,
+          // rank: document.getElementById("rankingCompletionA").value,
+          Q7: document.querySelector('input[name="mcq7A"]:checked').value,
+        },
+        completionReasoning: {
+          reasonForQ1A,
+          reasonForQ2A,
+          reasonForQ6A,
+        },
+        completionReasoningURLs: {
+          urlForQ1A: $("#completionAJustificationQ1").val(),
+          urlForQ2A: $("#completionAJustificationQ2").val(),
+        },
+      };
+
+      completionB = {
+        completionText: document.getElementById("completionB").value,
+        completionQuestions: {
+          Q1: document.querySelector('input[name="mcq1B"]:checked').value,
+          Q2: document.querySelector('input[name="mcq2B"]:checked').value,
+          Q3: document.querySelector('input[name="mcq3B"]:checked').value,
+          Q4: document.querySelector('input[name="mcq4B"]:checked').value,
+          Q5: document.querySelector('input[name="mcq5B"]:checked').value,
+          Q6: document.querySelector('input[name="mcq6B"]:checked').value,
+          // rank: document.getElementById("rankingCompletionB").value,
+          Q7: document.querySelector('input[name="mcq7B"]:checked').value,
+        },
+        completionReasoning: {
+          reasonForQ1B,
+          reasonForQ2B,
+          reasonForQ6B,
+        },
+        completionReasoningURLs: {
+          urlForQ1B: $("#completionBJustificationQ1").val(),
+          urlForQ2B: $("#completionBJustificationQ2").val(),
+        },
+      };
+
+      completionC = {
+        completionText: document.getElementById("completionC").value,
+        completionQuestions: {
+          Q1: document.querySelector('input[name="mcq1C"]:checked').value,
+          Q2: document.querySelector('input[name="mcq2C"]:checked').value,
+          Q3: document.querySelector('input[name="mcq3C"]:checked').value,
+          Q4: document.querySelector('input[name="mcq4C"]:checked').value,
+          Q5: document.querySelector('input[name="mcq5C"]:checked').value,
+          Q6: document.querySelector('input[name="mcq6C"]:checked').value,
+          // rank: document.getElementById("rankingCompletionC").value,
+          Q7: document.querySelector('input[name="mcq7C"]:checked').value,
+        },
+        completionReasoning: {
+          reasonForQ1C,
+          reasonForQ2C,
+          reasonForQ6C,
+        },
+        completionReasoningURLs: {
+          urlForQ1C: $("#completionCJustificationQ1").val(),
+          urlForQ2C: $("#completionCJustificationQ2").val(),
+        },
+      };
+
+      // Collect form data
+      formData = {
+        date: new Date(),
+        annotatorEmail: annotatorEmail,
+        language: document.querySelector('input[name="language"]:checked')
+          .value,
+        batchNumber: document.getElementById("batchNumber").value,
+        prompt: document.getElementById("prompt").value,
+        taskType: document.querySelector('input[name="taskType"]:checked')
+          .value,
+        completions: [completionA, completionB, completionC],
+        ranking: document.getElementById("ranking").value,
+        reasoning: document.getElementById("reason").value,
+        rejected:
+          document.querySelector('input[name="rejected"]:checked').value ===
+          "true",
+      };
     } else if (
-      document.querySelector('input[name="mcq2A"]:checked').value === "2"
+      document.querySelector('input[name="rejected"]:checked').value === "true"
     ) {
-      reasonForQ2A = $("#justificationReasonNoCompletionAQ2").val().join(", ");
+      completionA = {
+        completionText: document.getElementById("completionA").value,
+        completionQuestions: {
+          Q1: null,
+          Q2: null,
+          Q3: null,
+          Q4: null,
+          Q5: null,
+          Q6: null,
+          // rank: document.getElementById("rankingCompletionA").value,
+          Q7: null,
+        },
+        completionReasoning: {
+          reasonForQ1A,
+          reasonForQ2A,
+          reasonForQ6A,
+        },
+        completionReasoningURLs: {
+          urlForQ1A: "",
+          urlForQ2A: "",
+        },
+      };
+
+      completionB = {
+        completionText: document.getElementById("completionB").value,
+        completionQuestions: {
+          Q1: null,
+          Q2: null,
+          Q3: null,
+          Q4: null,
+          Q5: null,
+          Q6: null,
+          // rank: document.getElementById("rankingCompletionB").value,
+          Q7: null,
+        },
+        completionReasoning: {
+          reasonForQ1B,
+          reasonForQ2B,
+          reasonForQ6B,
+        },
+        completionReasoningURLs: {
+          urlForQ1B: "",
+          urlForQ2B: "",
+        },
+      };
+
+      completionC = {
+        completionText: document.getElementById("completionC").value,
+        completionQuestions: {
+          Q1: null,
+          Q2: null,
+          Q3: null,
+          Q4: null,
+          Q5: null,
+          Q6: null,
+          // rank: document.getElementById("rankingCompletionC").value,
+          Q7: null,
+        },
+        completionReasoning: {
+          reasonForQ1C,
+          reasonForQ2C,
+          reasonForQ6C,
+        },
+        completionReasoningURLs: {
+          urlForQ1C: "",
+          urlForQ2C: "",
+        },
+      };
+
+      // Collect form data
+      if (localStorage.getItem("annotatorRole") === "primary") {
+        formData = {
+          date: new Date(),
+          annotatorEmail: annotatorEmail,
+          language: document.querySelector('input[name="language"]:checked')
+            .value,
+          batchNumber: document.getElementById("batchNumber").value,
+          prompt: document.getElementById("prompt").value,
+          taskType: document.querySelector('input[name="taskType"]:checked')
+            .value,
+          completions: [completionA, completionB, completionC],
+          ranking: document.getElementById("ranking").value,
+          reasoning: document.getElementById("reason").value,
+          rejected:
+            document.querySelector('input[name="rejected"]:checked').value ===
+            "true",
+          reasonForRejection: $("#rejectionReasonDropdown").val().join(", "),
+        };
+      } else {
+        formData = {
+          date: new Date(),
+          annotatorEmail: annotatorEmail,
+          language: document.querySelector('input[name="language"]:checked')
+            .value,
+          batchNumber: document.getElementById("batchNumber").value,
+          prompt: document.getElementById("prompt").value,
+          taskType: document.querySelector('input[name="taskType"]:checked')
+            .value,
+          completions: [completionA, completionB, completionC],
+          ranking: document.getElementById("ranking").value,
+          reasoning: document.getElementById("reason").value,
+          rejected:
+            document.querySelector('input[name="rejected"]:checked').value ===
+            "true",
+          reasonForRejection: $("#rejectionReasonDropdown").val().join(", "),
+          rejectionConfirmedByReviewer: document.querySelector(
+            'input[name="confirmRejection"]:checked'
+          ).value,
+        };
+      }
     }
-
-    if (document.querySelector('input[name="mcq6A"]:checked').value === "1") {
-      reasonForQ6A = $("#justificationReasonYesCompletionAQ6").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq6A"]:checked').value === "2"
-    ) {
-      reasonForQ6A = $("#justificationReasonNoCompletionAQ6").val().join(", ");
-    }
-
-    // reasoning completion B
-    if (document.querySelector('input[name="mcq1B"]:checked').value === "1") {
-      reasonForQ1B = $("#justificationReasonYesCompletionBQ1").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq1B"]:checked').value === "2"
-    ) {
-      reasonForQ1B = $("#justificationReasonNoCompletionBQ1").val().join(", ");
-    }
-
-    if (document.querySelector('input[name="mcq2B"]:checked').value === "1") {
-      reasonForQ2B = $("#justificationReasonYesCompletionBQ2").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq2B"]:checked').value === "2"
-    ) {
-      reasonForQ2B = $("#justificationReasonNoCompletionBQ2").val().join(", ");
-    }
-
-    if (document.querySelector('input[name="mcq6B"]:checked').value === "1") {
-      reasonForQ6B = $("#justificationReasonYesCompletionBQ6").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq6B"]:checked').value === "2"
-    ) {
-      reasonForQ6B = $("#justificationReasonNoCompletionBQ6").val().join(", ");
-    }
-
-    // reasoning completion C
-    if (document.querySelector('input[name="mcq1C"]:checked').value === "1") {
-      reasonForQ1C = $("#justificationReasonYesCompletionCQ1").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq1C"]:checked').value === "2"
-    ) {
-      reasonForQ1C = $("#justificationReasonNoCompletionCQ1").val().join(", ");
-    }
-
-    if (document.querySelector('input[name="mcq2C"]:checked').value === "1") {
-      reasonForQ2C = $("#justificationReasonYesCompletionCQ2").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq2C"]:checked').value === "2"
-    ) {
-      reasonForQ2C = $("#justificationReasonNoCompletionCQ2").val().join(", ");
-    }
-
-    if (document.querySelector('input[name="mcq6C"]:checked').value === "1") {
-      reasonForQ6C = $("#justificationReasonYesCompletionCQ6").val().join(", ");
-    } else if (
-      document.querySelector('input[name="mcq6C"]:checked').value === "2"
-    ) {
-      reasonForQ6C = $("#justificationReasonNoCompletionCQ6").val().join(", ");
-    }
-
-    const completionA = {
-      completionText: document.getElementById("completionA").value,
-      completionQuestions: {
-        Q1: document.querySelector('input[name="mcq1A"]:checked').value,
-        Q2: document.querySelector('input[name="mcq2A"]:checked').value,
-        Q3: document.querySelector('input[name="mcq3A"]:checked').value,
-        Q4: document.querySelector('input[name="mcq4A"]:checked').value,
-        Q5: document.querySelector('input[name="mcq5A"]:checked').value,
-        Q6: document.querySelector('input[name="mcq6A"]:checked').value,
-        // rank: document.getElementById("rankingCompletionA").value,
-        Q7: document.querySelector('input[name="mcq7A"]:checked').value,
-      },
-      completionReasoning: {
-        reasonForQ1A,
-        reasonForQ2A,
-        reasonForQ6A,
-      },
-      completionReasoningURLs: {
-        urlForQ1A: $("#completionAJustificationQ1").val(),
-        urlForQ2A: $("#completionAJustificationQ2").val(),
-      },
-    };
-
-    const completionB = {
-      completionText: document.getElementById("completionB").value,
-      completionQuestions: {
-        Q1: document.querySelector('input[name="mcq1B"]:checked').value,
-        Q2: document.querySelector('input[name="mcq2B"]:checked').value,
-        Q3: document.querySelector('input[name="mcq3B"]:checked').value,
-        Q4: document.querySelector('input[name="mcq4B"]:checked').value,
-        Q5: document.querySelector('input[name="mcq5B"]:checked').value,
-        Q6: document.querySelector('input[name="mcq6B"]:checked').value,
-        // rank: document.getElementById("rankingCompletionB").value,
-        Q7: document.querySelector('input[name="mcq7B"]:checked').value,
-      },
-      completionReasoning: {
-        reasonForQ1B,
-        reasonForQ2B,
-        reasonForQ6B,
-      },
-      completionReasoningURLs: {
-        urlForQ1B: $("#completionBJustificationQ1").val(),
-        urlForQ2B: $("#completionBJustificationQ2").val(),
-      },
-    };
-
-    const completionC = {
-      completionText: document.getElementById("completionC").value,
-      completionQuestions: {
-        Q1: document.querySelector('input[name="mcq1C"]:checked').value,
-        Q2: document.querySelector('input[name="mcq2C"]:checked').value,
-        Q3: document.querySelector('input[name="mcq3C"]:checked').value,
-        Q4: document.querySelector('input[name="mcq4C"]:checked').value,
-        Q5: document.querySelector('input[name="mcq5C"]:checked').value,
-        Q6: document.querySelector('input[name="mcq6C"]:checked').value,
-        // rank: document.getElementById("rankingCompletionC").value,
-        Q7: document.querySelector('input[name="mcq7C"]:checked').value,
-      },
-      completionReasoning: {
-        reasonForQ1C,
-        reasonForQ2C,
-        reasonForQ6C,
-      },
-      completionReasoningURLs: {
-        urlForQ1C: $("#completionCJustificationQ1").val(),
-        urlForQ2C: $("#completionCJustificationQ2").val(),
-      },
-    };
-
-    // Collect form data
-    let formData = {
-      date: new Date(),
-      annotatorEmail: annotatorEmail,
-      language: document.querySelector('input[name="language"]:checked').value,
-      batchNumber: document.getElementById("batchNumber").value,
-      prompt: document.getElementById("prompt").value,
-      taskType: document.querySelector('input[name="taskType"]:checked').value,
-      completions: [completionA, completionB, completionC],
-      ranking: document.getElementById("ranking").value,
-      reasoning: document.getElementById("reason").value,
-      rejected:
-        document.querySelector('input[name="rejected"]:checked').value ===
-        "true",
-    };
 
     let endpoint = "",
       method = "POST",
@@ -1387,7 +1654,7 @@ function submitAnnotation() {
     // Send POST request
 
     fetch(
-      `https://rmcopypastetoolbackend.onrender.com/api/annotations/${endpoint}`,
+      `http://localhost:3000/api/annotations/${endpoint}`,
 
       {
         method,

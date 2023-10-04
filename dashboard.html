@@ -225,11 +225,7 @@
         var xhr = new XMLHttpRequest();
 
         // Configure the request type, URL, and asynchronous flag
-        xhr.open(
-          "POST",
-          "https://rmcopypastetoolbackend.onrender.com/api/employee/filter",
-          true
-        );
+        xhr.open("POST", "http://localhost:3000/api/employee/filter", true);
 
         // Set the request header for content-type
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -253,6 +249,15 @@
 
             annotatorDetails = response.message[0];
 
+            if (response.message[0].annotatorRole === "tertiary") {
+              window.location.href = "./leader_dashboard.html";
+            }
+
+            localStorage.setItem(
+              "annotatorRole",
+              response.message[0]?.annotatorRole
+            );
+
             // annotation request start ------------------------------
             showSuccessAlertDashboard("Loading annotations ...");
             // Create a new instance of XMLHttpRequest
@@ -274,13 +279,13 @@
             if (annotatorDetails.annotatorRole === "primary") {
               xhrAnnotations.open(
                 "POST",
-                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+                `http://localhost:3000/api/annotations/filter?page=${pageNumber}`,
                 true
               );
             } else {
               xhrAnnotations.open(
                 "GET",
-                `https://rmcopypastetoolbackend.onrender.com/api/annotations/?page=${pageNumber}`,
+                `http://localhost:3000/api/annotations/?page=${pageNumber}`,
                 true
               );
             }

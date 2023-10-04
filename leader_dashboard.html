@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leader Dashboard</title>
+    <!-- Bootstrap CSS Link -->
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+
+  <body>
+    <div id="alertContainerDashboard" class="container mt-4"></div>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-6">
+          <h1>Leader Dashboard</h1>
+        </div>
+        <div class="col-6" style="text-align: right">
+          <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+      </div>
+
+      <!-- Annotator Info -->
+      <div class="card">
+        <div class="card-header">Annotator Information</div>
+        <div class="card-body">
+          <p><strong>Email:</strong> <span id="email">Loading ...</span></p>
+          <p><strong>Name:</strong> <span id="name">Loading ...</span></p>
+          <p>
+            <strong>Date of Joining:</strong>
+            <span id="joiningDate">Loading ...</span>
+          </p>
+          <p>
+            <strong>Designation:</strong>
+            <span id="designation">Loading ...</span>
+          </p>
+          <p><strong>Language:</strong> <span id="language">XXXX</span></p>
+          <p><strong>Role:</strong> <span id="role">Loading ...</span></p>
+        </div>
+      </div>
+
+      <!-- Annotations List -->
+      <div class="mt-4 row">
+        <div class="col-2">
+          <!-- Dropdown wrapper -->
+          <div class="dropdown">
+            <!-- Trigger button for dropdown -->
+            <button
+              class="btn btn-primary dropdown-toggle"
+              type="button"
+              id="filterDropdownMenuButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              Select Filter
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              class="dropdown-menu"
+              aria-labelledby="filterDropdownMenuButton"
+            >
+              <a class="dropdown-item" href="#">Annotation ID</a>
+              <a class="dropdown-item" href="#">Prompt</a>
+              <a class="dropdown-item" href="#">Batch Number</a>
+              <a class="dropdown-item" href="#">Annotation Date</a>
+              <!-- Add more options as needed -->
+            </div>
+          </div>
+        </div>
+        <div class="col-8">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Search functionality coming soon ..."
+          />
+        </div>
+        <div class="col-1">
+          <button onclick="searchByFilter()" class="btn btn-primary">
+            Search
+          </button>
+        </div>
+        <div class="col-1">
+          <button onclick="resetSearch()" class="btn btn-dark">Reset</button>
+        </div>
+      </div>
+      <div class="card mt-4 mb-4">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-6">Annotator Name</div>
+            <div class="col-6">Annotations in Past 1 hour</div>
+          </div>
+        </div>
+        <div
+          class="list-group list-group-flush"
+          style="padding: 10px"
+          id="annotationList"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Bootstrap & jQuery JS Links -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+
+    <script>
+      let annotatorDetails = {};
+      if (
+        localStorage.getItem("loggedIn") === undefined ||
+        localStorage.getItem("annotatorEmail") === undefined ||
+        localStorage.getItem("loggedIn") === null ||
+        localStorage.getItem("annotatorEmail") === null
+      ) {
+        location.href = "/index.html";
+      }
+
+      function searchByFilter() {
+        console.log("Implement search functionality");
+      }
+
+      function searchByFilter() {
+        console.log("Reset annotation list");
+      }
+
+      $(document).ready(function () {
+        showSuccessAlertDashboard("Loading details ...");
+
+        $(".dropdown-menu a").click(function () {
+          $("#filterDropdownMenuButton").text($(this).text());
+        });
+
+        // Create a new instance of XMLHttpRequest
+        var xhr = new XMLHttpRequest();
+
+        // Configure the request type, URL, and asynchronous flag
+        xhr.open("POST", "http://localhost:3000/api/employee/filter", true);
+
+        // Set the request header for content-type
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        // Define the callback for when the request has completed
+        xhr.onload = function () {
+          const response = JSON.parse(xhr.responseText);
+          if (xhr.status >= 200 && xhr.status < 400) {
+            // The request was successful! Handle the response here.
+            document.getElementById("email").innerText =
+              response.message[0]?.annotatorEmail;
+            document.getElementById("name").innerText =
+              response.message[0]?.annotatorName;
+            document.getElementById("role").innerText =
+              response.message[0]?.annotatorRole;
+            document.getElementById("joiningDate").innerText = formatDate(
+              response.message[0]?.dateOfJoining
+            );
+            document.getElementById("designation").innerText =
+              response.message[0]?.designation;
+
+            annotatorDetails = response.message[0];
+
+            if (response.message[0].annotatorRole !== "tertiary") {
+              window.location.href = "./dashboard.html";
+            }
+
+            // annotation request start ------------------------------
+            showSuccessAlertDashboard("Loading annotations ...");
+
+            // fill with the leader view APIs
+
+            const dummyData = [
+              {
+                annotatorName: "adimalik@deloitte.com",
+                annotationsPastHour: 2,
+              },
+              {
+                annotatorName: "subhamsaha@deloitte.com",
+                annotationsPastHour: 1,
+              },
+              {
+                annotatorName: "jhsharma@deloitte.com",
+                annotationsPastHour: 3,
+              },
+              {
+                annotatorName: "bhaskar@deloitte.com",
+                annotationsPastHour: 4,
+              },
+            ];
+
+            const annotationListContainer =
+              document.getElementById("annotationList");
+
+            dummyData.forEach((record) => {
+              const listItemContainer = document.createElement("div");
+              listItemContainer.className = "row m-3";
+
+              const listItemAnnotatorName = document.createElement("div");
+              listItemAnnotatorName.className = "col-6";
+              listItemAnnotatorName.innerText = record.annotatorName;
+
+              const listItemAnnotations = document.createElement("div");
+              listItemAnnotations.className = "col-6";
+              listItemAnnotations.innerText = record.annotationsPastHour;
+
+              listItemContainer.appendChild(listItemAnnotatorName);
+              listItemContainer.appendChild(listItemAnnotations);
+
+              annotationListContainer.appendChild(listItemContainer);
+            });
+
+            // annotation request end --------------------------------
+          } else {
+            // The request failed with a status code outside the range [200, 400).
+            // Handle the error here.
+            console.error(
+              "Request failed: " + xhr.status + " " + xhr.statusText
+            );
+            showFailAlertDashboard(response.message);
+          }
+        };
+
+        // Define the callback for network errors
+        xhr.onerror = function () {
+          console.error("Network error occurred.");
+          showFailAlertDashboard(xhr.message);
+        };
+
+        var data = JSON.stringify({
+          field: "annotatorEmail",
+          value: localStorage.getItem("annotatorEmail"),
+        });
+        xhr.send(data);
+      });
+    </script>
+  </body>
+</html>
