@@ -38,6 +38,9 @@
           <p><strong>Email:</strong> <span id="email">Loading ...</span></p>
           <p><strong>Name:</strong> <span id="name">Loading ...</span></p>
           <p>
+            <strong>POD Number:</strong> <span id="podNumber">Loading ...</span>
+          </p>
+          <p>
             <strong>Date of Joining:</strong>
             <span id="joiningDate">Loading ...</span>
           </p>
@@ -45,7 +48,9 @@
             <strong>Designation:</strong>
             <span id="designation">Loading ...</span>
           </p>
-          <p><strong>Language:</strong> <span id="language">XXXX</span></p>
+          <p>
+            <strong>Language:</strong> <span id="language">Loading ...</span>
+          </p>
           <p><strong>Role:</strong> <span id="role">Loading ...</span></p>
         </div>
       </div>
@@ -72,19 +77,18 @@
               class="dropdown-menu"
               aria-labelledby="filterDropdownMenuButton"
             >
-              <a class="dropdown-item" href="#">Annotation ID</a>
-              <a class="dropdown-item" href="#">Prompt</a>
-              <a class="dropdown-item" href="#">Batch Number</a>
-              <a class="dropdown-item" href="#">Annotation Date</a>
-              <!-- Add more options as needed -->
+              <a class="dropdown-item" href="#">annotationId</a>
+              <a class="dropdown-item" href="#">prompt</a>
+              <a class="dropdown-item" href="#">batchNumber</a>
             </div>
           </div>
         </div>
         <div class="col-8">
           <input
             type="text"
+            id="searchValue"
             class="form-control"
-            placeholder="Search functionality coming soon ..."
+            placeholder="Search value"
           />
         </div>
         <div class="col-1">
@@ -96,6 +100,10 @@
           <button onclick="resetSearch()" class="btn btn-dark">Reset</button>
         </div>
       </div>
+      <br />
+      <span style="opacity: 0.6"
+        >* You are viewing annotations from your POD members only</span
+      >
       <div class="card mt-4 mb-4">
         <div class="card-header">Annotations</div>
         <ul class="list-group list-group-flush" id="annotationList">
@@ -104,8 +112,7 @@
       </div>
 
       <strong style="opacity: 0.6"
-        >Showing 20 records on this page, jump to the pages using the buttons
-        below</strong
+        >Showing maximum of 20 records on this page</strong
       >
       <nav aria-label="Page navigation">
         <ul class="pagination">
@@ -196,6 +203,7 @@
     <script src="script.js"></script>
 
     <script>
+      let currentSearchFilter = "";
       let annotatorDetails = {};
       if (
         localStorage.getItem("loggedIn") === undefined ||
@@ -206,12 +214,149 @@
         location.href = "/index.html";
       }
 
-      function searchByFilter() {
-        console.log("Implement search functionality");
+      const dashboardParams = new Proxy(
+        new URLSearchParams(window.location.search),
+        {
+          get: (searchParams, prop) => searchParams.get(prop),
+        }
+      );
+
+      let pageNumber = dashboardParams["pageNumber"];
+      if (pageNumber === undefined || pageNumber === null) {
+        pageNumber = 1;
       }
 
       function searchByFilter() {
+        console.log(
+          currentSearchFilter +
+            " - " +
+            document.getElementById("searchValue").value
+        );
+
+        var xhrSearch = new XMLHttpRequest();
+
+        xhrSearch.open(
+          "POST",
+          `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+          true
+        );
+
+        // Set the request header for content-type
+        xhrSearch.setRequestHeader(
+          "Content-Type",
+          "application/json;charset=UTF-8"
+        );
+
+        // Define the callback for when the request has completed
+        xhrSearch.onload = function () {
+          const response = JSON.parse(xhrSearch.responseText);
+          if (xhrSearch.status >= 200 && xhrSearch.status < 400) {
+            // The request was successful! Handle the response here.
+
+            const annotations = response.message;
+            const annotationListContainer =
+              document.getElementById("annotationList");
+            if (annotations !== undefined) {
+              annotationListContainer.innerHTML = "";
+            }
+            annotations?.map((annotation) => {
+              // Create the main <li> element
+              const li = document.createElement("li");
+              li.className = "list-group-item";
+
+              // Create the Batch # content
+              const annotationDetails = document.createElement("p");
+              annotationDetails.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
+                annotation.annotationId
+              } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
+                annotation.date
+              )} </span>  <br /> <span class="mr-4"><strong>Task Type:</strong> ${
+                annotation.taskType
+              }</span><span class="mr-4"><strong> Annotator Email: </strong> ${
+                annotation.annotatorEmail
+              } </span><br />`;
+
+              li.appendChild(annotationDetails);
+
+              const batchStrong = document.createElement("strong");
+              batchStrong.textContent = "Batch #: ";
+              li.appendChild(batchStrong);
+              li.appendChild(document.createTextNode(annotation.batchNumber));
+
+              li.appendChild(document.createTextNode(" | "));
+
+              // Create the Prompt content
+              const promptStrong = document.createElement("strong");
+              promptStrong.textContent = "Prompt: ";
+              li.appendChild(promptStrong);
+              li.appendChild(
+                document.createTextNode(
+                  annotation.prompt.slice(0, 200) + " ......."
+                )
+              );
+
+              const lineBreak = document.createElement("br");
+              li.appendChild(lineBreak);
+
+              // Create the open button
+              const btn = document.createElement("button");
+              btn.className = "btn btn-primary mt-2";
+              btn.textContent = "Open";
+              btn.onclick = function () {
+                openAnnotationDetails(annotation._id);
+              };
+              li.appendChild(btn);
+
+              if (annotatorDetails.annotatorRole !== "primary") {
+                // Create the edit button
+                const btn = document.createElement("button");
+                btn.className = "btn btn-primary ml-2 mt-2";
+                btn.textContent = "Edit";
+                btn.onclick = function () {
+                  editAnnotation(annotation._id);
+                };
+                li.appendChild(btn);
+
+                // Create the edit button
+                const btnDelete = document.createElement("button");
+                btnDelete.className = "btn btn-danger ml-2 mt-2";
+                btnDelete.textContent = "Delete";
+                btnDelete.onclick = function () {
+                  deleteAnnotation(annotation._id);
+                };
+                li.appendChild(btnDelete);
+              }
+
+              // append li to annotation list
+              annotationListContainer.appendChild(li);
+            });
+          } else {
+            // The request failed with a status code outside the range [200, 400).
+            // Handle the error here.
+            console.error(
+              "Request failed: " + xhrSearch.status + " " + xhrSearch.statusText
+            );
+            showFailAlertDashboard(response.message);
+          }
+        };
+
+        // Define the callback for network errors
+        xhrSearch.onerror = function () {
+          console.error("Network error occurred.");
+          showFailAlertDashboard(xhrSearch.message);
+        };
+
+        const searchFilter = JSON.stringify({
+          field: currentSearchFilter,
+          value: document.getElementById("searchValue").value,
+        });
+
+        xhrSearch.send(searchFilter);
+      }
+
+      function resetSearch() {
         console.log("Reset annotation list");
+        window.location.reload();
       }
 
       $(document).ready(function () {
@@ -219,6 +364,7 @@
 
         $(".dropdown-menu a").click(function () {
           $("#filterDropdownMenuButton").text($(this).text());
+          currentSearchFilter = $(this).text();
         });
 
         // Create a new instance of XMLHttpRequest
@@ -248,8 +394,13 @@
             document.getElementById("joiningDate").innerText = formatDate(
               response.message[0]?.dateOfJoining
             );
+            document.getElementById("podNumber").innerText =
+              response.message[0]?.podNumber;
             document.getElementById("designation").innerText =
               response.message[0]?.designation;
+
+            document.getElementById("language").innerText =
+              response.message[0]?.language;
 
             annotatorDetails = response.message[0];
 
@@ -262,22 +413,12 @@
               response.message[0]?.annotatorRole
             );
 
+            localStorage.setItem("podNumber", response.message[0]?.podNumber);
+
             // annotation request start ------------------------------
             showSuccessAlertDashboard("Loading annotations ...");
             // Create a new instance of XMLHttpRequest
             var xhrAnnotations = new XMLHttpRequest();
-
-            const params = new Proxy(
-              new URLSearchParams(window.location.search),
-              {
-                get: (searchParams, prop) => searchParams.get(prop),
-              }
-            );
-
-            let pageNumber = params["pageNumber"];
-            if (pageNumber === undefined || pageNumber === null) {
-              pageNumber = 1;
-            }
 
             // Configure the request type, URL, and asynchronous flag
             if (annotatorDetails.annotatorRole === "primary") {
@@ -288,8 +429,8 @@
               );
             } else {
               xhrAnnotations.open(
-                "GET",
-                `https://rmcopypastetoolbackend.onrender.com/api/annotations/?page=${pageNumber}`,
+                "POST",
+                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByPod?page=${pageNumber}`,
                 true
               );
             }
@@ -404,15 +545,20 @@
               showFailAlertDashboard(xhrAnnotations.message);
             };
 
-            var dataAnnotations = JSON.stringify({
-              field: "annotatorEmail",
-              value: localStorage.getItem("annotatorEmail"),
-            });
+            let dataAnnotations;
 
             if (annotatorDetails.annotatorRole === "primary") {
+              dataAnnotations = JSON.stringify({
+                field: "annotatorEmail",
+                value: localStorage.getItem("annotatorEmail"),
+              });
               xhrAnnotations.send(dataAnnotations);
             } else {
-              xhrAnnotations.send();
+              dataAnnotations = JSON.stringify({
+                podNumber: localStorage.getItem("podNumber"),
+                language: annotatorDetails.language,
+              });
+              xhrAnnotations.send(dataAnnotations);
             }
 
             // annotation request end --------------------------------

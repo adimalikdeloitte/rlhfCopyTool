@@ -49,48 +49,73 @@
 
       <!-- Annotations List -->
       <div class="mt-4 row">
-        <div class="col-2">
+        <div class="col-4">
           <!-- Dropdown wrapper -->
           <div class="dropdown">
             <!-- Trigger button for dropdown -->
             <button
-              class="btn btn-primary dropdown-toggle"
+              class="btn btn-primary dropdown-toggle w-100"
               type="button"
-              id="filterDropdownMenuButton"
+              id="languageDropdownFilter"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Select Filter
+              Language View
             </button>
 
             <!-- Dropdown Menu -->
             <div
-              class="dropdown-menu"
-              aria-labelledby="filterDropdownMenuButton"
+              class="dropdown-menu w-100"
+              aria-labelledby="languageDropdownFilter"
             >
-              <a class="dropdown-item" href="#">Annotation ID</a>
-              <a class="dropdown-item" href="#">Prompt</a>
-              <a class="dropdown-item" href="#">Batch Number</a>
-              <a class="dropdown-item" href="#">Annotation Date</a>
-              <!-- Add more options as needed -->
+              <a class="dropdown-item" href="#">Python</a>
+              <a class="dropdown-item" href="#">Java</a>
+              <a class="dropdown-item" href="#">JavaScript</a>
             </div>
           </div>
         </div>
-        <div class="col-8">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Search functionality coming soon ..."
-          />
+
+        <div class="col-4">
+          <!-- Dropdown wrapper -->
+          <div class="dropdown">
+            <!-- Trigger button for dropdown -->
+            <button
+              class="btn btn-primary dropdown-toggle w-100"
+              type="button"
+              id="podDropdownFilter"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              POD View
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              class="dropdown-menu w-100"
+              aria-labelledby="podDropdownFilter"
+            >
+              <a class="dropdown-item" href="#">POD 1</a>
+              <a class="dropdown-item" href="#">POD 2</a>
+              <a class="dropdown-item" href="#">POD 3</a>
+              <a class="dropdown-item" href="#">POD 4</a>
+              <a class="dropdown-item" href="#">POD 5</a>
+              <a class="dropdown-item" href="#">POD 6</a>
+              <a class="dropdown-item" href="#">POD 7</a>
+              <a class="dropdown-item" href="#">POD 8</a>
+            </div>
+          </div>
         </div>
-        <div class="col-1">
-          <button onclick="searchByFilter()" class="btn btn-primary">
-            Search
+
+        <div class="col-4">
+          <button
+            class="btn btn-primary w-100"
+            type="button"
+            id="annotatorViewBtn"
+          >
+            Annotator View
           </button>
-        </div>
-        <div class="col-1">
-          <button onclick="resetSearch()" class="btn btn-dark">Reset</button>
         </div>
       </div>
       <div class="card mt-4 mb-4">
@@ -184,39 +209,54 @@
 
             // fill with the leader view APIs
 
-            const dummyData = [
+            const annotatorData = [
               {
                 annotatorName: "adimalik@deloitte.com",
-                annotationsPastHour: 2,
+                annotations: 2,
               },
               {
                 annotatorName: "subhamsaha@deloitte.com",
-                annotationsPastHour: 1,
+                annotations: 1,
               },
               {
                 annotatorName: "jhsharma@deloitte.com",
-                annotationsPastHour: 3,
+                annotations: 3,
               },
               {
                 annotatorName: "bhaskar@deloitte.com",
-                annotationsPastHour: 4,
+                annotations: 4,
+              },
+            ];
+
+            const languageData = [
+              {
+                language: "Python",
+                annotations: 2,
+              },
+              {
+                language: "Java",
+                annotations: 1,
+              },
+              {
+                language: "JavaScript",
+                annotations: 3,
               },
             ];
 
             const annotationListContainer =
               document.getElementById("annotationList");
 
-            dummyData.forEach((record) => {
+            languageData.forEach((record) => {
               const listItemContainer = document.createElement("div");
               listItemContainer.className = "row m-3";
 
               const listItemAnnotatorName = document.createElement("div");
               listItemAnnotatorName.className = "col-6";
-              listItemAnnotatorName.innerText = record.annotatorName;
+              listItemAnnotatorName.innerText = record.language;
 
               const listItemAnnotations = document.createElement("div");
               listItemAnnotations.className = "col-6";
-              listItemAnnotations.innerText = record.annotationsPastHour;
+              listItemAnnotations.innerText = record.annotations;
 
               listItemContainer.appendChild(listItemAnnotatorName);
               listItemContainer.appendChild(listItemAnnotations);

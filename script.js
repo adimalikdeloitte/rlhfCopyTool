@@ -945,7 +945,7 @@ function checkEmpty() {
     if (localStorage.getItem("annotatorRole") !== "primary") {
       if (
         document.querySelector('input[name="confirmRejection"]:checked')
-          ?.value !== "true" ||
+          ?.value !== "true" &&
         document.querySelector('input[name="confirmRejection"]:checked')
           ?.value !== "false"
       ) {
