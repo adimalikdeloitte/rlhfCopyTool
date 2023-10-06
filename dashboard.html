@@ -115,78 +115,9 @@
         >Showing maximum of 20 records on this page</strong
       >
       <nav aria-label="Page navigation">
-        <ul class="pagination">
+        <ul class="pagination" id="paginationList">
           <li class="page-item">
             <a class="page-link" href="./dashboard.html?pageNumber=1">1</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=2">2</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=3">3</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=4">4</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=5">5</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=6">6</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=7">7</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=8">8</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=9">9</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=10">10</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=11">11</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=12">12</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=1">13</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=2">14</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=3">15</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=4">16</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=5">17</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=6">18</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=7">19</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=8">20</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=9">21</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=10">22</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=11">23</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="./dashboard.html?pageNumber=12">24</a>
           </li>
           <!-- Add more page numbers as needed -->
         </ul>
@@ -227,17 +158,23 @@
       }
 
       function searchByFilter() {
-        console.log(
-          currentSearchFilter +
-            " - " +
-            document.getElementById("searchValue").value
-        );
+        if (
+          currentSearchFilter === "" ||
+          document.getElementById("searchValue").value === ""
+        ) {
+          showFailAlertDashboard(
+            "Please select a filter value and enter a search value"
+          );
+          return;
+        } else {
+          showSuccessAlertDashboard("Searching value, please wait ...");
+        }
 
         var xhrSearch = new XMLHttpRequest();
 
         xhrSearch.open(
           "POST",
-          `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+          `http://localhost:3000/api/annotations/filterByPod?page=${pageNumber}`,
           true
         );
 
@@ -252,12 +189,47 @@
           const response = JSON.parse(xhrSearch.responseText);
           if (xhrSearch.status >= 200 && xhrSearch.status < 400) {
             // The request was successful! Handle the response here.
+            const paginationData = response.pagination;
+            const paginationList = document.getElementById("paginationList");
+            paginationList.innerHTML = "";
+            // set the pagination
+            for (let i = 1; i <= paginationData.totalPages; i++) {
+              const paginationListItem = document.createElement("li");
+              paginationListItem.setAttribute("class", "page-item");
+
+              const paginationListItemLink = document.createElement("a");
+              paginationListItemLink.setAttribute("class", "page-link");
+              paginationListItemLink.setAttribute(
+                "href",
+                `./dashboard.html?pageNumber=${i}`
+              );
+              paginationListItemLink.innerText = i;
+
+              paginationListItem.appendChild(paginationListItemLink);
+              paginationList.appendChild(paginationListItem);
+            }
 
             const annotations = response.message;
             const annotationListContainer =
               document.getElementById("annotationList");
             if (annotations !== undefined) {
               annotationListContainer.innerHTML = "";
+
+              if (annotations.length === 0) {
+                showFailAlertDashboard("No annotations found !");
+                setTimeout(() => {
+                  showSuccessAlertDashboard(
+                    "Resetting the annotation list ..."
+                  );
+                }, 3000);
+                setTimeout(() => {
+                  window.location.reload();
+                }, 6000);
+              } else {
+                showSuccessAlertDashboard(
+                  `${annotations.length} annotations found !`
+                );
+              }
             }
             annotations?.map((annotation) => {
               // Create the main <li> element
@@ -347,8 +319,12 @@
         };
 
         const searchFilter = JSON.stringify({
-          field: currentSearchFilter,
-          value: document.getElementById("searchValue").value,
+          podNumber: localStorage.getItem("podNumber"),
+          language: localStorage.getItem("language"),
+          search: {
+            field: currentSearchFilter,
+            value: document.getElementById("searchValue").value,
+          },
         });
 
         xhrSearch.send(searchFilter);
@@ -371,11 +347,7 @@
         var xhr = new XMLHttpRequest();
 
         // Configure the request type, URL, and asynchronous flag
-        xhr.open(
-          "POST",
-          "https://rmcopypastetoolbackend.onrender.com/api/employee/filter",
-          true
-        );
+        xhr.open("POST", "http://localhost:3000/api/employee/filter", true);
 
         // Set the request header for content-type
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -414,6 +386,7 @@
             );
 
             localStorage.setItem("podNumber", response.message[0]?.podNumber);
+            localStorage.setItem("language", response.message[0]?.language);
 
             // annotation request start ------------------------------
             showSuccessAlertDashboard("Loading annotations ...");
@@ -424,13 +397,13 @@
             if (annotatorDetails.annotatorRole === "primary") {
               xhrAnnotations.open(
                 "POST",
-                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+                `http://localhost:3000/api/annotations/filter?page=${pageNumber}`,
                 true
               );
             } else {
               xhrAnnotations.open(
                 "POST",
-                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByPod?page=${pageNumber}`,
+                `http://localhost:3000/api/annotations/filterByPod?page=${pageNumber}`,
                 true
               );
             }
@@ -446,6 +419,26 @@
               const response = JSON.parse(xhrAnnotations.responseText);
               if (xhrAnnotations.status >= 200 && xhrAnnotations.status < 400) {
                 // The request was successful! Handle the response here.
+                const paginationData = response.pagination;
+                const paginationList =
+                  document.getElementById("paginationList");
+                paginationList.innerHTML = "";
+                // set the pagination
+                for (let i = 1; i <= paginationData.totalPages; i++) {
+                  const paginationListItem = document.createElement("li");
+                  paginationListItem.setAttribute("class", "page-item");
+
+                  const paginationListItemLink = document.createElement("a");
+                  paginationListItemLink.setAttribute("class", "page-link");
+                  paginationListItemLink.setAttribute(
+                    "href",
+                    `./dashboard.html?pageNumber=${i}`
+                  );
+                  paginationListItemLink.innerText = i;
+
+                  paginationListItem.appendChild(paginationListItemLink);
+                  paginationList.appendChild(paginationListItem);
+                }
 
                 const annotations = response.message;
                 const annotationListContainer =
@@ -556,7 +549,7 @@
             } else {
               dataAnnotations = JSON.stringify({
                 podNumber: localStorage.getItem("podNumber"),
-                language: annotatorDetails.language,
+                language: localStorage.getItem("language"),
               });
               xhrAnnotations.send(dataAnnotations);
             }
