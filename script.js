@@ -1022,6 +1022,15 @@ if (view !== null) {
 
 if (_id != null) {
   showSuccessAlertCreateAnnotation("Loading annotation...");
+
+  // if role is primary, don't show confirm rejection button
+  if (localStorage.getItem("annotatorRole") === "primary") {
+    document.getElementById("confirmRejectionContainer").style.display = "none";
+  } else {
+    document.getElementById("confirmRejectionContainer").style.display =
+      "block";
+  }
+
   fetch(`https://rmcopypastetoolbackend.onrender.com/api/annotations/${_id}`, {
     method: "GET",
     headers: {
@@ -1186,6 +1195,23 @@ if (_id != null) {
             // pre select the choices
             arr.map((reason) => {
               $(`#rejectionReasonDropdown`).multiselect("select", reason);
+              // if rejection reason is others
+              if (
+                reason !== "Docstring is not present" &&
+                reason !==
+                  "Docstring is unclear and confusing and hence intent/ask of the prompt is unclear" &&
+                reason !==
+                  "Prompt is of custom project and unable to understand" &&
+                reason !==
+                  "No supporting document available for the standard or custom code method/function" &&
+                reason !==
+                  "Multiple docstrings are present but not able to use ANY of the docstrings to address the ask" &&
+                reason !==
+                  "Though docstring is present and clear - the intent/ask of the prompt is unclear" &&
+                reason !== "Others ---followed by a textbox"
+              ) {
+                document.getElementById("otherReasonTextbox").value = reason;
+              }
             });
 
             document.querySelector(
@@ -1618,7 +1644,10 @@ function submitAnnotation() {
           rejected:
             document.querySelector('input[name="rejected"]:checked').value ===
             "true",
-          reasonForRejection: $("#rejectionReasonDropdown").val().join(", "),
+          reasonForRejection:
+            $("#rejectionReasonDropdown").val().join(", ") +
+            ", " +
+            $("#otherReasonTextbox").val(),
         };
       } else {
         formData = {
@@ -1636,7 +1665,10 @@ function submitAnnotation() {
           rejected:
             document.querySelector('input[name="rejected"]:checked').value ===
             "true",
-          reasonForRejection: $("#rejectionReasonDropdown").val().join(", "),
+          reasonForRejection:
+            $("#rejectionReasonDropdown").val().join(", ") +
+            ", " +
+            $("#otherReasonTextbox").val(),
           rejectionConfirmedByReviewer: document.querySelector(
             'input[name="confirmRejection"]:checked'
           ).value,
