@@ -1924,52 +1924,18 @@ function checkRating(completions) {
   completions.map((comp, index) => {
     let ques = comp.questions;
 
-    if (ques[0].answer != "1") {
-      if (ques[6].answer > 1) {
-        errorList.push(
-          "Completion " +
-            String.fromCharCode(index + 65) +
-            ": Rating cannot be higher than 1 for submitted choices."
-        );
-      }
-    } else {
-      if (!["1", "3"].includes(ques[1].answer)) {
-        if (ques[5].answer != "1") {
-          if (ques[6].answer > 1) {
-            errorList.push(
-              "Completion " +
-                String.fromCharCode(index + 65) +
-                ": Rating cannot be higher than 1 for submitted choices."
-            );
-          }
-        } else {
-          if (ques[6].answer > 4) {
-            errorList.push(
-              "Completion " +
-                String.fromCharCode(index + 65) +
-                ": Rating cannot be higher than 4 for submitted choices."
-            );
-          }
-        }
-      } else {
-        if (ques[5].answer != "1") {
-          if (ques[6].answer > 4) {
-            errorList.push(
-              "Completion " +
-                String.fromCharCode(index + 65) +
-                ": Rating cannot be higher than 4 for submitted choices."
-            );
-          }
-        } else {
-          if (ques[6].answer <= 4) {
-            errorList.push(
-              "Completion " +
-                String.fromCharCode(index + 65) +
-                ": Rating has to be more than 4 for submitted choices." /* changed the message text */
-            );
-          }
-        }
-      }
+    if (ques[0].answer === "2" && ques[6].answer !== "1") {
+      errorList.push(
+        "Completion " +
+          String.fromCharCode(index + 65) +
+          ": Rating cannot be higher than 1 for submitted choices."
+      );
+    } else if (ques[0].answer === "1" && ques[6].answer === "1") {
+      errorList.push(
+        "Completion " +
+          String.fromCharCode(index + 65) +
+          ": Rating cannot be 1 for submitted choices."
+      );
     }
   });
 
