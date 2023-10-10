@@ -264,6 +264,55 @@
               annotationListContainer.appendChild(listItemContainer);
             });
 
+            // Create a new instance of XMLHttpRequest
+            // var xhrAnnotations = new XMLHttpRequest();
+            // xhrAnnotations.open(
+            //   "POST",
+            //   `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate`,
+            //   true
+            // );
+
+            // // Set the request header for content-type
+            // xhrAnnotations.setRequestHeader(
+            //   "Content-Type",
+            //   "application/json;charset=UTF-8"
+            // );
+
+            // // Define the callback for when the request has completed
+            // xhrAnnotations.onload = function () {
+            //   const response = JSON.parse(xhrAnnotations.responseText);
+            //   if (xhrAnnotations.status >= 200 && xhrAnnotations.status < 400) {
+            //     // The request was successful! Handle the response here.
+
+            //     console.log(response);
+            //   } else {
+            //     // The request failed with a status code outside the range [200, 400).
+            //     // Handle the error here.
+            //     console.error(
+            //       "Request failed: " +
+            //         xhrAnnotations.status +
+            //         " " +
+            //         xhrAnnotations.statusText
+            //     );
+            //     console.log(response.message);
+            //   }
+            // };
+
+            // // Define the callback for network errors
+            // xhrAnnotations.onerror = function () {
+            //   console.error("Network error occurred.");
+            //   console.log(xhrAnnotations.message);
+            // };
+
+            // let dataAnnotations = JSON.stringify({
+            //   fromDate: "2023-09-28",
+            //   fromTime: "00:00:00",
+            //   toDate: "2023-09-28",
+            //   toTime: "24:00:00",
+            //   groupBy: "annotatorEmail", // or language, etc
+            // });
+            // xhrAnnotations.send(dataAnnotations);
+
             // annotation request end --------------------------------
           } else {
             // The request failed with a status code outside the range [200, 400).
@@ -271,14 +320,14 @@
             console.error(
               "Request failed: " + xhr.status + " " + xhr.statusText
             );
-            showFailAlertDashboard(response.message);
+            console.log(response.message);
           }
         };
 
         // Define the callback for network errors
         xhr.onerror = function () {
           console.error("Network error occurred.");
-          showFailAlertDashboard(xhr.message);
+          console.log(xhr.message);
         };
 
         var data = JSON.stringify({

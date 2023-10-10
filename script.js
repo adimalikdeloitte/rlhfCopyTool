@@ -1339,6 +1339,9 @@ if (_id != null) {
 
 function submitAnnotation() {
   if (checkEmpty()) {
+    // disable the submit button to avoid multiple submissions
+    document.getElementById("submitBtn").disabled = true;
+
     let reasonForQ1A,
       reasonForQ2A,
       reasonForQ6A,
@@ -1356,7 +1359,6 @@ function submitAnnotation() {
     if (
       document.querySelector('input[name="rejected"]:checked').value === "false"
     ) {
-      console.log("file not rejected");
       // file not rejected, submit annotations accordingly
       // reasoning completion A
       if (document.querySelector('input[name="mcq1A"]:checked').value === "1") {
@@ -1475,7 +1477,7 @@ function submitAnnotation() {
           Q1: document.querySelector('input[name="mcq1A"]:checked').value,
           Q2: document.querySelector('input[name="mcq2A"]:checked').value,
           Q3: document.querySelector('input[name="mcq3A"]:checked').value,
-          Q4: document.querySelector('input[name="mcq4A"]:checked').value,
+          Q4: "1",
           Q5: document.querySelector('input[name="mcq5A"]:checked').value,
           Q6: document.querySelector('input[name="mcq6A"]:checked').value,
           // rank: document.getElementById("rankingCompletionA").value,
@@ -1498,7 +1500,7 @@ function submitAnnotation() {
           Q1: document.querySelector('input[name="mcq1B"]:checked').value,
           Q2: document.querySelector('input[name="mcq2B"]:checked').value,
           Q3: document.querySelector('input[name="mcq3B"]:checked').value,
-          Q4: document.querySelector('input[name="mcq4B"]:checked').value,
+          Q4: "1",
           Q5: document.querySelector('input[name="mcq5B"]:checked').value,
           Q6: document.querySelector('input[name="mcq6B"]:checked').value,
           // rank: document.getElementById("rankingCompletionB").value,
@@ -1521,7 +1523,7 @@ function submitAnnotation() {
           Q1: document.querySelector('input[name="mcq1C"]:checked').value,
           Q2: document.querySelector('input[name="mcq2C"]:checked').value,
           Q3: document.querySelector('input[name="mcq3C"]:checked').value,
-          Q4: document.querySelector('input[name="mcq4C"]:checked').value,
+          Q4: "1",
           Q5: document.querySelector('input[name="mcq5C"]:checked').value,
           Q6: document.querySelector('input[name="mcq6C"]:checked').value,
           // rank: document.getElementById("rankingCompletionC").value,
@@ -2028,7 +2030,7 @@ function runChecks() {
           },
           {
             question: "Are the variable names understandable in the code?",
-            answer: document.querySelector('input[name="mcq4A"]:checked').value,
+            answer: "1",
             options: {
               1: "yes",
               2: "no",
@@ -2094,7 +2096,7 @@ function runChecks() {
           },
           {
             question: "Are the variable names understandable in the code?",
-            answer: document.querySelector('input[name="mcq4B"]:checked').value,
+            answer: "1",
             options: {
               1: "yes",
               2: "no",
@@ -2160,7 +2162,7 @@ function runChecks() {
           },
           {
             question: "Are the variable names understandable in the code?",
-            answer: document.querySelector('input[name="mcq4C"]:checked').value,
+            answer: "1",
             options: {
               1: "yes",
               2: "no",

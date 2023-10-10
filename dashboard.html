@@ -32,26 +32,49 @@
       </div>
 
       <!-- Annotator Info -->
-      <div class="card">
-        <div class="card-header">Annotator Information</div>
-        <div class="card-body">
-          <p><strong>Email:</strong> <span id="email">Loading ...</span></p>
-          <p><strong>Name:</strong> <span id="name">Loading ...</span></p>
-          <p>
-            <strong>POD Number:</strong> <span id="podNumber">Loading ...</span>
-          </p>
-          <p>
-            <strong>Date of Joining:</strong>
-            <span id="joiningDate">Loading ...</span>
-          </p>
-          <p>
-            <strong>Designation:</strong>
-            <span id="designation">Loading ...</span>
-          </p>
-          <p>
-            <strong>Language:</strong> <span id="language">Loading ...</span>
-          </p>
-          <p><strong>Role:</strong> <span id="role">Loading ...</span></p>
+      <div class="row align-items-center">
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <strong>Annotator Information</strong>
+            </div>
+            <div class="card-body">
+              <p><strong>Email:</strong> <span id="email">Loading ...</span></p>
+              <p><strong>Name:</strong> <span id="name">Loading ...</span></p>
+              <p>
+                <strong>POD Number:</strong>
+                <span id="podNumber">Loading ...</span>
+              </p>
+              <p>
+                <strong>Date of Joining:</strong>
+                <span id="joiningDate">Loading ...</span>
+              </p>
+              <p>
+                <strong>Designation:</strong>
+                <span id="designation">Loading ...</span>
+              </p>
+              <p>
+                <strong>Language:</strong>
+                <span id="language">Loading ...</span>
+              </p>
+              <p><strong>Role:</strong> <span id="role">Loading ...</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="card">
+            <div class="card-header">
+              <div class="row">
+                <div class="col-8"><strong>Date</strong></div>
+                <div class="col-4"><strong>Annotation Count</strong></div>
+              </div>
+            </div>
+            <div
+              id="annotationCountList"
+              class="card-body"
+              style="overflow-y: scroll; height: 325px"
+            ></div>
+          </div>
         </div>
       </div>
 
@@ -238,7 +261,7 @@
 
               // Create the Batch # content
               const annotationDetails = document.createElement("p");
-              annotationDetails.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
+              annotationDetails.innerHTML = `<div class="row align-items-center"><div class="col-10"><span class="mr-4"><strong> Annotation ID: </strong> ${
                 annotation.annotationId
               } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
                 annotation.date
@@ -246,7 +269,11 @@
                 annotation.taskType
               }</span><span class="mr-4"><strong> Annotator Email: </strong> ${
                 annotation.annotatorEmail
-              } </span><br />`;
+              } </span></div><div class="col-2">${
+                annotation.rejected
+                  ? "<span class='bg-danger p-2 text-white'>Rejected</span>"
+                  : "<span class='bg-success p-2 text-white'>Not Rejected</span>"
+              }</div></div>`;
 
               li.appendChild(annotationDetails);
 
@@ -457,7 +484,7 @@
 
                   // Create the Batch # content
                   const annotationDetails = document.createElement("p");
-                  annotationDetails.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
+                  annotationDetails.innerHTML = `<div class="row align-items-center"><div class="col-10"><span class="mr-4"><strong> Annotation ID: </strong> ${
                     annotation.annotationId
                   } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
                     annotation.date
@@ -465,7 +492,11 @@
                     annotation.taskType
                   }</span><span class="mr-4"><strong> Annotator Email: </strong> ${
                     annotation.annotatorEmail
-                  } </span><br />`;
+                  } </span></div><div class="col-2">${
+                    annotation.rejected
+                      ? "<span class='bg-danger p-2 text-white'>Rejected</span>"
+                      : "<span class='bg-success p-2 text-white'>Not Rejected</span>"
+                  }</div></div>`;
 
                   li.appendChild(annotationDetails);
 
@@ -523,6 +554,101 @@
                   // append li to annotation list
                   annotationListContainer.appendChild(li);
                 });
+
+                function getAnnotationCount(
+                  fromDate,
+                  fromTime,
+                  toDate,
+                  toTime
+                ) {
+                  // annotation count request start ------------------------------
+                  showSuccessAlertDashboard("Loading counts ...");
+                  // Create a new instance of XMLHttpRequest
+                  var xhrAnnotationsCount = new XMLHttpRequest();
+
+                  // Configure the request type, URL, and asynchronous flag
+                  xhrAnnotationsCount.open(
+                    "POST",
+                    `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate`,
+                    true
+                  );
+
+                  // Set the request header for content-type
+                  xhrAnnotationsCount.setRequestHeader(
+                    "Content-Type",
+                    "application/json;charset=UTF-8"
+                  );
+
+                  // Define the callback for when the request has completed
+                  xhrAnnotationsCount.onload = function () {
+                    const response = JSON.parse(
+                      xhrAnnotationsCount.responseText
+                    );
+                    if (
+                      xhrAnnotationsCount.status >= 200 &&
+                      xhrAnnotationsCount.status < 400
+                    ) {
+                      // The request was successful! Handle the response here.
+
+                      response.message.forEach((r) => {
+                        if (r._id === localStorage.getItem("annotatorEmail")) {
+                          const countDiv = `<div class="row"><div class="col-8">${formatDate(
+                            fromDate
+                          )}</div><div class="col-4">${r.count}</div></div>`;
+                          const countItem = document.createElement("div");
+                          countItem.innerHTML = countDiv;
+                          document
+                            .getElementById("annotationCountList")
+                            .appendChild(countItem);
+                        }
+                      });
+                    } else {
+                      // The request failed with a status code outside the range [200, 400).
+                      // Handle the error here.
+                      console.error(
+                        "Request failed: " +
+                          xhrAnnotationsCount.status +
+                          " " +
+                          xhrAnnotationsCount.statusText
+                      );
+                      showFailAlertDashboard(response.message);
+                    }
+                  };
+
+                  // Define the callback for network errors
+                  xhrAnnotationsCount.onerror = function () {
+                    console.error("Network error occurred.");
+                    showFailAlertDashboard(xhrAnnotationsCount.message);
+                  };
+
+                  let countFilter = JSON.stringify({
+                    fromDate,
+                    fromTime,
+                    toDate,
+                    toTime,
+                    groupBy: "annotatorEmail",
+                  });
+                  xhrAnnotationsCount.send(countFilter);
+
+                  // annotation count request end --------------------------------
+                }
+
+                const startDate = new Date(2023, 8, 28); // Months are 0-based, so 8 represents September
+                startDate.setHours(0, 0, 0, 0); // Set time to midnight
+
+                const endDate = new Date(2023, 11, 30); // year end's date
+                endDate.setHours(0, 0, 0, 0); // Set time to midnight
+
+                while (startDate <= endDate) {
+                  let fromDate = startDate.toISOString().split("T")[0];
+                  let fromTime = "00:00:00";
+                  let toDate = startDate.toISOString().split("T")[0];
+                  let toTime = "23:59:59";
+
+                  getAnnotationCount(fromDate, fromTime, toDate, toTime);
+
+                  startDate.setDate(startDate.getDate() + 1); // Move to the next day
+                }
               } else {
                 // The request failed with a status code outside the range [200, 400).
                 // Handle the error here.
