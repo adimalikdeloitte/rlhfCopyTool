@@ -4,14 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leader Dashboard</title>
-    <!-- Bootstrap CSS Link -->
     <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css"
+    />
+
+    <!-- bootstrap-datepicker CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- bootstrap-timepicker CSS -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/css/bootstrap-timepicker.min.css"
+      rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
@@ -35,98 +46,85 @@
           <p><strong>Email:</strong> <span id="email">Loading ...</span></p>
           <p><strong>Name:</strong> <span id="name">Loading ...</span></p>
           <p>
-            <strong>Date of Joining:</strong>
-            <span id="joiningDate">Loading ...</span>
-          </p>
-          <p>
             <strong>Designation:</strong>
             <span id="designation">Loading ...</span>
           </p>
-          <p><strong>Language:</strong> <span id="language">XXXX</span></p>
           <p><strong>Role:</strong> <span id="role">Loading ...</span></p>
         </div>
       </div>
 
-      <!-- Annotations List -->
       <div class="mt-4 row">
         <div class="col-4">
-          <!-- Dropdown wrapper -->
           <div class="dropdown">
-            <!-- Trigger button for dropdown -->
             <button
               class="btn btn-primary dropdown-toggle w-100"
               type="button"
-              id="languageDropdownFilter"
+              id="languageViewDropdownBtn"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
-              Language View
+              Select Language
             </button>
-
-            <!-- Dropdown Menu -->
             <div
-              class="dropdown-menu w-100"
-              aria-labelledby="languageDropdownFilter"
+              class="dropdown-menu"
+              aria-labelledby="languageViewDropdownBtn"
             >
-              <a class="dropdown-item" href="#">Python</a>
-              <a class="dropdown-item" href="#">Java</a>
-              <a class="dropdown-item" href="#">JavaScript</a>
+              <a class="dropdown-item" href="#" data-language="Python"
+                >Python</a
+              >
+              <a class="dropdown-item" href="#" data-language="JavaScript"
+                >JavaScript</a
+              >
+              <a class="dropdown-item" href="#" data-language="Java">Java</a>
             </div>
           </div>
         </div>
 
         <div class="col-4">
-          <!-- Dropdown wrapper -->
           <div class="dropdown">
-            <!-- Trigger button for dropdown -->
             <button
               class="btn btn-primary dropdown-toggle w-100"
               type="button"
-              id="podDropdownFilter"
+              id="podViewDropdownBtn"
               data-toggle="dropdown"
               aria-haspopup="true"
               aria-expanded="false"
             >
-              POD View
+              Select POD
             </button>
-
-            <!-- Dropdown Menu -->
-            <div
-              class="dropdown-menu w-100"
-              aria-labelledby="podDropdownFilter"
-            >
-              <a class="dropdown-item" href="#">POD 1</a>
-              <a class="dropdown-item" href="#">POD 2</a>
-              <a class="dropdown-item" href="#">POD 3</a>
-              <a class="dropdown-item" href="#">POD 4</a>
-              <a class="dropdown-item" href="#">POD 5</a>
-              <a class="dropdown-item" href="#">POD 6</a>
-              <a class="dropdown-item" href="#">POD 7</a>
-              <a class="dropdown-item" href="#">POD 8</a>
+            <div class="dropdown-menu" aria-labelledby="podViewDropdownBtn">
+              <a class="dropdown-item" href="#" data-pod="1">1</a>
+              <a class="dropdown-item" href="#" data-pod="2">2</a>
+              <a class="dropdown-item" href="#" data-pod="3">3</a>
+              <a class="dropdown-item" href="#" data-pod="4">4</a>
+              <a class="dropdown-item" href="#" data-pod="5">5</a>
+              <a class="dropdown-item" href="#" data-pod="6">6</a>
+              <a class="dropdown-item" href="#" data-pod="7">7</a>
+              <a class="dropdown-item" href="#" data-pod="8">8</a>
+              <a class="dropdown-item" href="#" data-pod="9">9</a>
             </div>
           </div>
         </div>
 
         <div class="col-4">
-          <button
-            class="btn btn-primary w-100"
-            type="button"
-            id="annotatorViewBtn"
-          >
-            Annotator View
-          </button>
+          <input
+            placeholder="Select a date"
+            type="text"
+            class="form-control datepicker"
+            id="fromDate"
+          />
         </div>
       </div>
       <div class="card mt-4 mb-4">
         <div class="card-header">
-          <div class="row">
-            <div class="col-6">Annotator Name</div>
-            <div class="col-6">Annotations in Past 1 hour</div>
+          <div class="row text-center">
+            <div class="col-6"><strong>Field Value</strong></div>
+            <div class="col-6"><strong>Count</strong></div>
           </div>
         </div>
         <div
-          class="list-group list-group-flush"
+          class="list-group list-group-flush text-center"
           style="padding: 10px"
           id="annotationList"
         ></div>
@@ -139,10 +137,68 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 
-    <!-- Custom JS -->
-    <script src="script.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <!-- bootstrap-datepicker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+
+    <!-- bootstrap-timepicker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
 
     <script>
+      let selectedLanguage = "",
+        selectedPod = "";
+
+      $(document).ready(function () {
+        $(".datepicker").datepicker({
+          format: "mm/dd/yyyy",
+          autoclose: true,
+        });
+      });
+
+      // Initialize timepickers
+      // $(".timepicker").timepicker({
+      //   showMeridian: false,
+      //   minuteStep: 5,
+      //   defaultTime: "current",
+      // });
+
+      // When a dropdown item is clicked...
+      document
+        .querySelectorAll(
+          "#languageViewDropdownBtn + .dropdown-menu .dropdown-item"
+        )
+        .forEach((item) => {
+          item.addEventListener("click", function () {
+            // Fetch the selected language using the data-language attribute
+            selectedLanguage = this.getAttribute("data-language");
+
+            // Set the button text to the selected language
+            document.getElementById("languageViewDropdownBtn").innerText =
+              selectedLanguage;
+
+            // You can also use the value here as needed
+            // ...
+          });
+        });
+
+      document
+        .querySelectorAll("#podViewDropdownBtn + .dropdown-menu .dropdown-item")
+        .forEach((item) => {
+          item.addEventListener("click", function () {
+            // Fetch the selected pod using the data-pod attribute
+            selectedPod = this.getAttribute("data-pod");
+
+            // Set the button text to the selected pod
+            document.getElementById("podViewDropdownBtn").innerText =
+              "POD number " + selectedPod;
+
+            // You can also use the value here as needed
+            // ...
+          });
+        });
+
       let annotatorDetails = {};
       if (
         localStorage.getItem("loggedIn") === undefined ||
@@ -153,13 +209,144 @@
         location.href = "/index.html";
       }
 
-      function searchByFilter() {
-        console.log("Implement search functionality");
+      for (let i = 0; i < 24; i++) {
+        let startTime = new Date(2023, 0, 1, i, 0, 0, 0).toLocaleTimeString(
+          "en-US",
+          { hour: "2-digit", minute: "2-digit", hour12: true }
+        );
+        let endTime = new Date(2023, 0, 1, i + 1, 0, 0, 0).toLocaleTimeString(
+          "en-US",
+          { hour: "2-digit", minute: "2-digit", hour12: true }
+        );
+
+        $("#annotationList").append(`
+            <div class="card">
+                <div class="card-header" id="heading${i}">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse${i}" aria-expanded="true" aria-controls="collapse${i}">
+                            ${startTime} - ${endTime}
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapse${i}" class="collapse" aria-labelledby="heading${i}" data-parent="#annotationList">
+                    <div class="card-body">
+                      Loading ...
+                    </div>
+                </div>
+            </div>
+        `);
       }
 
-      function searchByFilter() {
-        console.log("Reset annotation list");
+      function groupByPodRequest(
+        selectedDate,
+        selectedLanguage,
+        selectedPod,
+        fromTime,
+        toTime,
+        targetDivId
+      ) {
+        showSuccessAlertDashboard(
+          `Fetching details for Language: ${selectedLanguage}, POD: ${selectedPod}, Date: ${selectedDate}`
+        );
+        // Create the request payload
+        const requestBody = {
+          fromDate: selectedDate,
+          fromTime,
+          toDate: selectedDate,
+          toTime,
+          podNumber: selectedPod,
+          language: selectedLanguage,
+        };
+
+        // API request using jQuery's ajax method
+        $.ajax({
+          type: "POST",
+          url: "https://rmcopypastetoolbackend.onrender.com/api/annotations/groupByPod/",
+          data: JSON.stringify(requestBody),
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          success: function (response) {
+            // Populate the collapsible div with the response
+
+            if (response?.message?.length === 0) {
+              $(`#${targetDivId} .card-body`).html(
+                `<div>No records found</div>`
+              );
+            } else {
+              let reportDiv = ``;
+              response.message.forEach((record) => {
+                const singleRecord = `<div class='row'><div class='col-6'>${record._id}</div><div class='col-6'>${record.count}</div></div>`;
+                reportDiv += singleRecord;
+              });
+              $(`#${targetDivId} .card-body`).html(reportDiv);
+            }
+          },
+          error: function (error) {
+            console.error("Error fetching data:", error);
+          },
+        });
       }
+
+      function convertDateFormat(inputDate) {
+        if (typeof inputDate !== "string") {
+          showFailAlertDashboard("Please select a date first");
+          throw new Error("Input date must be a string");
+        }
+
+        // Split the input string into an array [month, day, year]
+        const parts = inputDate.split("/");
+
+        if (parts.length !== 3) {
+          showFailAlertDashboard("Please select a date first");
+          throw new Error("Invalid date format");
+        }
+
+        // Return the date in the desired format
+        return `${parts[2]}-${String(parts[0]).padStart(2, "0")}-${String(
+          parts[1]
+        ).padStart(2, "0")}`;
+      }
+
+      function extractTimes(inputString) {
+        const parts = inputString.split(" - ");
+
+        function convertTo24HourFormat(timeStr) {
+          // Handle the special case of 12:00 AM
+          if (timeStr.trim() === "12:00 AM") {
+            return "00:00:00";
+          }
+
+          // Use the Date object to parse the 12-hour format
+          const date = new Date("01/01/2000 " + timeStr);
+
+          // Get hours and minutes in 24-hour format with double digits
+          const hours = String(date.getHours()).padStart(2, "0");
+          const minutes = String(date.getMinutes()).padStart(2, "0");
+
+          return hours + ":" + minutes + ":00";
+        }
+
+        const fromTime = convertTo24HourFormat(parts[0]);
+        const toTime = convertTo24HourFormat(parts[1]);
+
+        return { fromTime, toTime };
+      }
+
+      // Add a function to handle the expansion of each div
+      $("#annotationList").on("show.bs.collapse", function (e) {
+        let timeInterval = $(e.target).prev().find("button").text().trim();
+        let { fromTime, toTime } = extractTimes(timeInterval);
+        let selectedDate = convertDateFormat($("#fromDate").val());
+
+        groupByPodRequest(
+          selectedDate,
+          selectedLanguage,
+          selectedPod,
+          fromTime,
+          toTime,
+          e.target.id // Passing the ID of the collapsing div so that we can target it in the groupByPodRequest function
+        );
+      });
 
       $(document).ready(function () {
         showSuccessAlertDashboard("Loading details ...");
@@ -192,9 +379,7 @@
               response.message[0]?.annotatorName;
             document.getElementById("role").innerText =
               response.message[0]?.annotatorRole;
-            document.getElementById("joiningDate").innerText = formatDate(
-              response.message[0]?.dateOfJoining
-            );
+
             document.getElementById("designation").innerText =
               response.message[0]?.designation;
 
@@ -203,117 +388,6 @@
             if (response.message[0].annotatorRole !== "tertiary") {
               window.location.href = "./dashboard.html";
             }
-
-            // annotation request start ------------------------------
-            showSuccessAlertDashboard("Loading annotations ...");
-
-            // fill with the leader view APIs
-
-            const annotatorData = [
-              {
-                annotatorName: "adimalik@deloitte.com",
-                annotations: 2,
-              },
-              {
-                annotatorName: "subhamsaha@deloitte.com",
-                annotations: 1,
-              },
-              {
-                annotatorName: "jhsharma@deloitte.com",
-                annotations: 3,
-              },
-              {
-                annotatorName: "bhaskar@deloitte.com",
-                annotations: 4,
-              },
-            ];
-
-            const languageData = [
-              {
-                language: "Python",
-                annotations: 2,
-              },
-              {
-                language: "Java",
-                annotations: 1,
-              },
-              {
-                language: "JavaScript",
-                annotations: 3,
-              },
-            ];
-
-            const annotationListContainer =
-              document.getElementById("annotationList");
-
-            languageData.forEach((record) => {
-              const listItemContainer = document.createElement("div");
-              listItemContainer.className = "row m-3";
-
-              const listItemAnnotatorName = document.createElement("div");
-              listItemAnnotatorName.className = "col-6";
-              listItemAnnotatorName.innerText = record.language;
-
-              const listItemAnnotations = document.createElement("div");
-              listItemAnnotations.className = "col-6";
-              listItemAnnotations.innerText = record.annotations;
-
-              listItemContainer.appendChild(listItemAnnotatorName);
-              listItemContainer.appendChild(listItemAnnotations);
-
-              annotationListContainer.appendChild(listItemContainer);
-            });
-
-            // Create a new instance of XMLHttpRequest
-            // var xhrAnnotations = new XMLHttpRequest();
-            // xhrAnnotations.open(
-            //   "POST",
-            //   `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate`,
-            //   true
-            // );
-
-            // // Set the request header for content-type
-            // xhrAnnotations.setRequestHeader(
-            //   "Content-Type",
-            //   "application/json;charset=UTF-8"
-            // );
-
-            // // Define the callback for when the request has completed
-            // xhrAnnotations.onload = function () {
-            //   const response = JSON.parse(xhrAnnotations.responseText);
-            //   if (xhrAnnotations.status >= 200 && xhrAnnotations.status < 400) {
-            //     // The request was successful! Handle the response here.
-
-            //     console.log(response);
-            //   } else {
-            //     // The request failed with a status code outside the range [200, 400).
-            //     // Handle the error here.
-            //     console.error(
-            //       "Request failed: " +
-            //         xhrAnnotations.status +
-            //         " " +
-            //         xhrAnnotations.statusText
-            //     );
-            //     console.log(response.message);
-            //   }
-            // };
-
-            // // Define the callback for network errors
-            // xhrAnnotations.onerror = function () {
-            //   console.error("Network error occurred.");
-            //   console.log(xhrAnnotations.message);
-            // };
-
-            // let dataAnnotations = JSON.stringify({
-            //   fromDate: "2023-09-28",
-            //   fromTime: "00:00:00",
-            //   toDate: "2023-09-28",
-            //   toTime: "24:00:00",
-            //   groupBy: "annotatorEmail", // or language, etc
-            // });
-            // xhrAnnotations.send(dataAnnotations);
-
-            // annotation request end --------------------------------
           } else {
             // The request failed with a status code outside the range [200, 400).
             // Handle the error here.
@@ -337,5 +411,7 @@
         xhr.send(data);
       });
     </script>
+    <!-- Custom JS -->
+    <script src="script.js"></script>
   </body>
 </html>
