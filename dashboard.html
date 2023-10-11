@@ -195,11 +195,19 @@
 
         var xhrSearch = new XMLHttpRequest();
 
-        xhrSearch.open(
-          "POST",
-          `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByPod?page=${pageNumber}`,
-          true
-        );
+        if (currentSearchFilter === "annotationId") {
+          xhrSearch.open(
+            "POST",
+            `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+            true
+          );
+        } else {
+          xhrSearch.open(
+            "POST",
+            `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByPod?page=${pageNumber}`,
+            true
+          );
+        }
 
         // Set the request header for content-type
         xhrSearch.setRequestHeader(
@@ -345,14 +353,23 @@
           showFailAlertDashboard(xhrSearch.message);
         };
 
-        const searchFilter = JSON.stringify({
-          podNumber: localStorage.getItem("podNumber"),
-          language: localStorage.getItem("language"),
-          search: {
+        let searchFilter;
+
+        if (currentSearchFilter === "annotationId") {
+          searchFilter = JSON.stringify({
             field: currentSearchFilter,
             value: document.getElementById("searchValue").value,
-          },
-        });
+          });
+        } else {
+          searchFilter = JSON.stringify({
+            podNumber: localStorage.getItem("podNumber"),
+            language: localStorage.getItem("language"),
+            search: {
+              field: currentSearchFilter,
+              value: document.getElementById("searchValue").value,
+            },
+          });
+        }
 
         xhrSearch.send(searchFilter);
       }
