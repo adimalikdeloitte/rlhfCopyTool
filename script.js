@@ -1671,7 +1671,7 @@ function submitAnnotation() {
         language: document.querySelector('input[name="language"]:checked')
           .value,
         batchNumber: document.getElementById("batchNumber").value,
-        prompt: document.getElementById("prompt").value,
+        prompt: document.getElementById("prompt").value.trim(),
         taskType: document.querySelector('input[name="taskType"]:checked')
           .value,
         completions: [completionA, completionB, completionC],
@@ -1764,7 +1764,7 @@ function submitAnnotation() {
           language: document.querySelector('input[name="language"]:checked')
             .value,
           batchNumber: document.getElementById("batchNumber").value,
-          prompt: document.getElementById("prompt").value,
+          prompt: document.getElementById("prompt").value.trim(),
           taskType: document.querySelector('input[name="taskType"]:checked')
             .value,
           completions: [completionA, completionB, completionC],
@@ -1785,7 +1785,7 @@ function submitAnnotation() {
           language: document.querySelector('input[name="language"]:checked')
             .value,
           batchNumber: document.getElementById("batchNumber").value,
-          prompt: document.getElementById("prompt").value,
+          prompt: document.getElementById("prompt").value.trim(),
           taskType: document.querySelector('input[name="taskType"]:checked')
             .value,
           completions: [completionA, completionB, completionC],
