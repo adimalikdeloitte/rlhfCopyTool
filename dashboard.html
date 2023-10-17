@@ -64,7 +64,7 @@
         <div class="col-6">
           <div class="card">
             <div class="card-header">
-              <div class="row">
+              <div id="countHeader" class="row">
                 <div class="col-8"><strong>Date</strong></div>
                 <div class="col-4"><strong>Annotation Count</strong></div>
               </div>
@@ -103,6 +103,7 @@
               <a class="dropdown-item" href="#">annotationId</a>
               <a class="dropdown-item" href="#">prompt</a>
               <a class="dropdown-item" href="#">batchNumber</a>
+              <a class="dropdown-item" href="#">date</a>
             </div>
           </div>
         </div>
@@ -111,7 +112,7 @@
             type="text"
             id="searchValue"
             class="form-control"
-            placeholder="Search value"
+            placeholder="Search value (in case of date, enter format : yyyy-mm-dd)"
           />
         </div>
         <div class="col-1">
@@ -199,6 +200,12 @@
           xhrSearch.open(
             "POST",
             `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+            true
+          );
+        } else if (currentSearchFilter === "date") {
+          xhrSearch.open(
+            "POST",
+            `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate?page=${pageNumber}`,
             true
           );
         } else {
@@ -359,6 +366,18 @@
           searchFilter = JSON.stringify({
             field: currentSearchFilter,
             value: document.getElementById("searchValue").value,
+          });
+        } else if (currentSearchFilter === "date") {
+          searchFilter = JSON.stringify({
+            fromDate: document.getElementById("searchValue").value,
+            fromTime: "00:00:00",
+            toDate: document.getElementById("searchValue").value,
+            toTime: "23:59:00",
+            groupBy: "", // or language, etc
+            search: {
+              field: "annotatorEmail",
+              value: localStorage.getItem("annotatorEmail"),
+            },
           });
         } else {
           searchFilter = JSON.stringify({
@@ -584,70 +603,154 @@
                   var xhrAnnotationsCount = new XMLHttpRequest();
 
                   // Configure the request type, URL, and asynchronous flag
-                  xhrAnnotationsCount.open(
-                    "POST",
-                    `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate`,
-                    true
-                  );
-
-                  // Set the request header for content-type
-                  xhrAnnotationsCount.setRequestHeader(
-                    "Content-Type",
-                    "application/json;charset=UTF-8"
-                  );
-
-                  // Define the callback for when the request has completed
-                  xhrAnnotationsCount.onload = function () {
-                    const response = JSON.parse(
-                      xhrAnnotationsCount.responseText
+                  if (localStorage.annotatorRole === "primary") {
+                    xhrAnnotationsCount.open(
+                      "POST",
+                      `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate`,
+                      true
                     );
-                    if (
-                      xhrAnnotationsCount.status >= 200 &&
-                      xhrAnnotationsCount.status < 400
-                    ) {
-                      // The request was successful! Handle the response here.
 
-                      response.message.forEach((r) => {
-                        if (r._id === localStorage.getItem("annotatorEmail")) {
-                          const countDiv = `<div class="row"><div class="col-8">${formatDate(
+                    // Set the request header for content-type
+                    xhrAnnotationsCount.setRequestHeader(
+                      "Content-Type",
+                      "application/json;charset=UTF-8"
+                    );
+
+                    // Define the callback for when the request has completed
+                    xhrAnnotationsCount.onload = function () {
+                      const response = JSON.parse(
+                        xhrAnnotationsCount.responseText
+                      );
+                      if (
+                        xhrAnnotationsCount.status >= 200 &&
+                        xhrAnnotationsCount.status < 400
+                      ) {
+                        // The request was successful! Handle the response here.
+
+                        response.message.forEach((r) => {
+                          if (
+                            r._id === localStorage.getItem("annotatorEmail")
+                          ) {
+                            const countDiv = `<div class="row"><div class="col-8">${formatDate(
+                              fromDate
+                            )}</div><div class="col-4">${r.count}</div></div>`;
+                            const countItem = document.createElement("div");
+                            countItem.innerHTML = countDiv;
+                            document
+                              .getElementById("annotationCountList")
+                              .appendChild(countItem);
+                          }
+                        });
+                      } else {
+                        // The request failed with a status code outside the range [200, 400).
+                        // Handle the error here.
+                        console.error(
+                          "Request failed: " +
+                            xhrAnnotationsCount.status +
+                            " " +
+                            xhrAnnotationsCount.statusText
+                        );
+                        showFailAlertDashboard(response.message);
+                      }
+                    };
+
+                    // Define the callback for network errors
+                    xhrAnnotationsCount.onerror = function () {
+                      console.error("Network error occurred.");
+                      showFailAlertDashboard(xhrAnnotationsCount.message);
+                    };
+
+                    let countFilter = JSON.stringify({
+                      fromDate,
+                      fromTime,
+                      toDate,
+                      toTime,
+                      groupBy: "annotatorEmail",
+                      search: {
+                        field: "annotatorEmail",
+                        value: localStorage.getItem("annotatorEmail"),
+                      },
+                    });
+                    xhrAnnotationsCount.send(countFilter);
+
+                    // annotation count request end --------------------------------
+                  } else {
+                    // the user is secondary user
+                    const countHeader = document.getElementById("countHeader");
+                    countHeader.innerHTML = `<div class="col-3"><strong>Date</strong></div>
+                <div class="col-3"><strong>Total</strong></div><div class="col-3"><strong>Approved</strong></div>
+                <div class="col-3"><strong>Rejected</strong></div>`;
+
+                    xhrAnnotationsCount.open(
+                      "POST",
+                      `https://rmcopypastetoolbackend.onrender.com/api/annotations/groupByPod/`,
+                      true
+                    );
+
+                    // Set the request header for content-type
+                    xhrAnnotationsCount.setRequestHeader(
+                      "Content-Type",
+                      "application/json;charset=UTF-8"
+                    );
+
+                    // Define the callback for when the request has completed
+                    xhrAnnotationsCount.onload = function () {
+                      const response = JSON.parse(
+                        xhrAnnotationsCount.responseText
+                      );
+                      if (
+                        xhrAnnotationsCount.status >= 200 &&
+                        xhrAnnotationsCount.status < 400
+                      ) {
+                        // The request was successful! Handle the response here.
+
+                        response.message.forEach((r) => {
+                          const countDiv = `<div style="border-bottom: 1px solid gray"><span>Annotator: ${
+                            r._id
+                          }</span><div class="row"><div class="col-3">${formatDate(
                             fromDate
-                          )}</div><div class="col-4">${r.count}</div></div>`;
+                          ).slice(0, 8)}</div><div class="col-3">${
+                            r.count
+                          }</div><div class="col-3">${
+                            r.approvedCount
+                          }</div><div class="col-3">${
+                            r.rejectedCount
+                          }</div><br /></div>`;
                           const countItem = document.createElement("div");
                           countItem.innerHTML = countDiv;
                           document
                             .getElementById("annotationCountList")
                             .appendChild(countItem);
-                        }
-                      });
-                    } else {
-                      // The request failed with a status code outside the range [200, 400).
-                      // Handle the error here.
-                      console.error(
-                        "Request failed: " +
-                          xhrAnnotationsCount.status +
-                          " " +
-                          xhrAnnotationsCount.statusText
-                      );
-                      showFailAlertDashboard(response.message);
-                    }
-                  };
+                        });
+                      } else {
+                        // The request failed with a status code outside the range [200, 400).
+                        // Handle the error here.
+                        console.error(
+                          "Request failed: " +
+                            xhrAnnotationsCount.status +
+                            " " +
+                            xhrAnnotationsCount.statusText
+                        );
+                        showFailAlertDashboard(response.message);
+                      }
+                    };
 
-                  // Define the callback for network errors
-                  xhrAnnotationsCount.onerror = function () {
-                    console.error("Network error occurred.");
-                    showFailAlertDashboard(xhrAnnotationsCount.message);
-                  };
+                    // Define the callback for network errors
+                    xhrAnnotationsCount.onerror = function () {
+                      console.error("Network error occurred.");
+                      showFailAlertDashboard(xhrAnnotationsCount.message);
+                    };
 
-                  let countFilter = JSON.stringify({
-                    fromDate,
-                    fromTime,
-                    toDate,
-                    toTime,
-                    groupBy: "annotatorEmail",
-                  });
-                  xhrAnnotationsCount.send(countFilter);
-
-                  // annotation count request end --------------------------------
+                    let countFilter = JSON.stringify({
+                      fromDate,
+                      fromTime,
+                      toDate,
+                      toTime,
+                      podNumber: annotatorDetails.podNumber,
+                      language: annotatorDetails.language,
+                    });
+                    xhrAnnotationsCount.send(countFilter);
+                  }
                 }
 
                 const startDate = new Date(2023, 8, 28); // Months are 0-based, so 8 represents September

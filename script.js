@@ -124,6 +124,74 @@ function showSuccessAlertCreateAnnotation(message) {
   }, 3000);
 }
 
+// Function to open the Bootstrap modal
+function openModalWithData(data) {
+  // Populate modal content with data
+  const modalContent = document.getElementById("checkStatusPromptModalContent");
+
+  let s = ``;
+
+  if (typeof data === "string") {
+    s = `No matching prompt found !`;
+  } else {
+    if (localStorage.getItem("annotatorRole") === "primary") {
+      data.forEach((record) => {
+        s += `<span class="mr-2">${
+          record.rejected === true
+            ? "<strong class='text-danger'>Rejected</strong>"
+            : "<strong class='text-success'>Not Rejected</strong>"
+        }</span><pre style="border: 1px solid gray">${
+          record.prompt
+        }</pre><hr />`;
+      });
+    } else {
+      data.forEach((record) => {
+        s += `<span class="mr-2">Annotation ID: <strong>${
+          record.annotationId
+        }</strong></span><br /><span class="mr-2">Annotator Email: <strong>${
+          record.annotatorEmail
+        }</strong></span><br /><span class="mr-2">${
+          record.rejected === true
+            ? "<strong class='text-danger'>Rejected</strong>"
+            : "<strong class='text-success'>Not Rejected</strong>"
+        }</span><pre style="border: 1px solid gray">${
+          record.prompt
+        }</pre><hr />`;
+      });
+    }
+  }
+
+  modalContent.innerHTML = s;
+
+  // Open the modal
+  $("#checkStatusPromptModal").modal("show");
+}
+
+function checkPromptStatus() {
+  fetch(
+    `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter/?page=1`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Set the content type to JSON
+      },
+      body: JSON.stringify({
+        field: "prompt",
+        value: document.getElementById("prompt").value,
+      }),
+    }
+  )
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      openModalWithData(data.message);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+}
+
 function editAnnotation(annotationId) {
   // TODO: Navigate to the annotation details page using the batch ID
   window.location.href = "create_annotation.html?id=" + annotationId; // Sample redirect
@@ -754,6 +822,10 @@ function checkEmpty() {
   if (
     document.querySelector('input[name="rejected"]:checked')?.value === "false"
   ) {
+    if ($(`input[name="confidence"]:checked`).length <= 0) {
+      emptyFields.push("Confidence Level");
+    }
+
     for (let i = 1; i <= 7; i++) {
       if ($(`input[name="mcq${i}A"]:checked`).length <= 0) {
         emptyFields.push(`MCQ ${i} of Completion A`);
@@ -782,8 +854,23 @@ function checkEmpty() {
 
     // selected yes for Q1 A
     if (document.querySelector('input[name="mcq1A"]:checked')?.value === "1") {
-      if ($("#completionAJustificationQ1").val() === "") {
+      if ($("#completionAJustificationQ1").val().trim() === "") {
         emptyFields.push("Completion A Q1 Justification URL");
+      }
+
+      if (
+        $("#completionAJustificationQ1").val().toLowerCase() === "na" ||
+        $("#completionAJustificationQ1").val().toLowerCase() ===
+          "not applicable" ||
+        $("#completionAJustificationQ1").val().toLowerCase() === "null" ||
+        $("#completionAJustificationQ1").val().toLowerCase() === "none" ||
+        $("#completionAJustificationQ1").val().toLowerCase() ===
+          "no comments" ||
+        $("#completionAJustificationQ1").val().toLowerCase() === "blank"
+      ) {
+        emptyFields.push(
+          "Keyword not allowed in the URL section of Completion A"
+        );
       }
 
       if ($("#justificationReasonYesCompletionAQ1").val().join(", ") === "") {
@@ -838,6 +925,21 @@ function checkEmpty() {
         emptyFields.push("Completion B Q1 Justification URL");
       }
 
+      if (
+        $("#completionBJustificationQ1").val().toLowerCase() === "na" ||
+        $("#completionBJustificationQ1").val().toLowerCase() ===
+          "not applicable" ||
+        $("#completionBJustificationQ1").val().toLowerCase() === "null" ||
+        $("#completionBJustificationQ1").val().toLowerCase() === "none" ||
+        $("#completionBJustificationQ1").val().toLowerCase() ===
+          "no comments" ||
+        $("#completionBJustificationQ1").val().toLowerCase() === "blank"
+      ) {
+        emptyFields.push(
+          "Keyword not allowed in the URL section of Completion B"
+        );
+      }
+
       if ($("#justificationReasonYesCompletionBQ1").val().join(", ") === "") {
         emptyFields.push("Completion B Q1 Justification Reasons");
       }
@@ -888,6 +990,21 @@ function checkEmpty() {
     if (document.querySelector('input[name="mcq1C"]:checked')?.value === "1") {
       if ($("#completionCJustificationQ1").val() === "") {
         emptyFields.push("Completion C Q1 Justification URL");
+      }
+
+      if (
+        $("#completionCJustificationQ1").val().toLowerCase() === "na" ||
+        $("#completionCJustificationQ1").val().toLowerCase() ===
+          "not applicable" ||
+        $("#completionCJustificationQ1").val().toLowerCase() === "null" ||
+        $("#completionCJustificationQ1").val().toLowerCase() === "none" ||
+        $("#completionCJustificationQ1").val().toLowerCase() ===
+          "no comments" ||
+        $("#completionCJustificationQ1").val().toLowerCase() === "blank"
+      ) {
+        emptyFields.push(
+          "Keyword not allowed in the URL section of Completion C"
+        );
       }
 
       if ($("#justificationReasonYesCompletionCQ1").val().join(", ") === "") {
@@ -1043,6 +1160,8 @@ if (_id != null) {
       if (data.success === true) {
         let ann = data.message;
 
+        console.log(ann);
+
         // fill top level data
         document.querySelector(
           `[name="language"][value="${ann.language}"]`
@@ -1063,6 +1182,11 @@ if (_id != null) {
         document.querySelector(
           `[name="rejected"][value="${ann.rejected}"]`
         ).checked = true;
+
+        if (ann.confidenceRating !== undefined)
+          document.querySelector(
+            `[name="confidence"][value="${ann.confidenceRating}"]`
+          ).checked = true;
 
         currentAnnotationId = ann.annotationId;
         currentEmailId = ann.annotatorEmail;
@@ -1556,6 +1680,9 @@ function submitAnnotation() {
         rejected:
           document.querySelector('input[name="rejected"]:checked').value ===
           "true",
+        confidenceRating: document.querySelector(
+          'input[name="confidence"]:checked'
+        ).value,
       };
     } else if (
       document.querySelector('input[name="rejected"]:checked').value === "true"
@@ -1710,12 +1837,14 @@ function submitAnnotation() {
       .then((data) => {
         showSuccessAlertCreateAnnotation(alertMessage);
 
-        setTimeout(() => {
-          window.location.href = redirect;
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.href = redirect;
+        // }, 3000);
       })
 
       .catch((error) => console.error("Error:", error));
+
+    console.log(formData);
   }
 }
 
