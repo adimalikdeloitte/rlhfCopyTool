@@ -108,12 +108,17 @@
           </div>
         </div>
         <div class="col-8">
-          <input
+          <textarea
+            id="searchValue"
+            class="form-control"
+            placeholder="Search value (in case of date, enter format : yyyy-mm-dd)"
+          ></textarea>
+          <!-- <input
             type="text"
             id="searchValue"
             class="form-control"
             placeholder="Search value (in case of date, enter format : yyyy-mm-dd)"
-          />
+          /> -->
         </div>
         <div class="col-1">
           <button onclick="searchByFilter()" class="btn btn-primary">
