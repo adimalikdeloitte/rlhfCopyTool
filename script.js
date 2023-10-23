@@ -787,7 +787,7 @@ function logout() {
 
 function checkEmpty() {
   let emptyFields = [];
-  if ($("#batchNumber").val() === "") {
+  if ($("#batchDropdownButton").text().trim() === "Select a batch") {
     emptyFields.push("Batch Number");
   }
 
@@ -1167,7 +1167,7 @@ if (_id != null) {
           `[name="language"][value="${ann.language}"]`
         ).checked = true;
 
-        document.getElementById("batchNumber").value = ann.batchNumber;
+        $("#batchDropdownButton").text(ann.batchNumber);
 
         document.getElementById("prompt").value = ann.prompt;
 
@@ -1670,7 +1670,7 @@ function submitAnnotation() {
         annotatorEmail: annotatorEmail,
         language: document.querySelector('input[name="language"]:checked')
           .value,
-        batchNumber: document.getElementById("batchNumber").value,
+        batchNumber: $("#batchDropdownButton").text().trim(),
         prompt: document.getElementById("prompt").value.trim(),
         taskType: document.querySelector('input[name="taskType"]:checked')
           .value,
@@ -1763,7 +1763,7 @@ function submitAnnotation() {
           annotatorEmail: annotatorEmail,
           language: document.querySelector('input[name="language"]:checked')
             .value,
-          batchNumber: document.getElementById("batchNumber").value,
+          batchNumber: $("#batchDropdownButton").text().trim(),
           prompt: document.getElementById("prompt").value.trim(),
           taskType: document.querySelector('input[name="taskType"]:checked')
             .value,
@@ -1784,7 +1784,7 @@ function submitAnnotation() {
           annotatorEmail: annotatorEmail,
           language: document.querySelector('input[name="language"]:checked')
             .value,
-          batchNumber: document.getElementById("batchNumber").value,
+          batchNumber: $("#batchDropdownButton").text().trim(),
           prompt: document.getElementById("prompt").value.trim(),
           taskType: document.querySelector('input[name="taskType"]:checked')
             .value,

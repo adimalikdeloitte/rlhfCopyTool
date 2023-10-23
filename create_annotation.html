@@ -51,9 +51,24 @@
       </div>
 
       <form id="annotationForm">
-        <div class="form-group">
-          <label for="batchNumber">Batch Number</label>
-          <input type="text" class="form-control" id="batchNumber" />
+        <div class="dropdown">
+          <button
+            class="btn btn-outline-dark dropdown-toggle mb-3"
+            type="button"
+            id="batchDropdownButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            Select a batch
+          </button>
+          <div
+            class="dropdown-menu"
+            aria-labelledby="batchDropdownButton"
+            id="batchDropdownMenu"
+          >
+            <!-- Items will be added here dynamically -->
+          </div>
         </div>
 
         <div class="form-group">
@@ -1768,6 +1783,49 @@
       ) {
         location.href = "/index.html";
       }
+
+      $(document).ready(function () {
+        let languagePreference = localStorage.getItem("language");
+        let batchList = [];
+
+        switch (languagePreference) {
+          case "Java":
+            batchList = ["Batch 4"];
+            break;
+          case "Python":
+            batchList = ["Batch 5", "Batch 6"];
+            break;
+          case "JavaScript":
+            batchList = ["Batch 2"];
+            break;
+        }
+
+        batchList.forEach(function (batch) {
+          $("#batchDropdownMenu").append(
+            '<a class="dropdown-item batch-item" href="#">' + batch + "</a>"
+          );
+        });
+
+        // Update the dropdown button's text when an item is selected
+        $(".batch-item").click(function () {
+          let selectedBatch = $(this).text();
+          $("#batchDropdownButton").text(selectedBatch);
+        });
+      });
+
+      // Function to get the currently selected value
+      function getSelectedBatch() {
+        let currentBatch = $("#batchDropdownButton").text();
+        if (currentBatch !== "Select a batch") {
+          return currentBatch;
+        } else {
+          return null; // or return "No batch selected" or similar message
+        }
+      }
+
+      // Usage:
+      // let selectedBatch = getSelectedBatch();
+      // console.log(selectedBatch);
     </script>
   </body>
 </html>
