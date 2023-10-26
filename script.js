@@ -167,6 +167,15 @@ function openModalWithData(data) {
   $("#checkStatusPromptModal").modal("show");
 }
 
+function removeExtraSpacesFromEmptyLines(str) {
+  return str
+    .split("\n")
+    .map((line) => {
+      return line.trim() === "" ? "" : line;
+    })
+    .join("\n");
+}
+
 function checkPromptStatus() {
   fetch(
     `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter/?page=1`,
@@ -177,7 +186,9 @@ function checkPromptStatus() {
       },
       body: JSON.stringify({
         field: "prompt",
-        value: document.getElementById("prompt").value,
+        value: removeExtraSpacesFromEmptyLines(
+          document.getElementById("prompt")?.value?.trim()
+        ),
       }),
     }
   )

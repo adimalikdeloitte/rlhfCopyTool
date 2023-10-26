@@ -53,81 +53,235 @@
         </div>
       </div>
 
-      <div class="mt-4 row">
-        <div class="col-4">
-          <div class="dropdown">
-            <button
-              class="btn btn-primary dropdown-toggle w-100"
-              type="button"
-              id="languageViewDropdownBtn"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Select Language
-            </button>
-            <div
-              class="dropdown-menu"
-              aria-labelledby="languageViewDropdownBtn"
-            >
-              <a class="dropdown-item" href="#" data-language="Python"
-                >Python</a
+      <button
+        class="btn btn-outline-dark w-100 mt-4"
+        type="button"
+        data-toggle="collapse"
+        data-target="#podWiseContent"
+        aria-expanded="false"
+        aria-controls="podWiseContent"
+      >
+        POD WISE Data
+      </button>
+
+      <div class="collapse" id="podWiseContent">
+        <div class="mt-4 row">
+          <div class="col-4">
+            <div class="dropdown">
+              <button
+                class="btn btn-primary dropdown-toggle w-100"
+                type="button"
+                id="languageViewDropdownBtn"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
               >
-              <a class="dropdown-item" href="#" data-language="JavaScript"
-                >JavaScript</a
+                Select Language
+              </button>
+              <div
+                class="dropdown-menu"
+                aria-labelledby="languageViewDropdownBtn"
               >
-              <a class="dropdown-item" href="#" data-language="Java">Java</a>
+                <a class="dropdown-item" href="#" data-language="Python"
+                  >Python</a
+                >
+                <a class="dropdown-item" href="#" data-language="JavaScript"
+                  >JavaScript</a
+                >
+                <a class="dropdown-item" href="#" data-language="Java">Java</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-4">
-          <div class="dropdown">
-            <button
-              class="btn btn-primary dropdown-toggle w-100"
-              type="button"
-              id="podViewDropdownBtn"
-              data-toggle="dropdown"
-              aria-haspopup="true"
-              aria-expanded="false"
-            >
-              Select POD
-            </button>
-            <div class="dropdown-menu" aria-labelledby="podViewDropdownBtn">
-              <a class="dropdown-item" href="#" data-pod="1">1</a>
-              <a class="dropdown-item" href="#" data-pod="2">2</a>
-              <a class="dropdown-item" href="#" data-pod="3">3</a>
-              <a class="dropdown-item" href="#" data-pod="4">4</a>
-              <a class="dropdown-item" href="#" data-pod="5">5</a>
-              <a class="dropdown-item" href="#" data-pod="6">6</a>
-              <a class="dropdown-item" href="#" data-pod="7">7</a>
-              <a class="dropdown-item" href="#" data-pod="8">8</a>
-              <a class="dropdown-item" href="#" data-pod="9">9</a>
+          <div class="col-4">
+            <div class="dropdown">
+              <button
+                class="btn btn-primary dropdown-toggle w-100"
+                type="button"
+                id="podViewDropdownBtn"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Select POD
+              </button>
+              <div class="dropdown-menu" aria-labelledby="podViewDropdownBtn">
+                <a class="dropdown-item" href="#" data-pod="1">1</a>
+                <a class="dropdown-item" href="#" data-pod="2">2</a>
+                <a class="dropdown-item" href="#" data-pod="3">3</a>
+                <a class="dropdown-item" href="#" data-pod="4">4</a>
+                <a class="dropdown-item" href="#" data-pod="5">5</a>
+                <a class="dropdown-item" href="#" data-pod="6">6</a>
+                <a class="dropdown-item" href="#" data-pod="7">7</a>
+                <a class="dropdown-item" href="#" data-pod="8">8</a>
+                <a class="dropdown-item" href="#" data-pod="9">9</a>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="col-4">
-          <input
-            placeholder="Select a date"
-            type="text"
-            class="form-control datepicker"
-            id="fromDate"
-          />
+          <div class="col-4">
+            <input
+              placeholder="Select a date"
+              type="text"
+              class="form-control datepicker"
+              id="fromDate"
+            />
+          </div>
+        </div>
+        <div class="card mt-4 mb-4">
+          <div class="card-header">
+            <div class="row text-center">
+              <div class="col-6"><strong>Field Value</strong></div>
+              <div class="col-6"><strong>Count</strong></div>
+            </div>
+          </div>
+          <div
+            class="list-group list-group-flush text-center"
+            style="padding: 10px"
+            id="annotationList"
+          ></div>
         </div>
       </div>
-      <div class="card mt-4 mb-4">
-        <div class="card-header">
-          <div class="row text-center">
-            <div class="col-6"><strong>Field Value</strong></div>
-            <div class="col-6"><strong>Count</strong></div>
+
+      <button
+        class="btn btn-outline-dark w-100 mt-4"
+        type="button"
+        data-toggle="collapse"
+        data-target="#batchWiseContent"
+        aria-expanded="false"
+        aria-controls="batchWiseContent"
+      >
+        BATCH WISE Data
+      </button>
+
+      <div class="collapse" id="batchWiseContent">
+        <div class="mt-4 row">
+          <div class="col-4">
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-dark dropdown-toggle w-100"
+                type="button"
+                id="languageBatchViewDropdownBtn"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Select Language
+              </button>
+              <div
+                class="dropdown-menu"
+                aria-labelledby="languageBatchViewDropdownBtn"
+              >
+                <a class="dropdown-item" href="#" data-language="Python"
+                  >Python</a
+                >
+                <a class="dropdown-item" href="#" data-language="JavaScript"
+                  >JavaScript</a
+                >
+                <a class="dropdown-item" href="#" data-language="Java">Java</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-4">
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-dark dropdown-toggle w-100"
+                type="button"
+                id="batchViewDropdown"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Select Batch
+              </button>
+              <div class="dropdown-menu" aria-labelledby="batchViewDropdown">
+                <a class="dropdown-item" href="#" data-batch="Batch 1"
+                  >Batch 1</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 2"
+                  >Batch 2</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 3"
+                  >Batch 3</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 4"
+                  >Batch 4</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 5"
+                  >Batch 5</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 6"
+                  >Batch 6</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 7"
+                  >Batch 7</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 8"
+                  >Batch 8</a
+                >
+                <a class="dropdown-item" href="#" data-batch="Batch 9"
+                  >Batch 9</a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <button class="btn btn-primary w-100" onclick="fetchReport()">
+              Fetch report
+            </button>
           </div>
         </div>
         <div
-          class="list-group list-group-flush text-center"
-          style="padding: 10px"
-          id="annotationList"
+          id="batchStats"
+          style="
+            display: none;
+            border: 1px solid gray;
+            padding: 5px;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+          "
         ></div>
+        <div class="card mt-4 mb-4">
+          <div class="card-header">
+            <div class="row text-center">
+              <div class="col-6"><strong>Annotation ID</strong></div>
+              <div class="col-2"><strong>Count</strong></div>
+              <div class="col-2"><strong>Approved Count</strong></div>
+              <div class="col-2"><strong>Rejected Count</strong></div>
+            </div>
+          </div>
+          <div
+            class="list-group list-group-flush text-center"
+            style="padding: 10px"
+            id="batchViewAnnotationList"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="annotationDetailsModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 id="annotationDetailsModalTitle" class="modal-title">
+              Annotation Details
+            </h6>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+          <div class="modal-body" id="annotationDetailsModalContent">
+            <!-- Content from the backend will be inserted here -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">
+              Close
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -137,18 +291,13 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
     <!-- bootstrap-datepicker JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
-    <!-- bootstrap-timepicker JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js"></script>
-
     <script>
       let selectedLanguage = "",
-        selectedPod = "";
+        selectedPod = "",
+        selectedBatch = "";
 
       $(document).ready(function () {
         $(".datepicker").datepicker({
@@ -156,13 +305,6 @@
           autoclose: true,
         });
       });
-
-      // Initialize timepickers
-      // $(".timepicker").timepicker({
-      //   showMeridian: false,
-      //   minuteStep: 5,
-      //   defaultTime: "current",
-      // });
 
       // When a dropdown item is clicked...
       document
@@ -176,6 +318,25 @@
 
             // Set the button text to the selected language
             document.getElementById("languageViewDropdownBtn").innerText =
+              selectedLanguage;
+
+            // You can also use the value here as needed
+            // ...
+          });
+        });
+
+      // When a dropdown item is clicked...
+      document
+        .querySelectorAll(
+          "#languageBatchViewDropdownBtn + .dropdown-menu .dropdown-item"
+        )
+        .forEach((item) => {
+          item.addEventListener("click", function () {
+            // Fetch the selected language using the data-language attribute
+            selectedLanguage = this.getAttribute("data-language");
+
+            // Set the button text to the selected language
+            document.getElementById("languageBatchViewDropdownBtn").innerText =
               selectedLanguage;
 
             // You can also use the value here as needed
@@ -198,6 +359,113 @@
             // ...
           });
         });
+
+      document
+        .querySelectorAll("#batchViewDropdown + .dropdown-menu .dropdown-item")
+        .forEach((item) => {
+          item.addEventListener("click", function () {
+            // Fetch the selected pod using the data-pod attribute
+            selectedBatch = this.getAttribute("data-batch");
+
+            // Set the button text to the selected pod
+            document.getElementById("batchViewDropdown").innerText =
+              selectedBatch;
+
+            // You can also use the value here as needed
+            // ...
+          });
+        });
+
+      function openAnnotationDetailsModal(annotationId) {
+        document.getElementById("annotationDetailsModalTitle").innerText =
+          "Annotation ID : " + annotationId;
+        // Populate modal content with data
+        const modalContent = document.getElementById(
+          "annotationDetailsModalContent"
+        );
+
+        let s = ``;
+
+        fetch(
+          `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=1`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Set the content type to JSON
+            },
+            body: JSON.stringify({
+              field: "annotationId",
+              value: annotationId,
+            }),
+          }
+        )
+          .then((response) => {
+            return response.json();
+          })
+          .then((data) => {
+            data.message.forEach((record) => {
+              s += `<span class="mr-2">Annotator Email: <strong>${
+                record.annotatorEmail
+              }</strong></span><br /><span class="mr-2">${
+                record.rejected === true
+                  ? "<strong class='text-danger'>Rejected</strong>"
+                  : "<strong class='text-success'>Not Rejected</strong>"
+              }</span><hr />`;
+            });
+
+            modalContent.innerHTML = s;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+
+        // Open the modal
+        $("#annotationDetailsModal").modal("show");
+      }
+
+      function fetchReport() {
+        if (selectedBatch.trim() === "" || selectedLanguage.trim() === "") {
+          showFailAlertDashboard("Please select a language and a batch number");
+        } else {
+          // Create the request payload
+          const requestBody = {
+            batchNumber: selectedBatch,
+            language: selectedLanguage,
+          };
+
+          // API request using jQuery's ajax method
+          $.ajax({
+            type: "POST",
+            url: "https://rmcopypastetoolbackend.onrender.com/api/annotations/groupByBatch/",
+            data: JSON.stringify(requestBody),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+              // Populate the collapsible div with the response
+              let totalRejections = 0;
+              let totalApproved = 0;
+              let totalCount = 0;
+
+              let reportDiv = ``;
+              response.message.forEach((record) => {
+                totalRejections += record.rejectedCount;
+                totalApproved += record.approvedCount;
+                totalCount += record.count;
+                const singleRecord = `<div class='row'><div class='col-6'><a href='#' onclick='openAnnotationDetailsModal("${record._id}")'>${record._id}</a></div><div class='col-2'>${record.count}</div><div class='col-2'>${record.approvedCount}</div><div class='col-2'>${record.rejectedCount}</div></div>`;
+                reportDiv += singleRecord;
+              });
+              $(`#batchViewAnnotationList`).html(reportDiv);
+              $(`#batchStats`).show();
+              $(`#batchStats`).html(
+                `<p><strong>Total Rejections:</strong> ${totalRejections}</p><p><strong>Total Approved:</strong> ${totalApproved}</p><p><strong>Total Count:</strong> ${totalCount}</p>`
+              );
+            },
+            error: function (error) {
+              console.error("Error fetching data:", error);
+            },
+          });
+        }
+      }
 
       let annotatorDetails = {};
       if (
