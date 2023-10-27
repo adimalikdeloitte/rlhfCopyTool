@@ -136,7 +136,9 @@ function openModalWithData(data) {
   } else {
     if (localStorage.getItem("annotatorRole") === "primary") {
       data.forEach((record) => {
-        s += `<span class="mr-2">${
+        s += `<span class="mr-2">Task Type: <strong>${
+          record.taskType
+        }</strong></span><br /><span class="mr-2">${
           record.rejected === true
             ? "<strong class='text-danger'>Rejected</strong>"
             : "<strong class='text-success'>Not Rejected</strong>"
@@ -150,6 +152,8 @@ function openModalWithData(data) {
           record.annotationId
         }</strong></span><br /><span class="mr-2">Annotator Email: <strong>${
           record.annotatorEmail
+        }</strong></span><br /><span class="mr-2">Task Type: <strong>${
+          record.taskType
         }</strong></span><br /><span class="mr-2">${
           record.rejected === true
             ? "<strong class='text-danger'>Rejected</strong>"
