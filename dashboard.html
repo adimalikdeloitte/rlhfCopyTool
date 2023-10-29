@@ -163,6 +163,8 @@
     <script src="script.js"></script>
 
     <script>
+      // const APIURL = "https://rmcopypastetoolbackend.onrender.com";
+
       let currentSearchFilter = "";
       let annotatorDetails = {};
       if (
@@ -171,7 +173,7 @@
         localStorage.getItem("loggedIn") === null ||
         localStorage.getItem("annotatorEmail") === null
       ) {
-        location.href = "/index.html";
+        location.href = "./index.html";
       }
 
       const dashboardParams = new Proxy(
@@ -204,19 +206,19 @@
         if (currentSearchFilter === "annotationId") {
           xhrSearch.open(
             "POST",
-            `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+            APIURL + `/api/annotations/filter?page=${pageNumber}`,
             true
           );
         } else if (currentSearchFilter === "date") {
           xhrSearch.open(
             "POST",
-            `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate?page=${pageNumber}`,
+            APIURL + `/api/annotations/filterByDate?page=${pageNumber}`,
             true
           );
         } else {
           xhrSearch.open(
             "POST",
-            `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByPod?page=${pageNumber}`,
+            APIURL + `/api/annotations/filterByPod?page=${pageNumber}`,
             true
           );
         }
@@ -291,8 +293,12 @@
                 annotation.annotatorEmail
               } </span></div><div class="col-2">${
                 annotation.rejected
-                  ? "<span class='bg-danger p-2 text-white'>Rejected</span>"
-                  : "<span class='bg-success p-2 text-white'>Not Rejected</span>"
+                  ? "<span class='badge badge-pill badge-danger'>Rejected</span>"
+                  : "<span class='badge badge-pill badge-success'>Not Rejected</span>"
+              }${
+                annotation.ranking === "" && annotation.rejected === false
+                  ? "<span class='badge badge-pill badge-warning'>Primary Log</span>"
+                  : ""
               }</div></div>`;
 
               li.appendChild(annotationDetails);
@@ -326,15 +332,23 @@
               };
               li.appendChild(btn);
 
+              const editBtn = document.createElement("button");
+              editBtn.className = "btn btn-primary ml-2 mt-2";
+              editBtn.textContent = "Edit as new";
+              editBtn.onclick = function () {
+                editAnnotation(annotation._id);
+              };
+              li.appendChild(editBtn);
+
               if (annotatorDetails.annotatorRole !== "primary") {
                 // Create the edit button
-                const btn = document.createElement("button");
-                btn.className = "btn btn-primary ml-2 mt-2";
-                btn.textContent = "Edit";
-                btn.onclick = function () {
-                  editAnnotation(annotation._id);
-                };
-                li.appendChild(btn);
+                // const btn = document.createElement("button");
+                // btn.className = "btn btn-primary ml-2 mt-2";
+                // btn.textContent = "Edit";
+                // btn.onclick = function () {
+                //   editAnnotation(annotation._id);
+                // };
+                // li.appendChild(btn);
 
                 // Create the edit button
                 const btnDelete = document.createElement("button");
@@ -415,11 +429,7 @@
         var xhr = new XMLHttpRequest();
 
         // Configure the request type, URL, and asynchronous flag
-        xhr.open(
-          "POST",
-          "https://rmcopypastetoolbackend.onrender.com/api/employee/filter",
-          true
-        );
+        xhr.open("POST", APIURL + "/api/employee/filter", true);
 
         // Set the request header for content-type
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -469,13 +479,13 @@
             if (annotatorDetails.annotatorRole === "primary") {
               xhrAnnotations.open(
                 "POST",
-                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter?page=${pageNumber}`,
+                APIURL + `/api/annotations/filter?page=${pageNumber}`,
                 true
               );
             } else {
               xhrAnnotations.open(
                 "POST",
-                `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByPod?page=${pageNumber}`,
+                APIURL + `/api/annotations/filterByPod?page=${pageNumber}`,
                 true
               );
             }
@@ -535,8 +545,12 @@
                     annotation.annotatorEmail
                   } </span></div><div class="col-2">${
                     annotation.rejected
-                      ? "<span class='bg-danger p-2 text-white'>Rejected</span>"
-                      : "<span class='bg-success p-2 text-white'>Not Rejected</span>"
+                      ? "<span class='badge badge-pill badge-danger'>Rejected</span>"
+                      : "<span class='badge badge-pill badge-success'>Not Rejected</span>"
+                  }${
+                    annotation.ranking === "" && annotation.rejected === false
+                      ? "<span class='badge badge-pill badge-warning'>Primary Log</span>"
+                      : ""
                   }</div></div>`;
 
                   li.appendChild(annotationDetails);
@@ -611,7 +625,7 @@
                   if (localStorage.annotatorRole === "primary") {
                     xhrAnnotationsCount.open(
                       "POST",
-                      `https://rmcopypastetoolbackend.onrender.com/api/annotations/filterByDate`,
+                      APIURL + `/api/annotations/filterByDate`,
                       true
                     );
 
@@ -688,7 +702,7 @@
 
                     xhrAnnotationsCount.open(
                       "POST",
-                      `https://rmcopypastetoolbackend.onrender.com/api/annotations/groupByPod/`,
+                      APIURL + `/api/annotations/groupByPod/`,
                       true
                     );
 

@@ -1,3 +1,6 @@
+const APIURL = "https://rmcopypastetoolbackend.onrender.com";
+// const APIURL = "http://localhost:3000";
+
 function showFailAlert(message) {
   const alertHTML = `
       <div id="failAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -181,21 +184,19 @@ function removeExtraSpacesFromEmptyLines(str) {
 }
 
 function checkPromptStatus() {
-  fetch(
-    `https://rmcopypastetoolbackend.onrender.com/api/annotations/filter/?page=1`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // Set the content type to JSON
-      },
-      body: JSON.stringify({
-        field: "prompt",
-        value: removeExtraSpacesFromEmptyLines(
-          document.getElementById("prompt")?.value?.trim()
-        ),
-      }),
-    }
-  )
+  // console.log({ prompt: document.getElementById("prompt")?.value?.trim() });
+  fetch(APIURL + `/api/annotations/filter/?page=1`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json", // Set the content type to JSON
+    },
+    body: JSON.stringify({
+      field: "prompt",
+      value: removeExtraSpacesFromEmptyLines(
+        document.getElementById("prompt")?.value?.trim()
+      ),
+    }),
+  })
     .then((response) => {
       return response.json();
     })
@@ -219,12 +220,9 @@ function openAnnotationDetails(annotationId) {
 }
 
 function deleteAnnotation(annotationId) {
-  fetch(
-    `https://rmcopypastetoolbackend.onrender.com/api/annotations/${annotationId}`,
-    {
-      method: "DELETE",
-    }
-  )
+  fetch(APIURL + `/api/annotations/${annotationId}`, {
+    method: "DELETE",
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -748,11 +746,7 @@ $(document).ready(function () {
     var xhr = new XMLHttpRequest();
 
     // Configure the request type, URL, and asynchronous flag
-    xhr.open(
-      "POST",
-      "https://rmcopypastetoolbackend.onrender.com/api/employee/login",
-      true
-    );
+    xhr.open("POST", APIURL + "/api/employee/login", true);
 
     // Set the request header for content-type
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
@@ -764,7 +758,7 @@ $(document).ready(function () {
         // The request was successful! Handle the response here.
         if (response.message === "Login successful") {
           setTimeout(() => {
-            window.location.href = "/dashboard.html?pageNumber=1";
+            window.location.href = "./dashboard.html?pageNumber=1";
           }, 3000);
 
           showSuccessAlert(response.message);
@@ -797,7 +791,7 @@ $(document).ready(function () {
 
 function logout() {
   localStorage.clear();
-  window.location.href = "/index.html";
+  window.location.href = "./index.html";
 }
 
 function checkEmpty() {
@@ -1143,7 +1137,8 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 
 // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
 
-let _id = params["id"]; // "some_value"
+let _id = params["id"];
+// let ann_id = params["annid"];
 let view = params["view"];
 let currentAnnotationId;
 let currentEmailId;
@@ -1151,6 +1146,112 @@ let currentEmailId;
 if (view !== null) {
   document.getElementById("submitBtn").style.display = "none";
 }
+
+const getAnnotationsWithSameId = () => {
+  // call an API to check for reviews by searching for annotations with same Annotation ID
+  showSuccessAlertCreateAnnotation("Loading reviews for this annotation ...");
+  var xhrReviews = new XMLHttpRequest();
+
+  // Configure the request type, URL, and asynchronous flag
+  xhrReviews.open("POST", APIURL + "/api/annotations/filter", true);
+
+  // Set the request header for content-type
+  xhrReviews.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+  // Define the callback for when the request has completed
+  xhrReviews.onload = function () {
+    const response = JSON.parse(xhrReviews.responseText);
+    if (xhrReviews.status >= 200 && xhrReviews.status < 400) {
+      // The request was successful! Handle the response here.
+
+      const annotations = response.message;
+      const annotationListContainer = document.getElementById("reviewList");
+      annotationListContainer.innerHTML = "";
+      annotations?.map((annotation) => {
+        if (annotation._id !== _id) {
+          // Create the main <li> element
+          const li = document.createElement("li");
+          li.className = "list-group-item";
+
+          // Create the Batch # content
+          const annotationDetails = document.createElement("p");
+          annotationDetails.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
+            annotation.annotationId
+          } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
+            annotation.date
+          )} </span>  <br /> <span class="mr-4"><strong>Task Type:</strong> ${
+            annotation.taskType
+          }</span><span class="mr-4"><strong> Annotator Email: </strong> ${
+            annotation.annotatorEmail
+          } </span><br />`;
+
+          li.appendChild(annotationDetails);
+
+          const batchStrong = document.createElement("strong");
+          batchStrong.textContent = "Batch #: ";
+          li.appendChild(batchStrong);
+          li.appendChild(document.createTextNode(annotation.batchNumber));
+
+          li.appendChild(document.createTextNode(" | "));
+
+          // Create the Prompt content
+          const promptStrong = document.createElement("strong");
+          promptStrong.textContent = "Prompt: ";
+          li.appendChild(promptStrong);
+          li.appendChild(
+            document.createTextNode(
+              annotation.prompt.slice(0, 200) + " ......."
+            )
+          );
+
+          const lineBreak = document.createElement("br");
+          li.appendChild(lineBreak);
+
+          // Create the open button
+          const btn = document.createElement("button");
+          btn.className = "btn btn-primary mt-2";
+          btn.textContent = "Open";
+          btn.onclick = function () {
+            openAnnotationDetails(annotation._id);
+          };
+          li.appendChild(btn);
+
+          // Create the edit button
+          // const editBtn = document.createElement("button");
+          // editBtn.className = "btn btn-primary ml-2 mt-2";
+          // editBtn.textContent = "Edit as new";
+          // editBtn.onclick = function () {
+          //   editAnnotation(annotation._id);
+          // };
+          // li.appendChild(editBtn);
+
+          // append li to annotation list
+          annotationListContainer.appendChild(li);
+        }
+      });
+    } else {
+      // The request failed with a status code outside the range [200, 400).
+      // Handle the error here.
+      console.error(
+        "Request failed: " + xhrReviews.status + " " + xhrReviews.statusText
+      );
+      showFailAlertDashboard(response.message);
+    }
+  };
+
+  // Define the callback for network errors
+  xhrReviews.onerror = function () {
+    console.error("Network error occurred.");
+    showFailAlertDashboard(xhrReviews.message);
+  };
+
+  var dataAnnotations = JSON.stringify({
+    field: "annotationId",
+    value: currentAnnotationId,
+  });
+
+  xhrReviews.send(dataAnnotations);
+};
 
 if (_id != null) {
   showSuccessAlertCreateAnnotation("Loading annotation...");
@@ -1163,7 +1264,7 @@ if (_id != null) {
       "block";
   }
 
-  fetch(`https://rmcopypastetoolbackend.onrender.com/api/annotations/${_id}`, {
+  fetch(APIURL + `/api/annotations/${_id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -1177,295 +1278,254 @@ if (_id != null) {
 
         console.log(ann);
 
-        // fill top level data
-        document.querySelector(
-          `[name="language"][value="${ann.language}"]`
-        ).checked = true;
+        if (
+          ann.ranking === "" &&
+          ann.reasoning === "" &&
+          ann.rejected === false
+        ) {
+          document.getElementById("prompt").value = ann.prompt;
+          ann.completions.map((comp, idx) => {
+            const alpha = String.fromCharCode(idx + 65);
 
-        $("#batchDropdownButton").text(ann.batchNumber);
+            // fill completion text
+            document.getElementById(`completion${alpha}`).value =
+              comp.completionText;
+          });
 
-        document.getElementById("prompt").value = ann.prompt;
+          currentAnnotationId = ann.annotationId;
+          currentEmailId = ann.annotatorEmail;
 
-        document.querySelector(
-          `[name="taskType"][value="${ann.taskType}"]`
-        ).checked = true;
+          getAnnotationsWithSameId();
+        } else {
+          if (
+            localStorage.getItem("annotatorEmail") != ann.annotatorEmail &&
+            localStorage.getItem("annotatorRole") === "primary"
+          ) {
+            // fill top level data
+            document.querySelector(
+              `[name="language"][value="${ann.language}"]`
+            ).checked = true;
 
-        document.getElementById("ranking").value = ann.ranking;
+            document.getElementById("prompt").value = ann.prompt;
+            ann.completions.map((comp, idx) => {
+              const alpha = String.fromCharCode(idx + 65);
 
-        document.getElementById("reason").value = ann.reasoning;
-
-        document.querySelector(
-          `[name="rejected"][value="${ann.rejected}"]`
-        ).checked = true;
-
-        if (ann.confidenceRating !== undefined)
-          document.querySelector(
-            `[name="confidence"][value="${ann.confidenceRating}"]`
-          ).checked = true;
-
-        currentAnnotationId = ann.annotationId;
-        currentEmailId = ann.annotatorEmail;
-
-        // fill completions
-        ann.completions.map((comp, idx) => {
-          const alpha = String.fromCharCode(idx + 65);
-
-          // fill completion text
-          document.getElementById(`completion${alpha}`).value =
-            comp.completionText;
-
-          if (ann.rejected === false) {
-            // fill main mcq questions for Completions
-            Object.keys(comp.completionQuestions).map((Key, qidx) => {
-              document.querySelector(
-                `input[name="mcq${qidx + 1}${alpha}"][value="${
-                  comp.completionQuestions[Key]
-                }"]`
-              ).checked = true;
+              // fill completion text
+              document.getElementById(`completion${alpha}`).value =
+                comp.completionText;
             });
 
-            // fill Q1 justification URL
-            document.getElementById(`completion${alpha}JustificationQ1`).value =
-              comp.completionReasoningURLs[`urlForQ1${alpha}`];
+            if (ann.rejected === false) {
+              ann.completions.map((comp, idx) => {
+                const alpha = String.fromCharCode(idx + 65);
 
-            // fill Q2 justification output / errors
-            document.getElementById(`completion${alpha}JustificationQ2`).value =
-              comp.completionReasoningURLs[`urlForQ2${alpha}`];
-
-            if (Object.keys(comp.completionReasoning).length === 3) {
-              let ques = ["1", "2", "6"];
-
-              Object.keys(comp.completionReasoning).map((k, jidx) => {
-                let i = ques[jidx],
-                  selectElement;
-                if (comp.completionQuestions[`Q${i}`] === "1") {
-                  // make the selections visible
-                  $(`#justificationReasonYesCompletion${alpha}Q${i}`)
-                    .next(".btn-group")
-                    .show();
-                  let arr = comp.completionReasoning[k].split(", ");
-
-                  // pre select the choices
-                  arr.map((reason) => {
-                    $(
-                      `#justificationReasonYesCompletion${alpha}Q${i}`
-                    ).multiselect("select", reason);
+                Object.keys(comp.completionQuestions)
+                  .slice(0, 2)
+                  .map((Key, qidx) => {
+                    document.querySelector(
+                      `input[name="mcq${qidx + 1}${alpha}"][value="${
+                        comp.completionQuestions[Key]
+                      }"]`
+                    ).checked = true;
                   });
-                } else if (comp.completionQuestions[`Q${i}`] === "2") {
-                  // hide the URL boxes
-                  $(`#completion${alpha}JustificationQ${i}`).hide();
-                  // make the selections visible
-                  $(`#justificationReasonNoCompletion${alpha}Q${i}`)
-                    .next(".btn-group")
-                    .show();
-                  let arr = comp.completionReasoning[k].split(", ");
-
-                  // pre select the choices
-                  arr.map((reason) => {
-                    $(
-                      `#justificationReasonNoCompletion${alpha}Q${i}`
-                    ).multiselect("select", reason);
-                  });
-                } else {
-                  // return;
-                }
               });
-            } else if (Object.keys(comp.completionReasoning).length === 2) {
-              let ques = ["1", "2"];
-
-              Object.keys(comp.completionReasoning).map((k, jidx) => {
-                let i = ques[jidx],
-                  selectElement;
-                if (comp.completionQuestions[`Q${i}`] === "1") {
-                  // make the selections visible
-                  $(`#justificationReasonYesCompletion${alpha}Q${i}`)
-                    .next(".btn-group")
-                    .show();
-                  let arr = comp.completionReasoning[k].split(", ");
-
-                  // pre select the choices
-                  arr.map((reason) => {
-                    $(
-                      `#justificationReasonYesCompletion${alpha}Q${i}`
-                    ).multiselect("select", reason);
-                  });
-                } else if (comp.completionQuestions[`Q${i}`] === "2") {
-                  // hide the URL boxes
-                  $(`#completion${alpha}JustificationQ${i}`).hide();
-                  // make the selections visible
-                  $(`#justificationReasonNoCompletion${alpha}Q${i}`)
-                    .next(".btn-group")
-                    .show();
-                  let arr = comp.completionReasoning[k].split(", ");
-
-                  // pre select the choices
-                  arr.map((reason) => {
-                    $(
-                      `#justificationReasonNoCompletion${alpha}Q${i}`
-                    ).multiselect("select", reason);
-                  });
-                } else {
-                  // return;
-                }
-              });
-            }
-          } else {
-            document.getElementById("runChecksBtn").style.display = "none";
-            if (
-              view !== "true" &&
-              localStorage.getItem("annotatorRole") === "primary"
-            ) {
-              document.getElementById("submitBtn").style.display = "none";
             } else {
-              document.getElementById("submitBtn").style.display =
-                "inline-block";
+              console.log("Rejected annotation");
             }
-            rejectedItems.forEach((element) => {
-              element.style.display = "block";
-            });
-            nonRejectedItems.forEach((element) => {
-              element.style.display = "none";
-            });
 
-            // make the selections visible
-            $(`#rejectionReasonDropdown`).next(".btn-group").show();
-            let arr = ann?.reasonForRejection?.split(", ");
+            currentAnnotationId = ann.annotationId;
+            // currentEmailId = ann.annotatorEmail;
 
-            // pre select the choices
-            arr.map((reason) => {
-              $(`#rejectionReasonDropdown`).multiselect("select", reason);
-              // if rejection reason is others
-              if (
-                reason !== "Docstring is not present" &&
-                reason !==
-                  "Docstring is unclear and confusing and hence intent/ask of the prompt is unclear" &&
-                reason !==
-                  "Prompt is of custom project and unable to understand" &&
-                reason !==
-                  "No supporting document available for the standard or custom code method/function" &&
-                reason !==
-                  "Multiple docstrings are present but not able to use ANY of the docstrings to address the ask" &&
-                reason !==
-                  "Though docstring is present and clear - the intent/ask of the prompt is unclear" &&
-                reason !== "Others ---followed by a textbox"
-              ) {
-                document.getElementById("otherReasonTextbox").value = reason;
-              }
-            });
+            getAnnotationsWithSameId();
+          } else {
+            // fill top level data
+            document.querySelector(
+              `[name="language"][value="${ann.language}"]`
+            ).checked = true;
+
+            $("#batchDropdownButton").text(ann.batchNumber);
+
+            document.getElementById("prompt").value = ann.prompt;
 
             document.querySelector(
-              `input[name="confirmRejection"][value="${ann?.rejectionConfirmedByReviewer}"]`
+              `[name="taskType"][value="${ann.taskType}"]`
             ).checked = true;
-          }
-        });
 
-        // call an API to check for reviews by searching for annotations with same Annotation ID
-        showSuccessAlertCreateAnnotation(
-          "Loading reviews for this annotation ..."
-        );
-        var xhrReviews = new XMLHttpRequest();
+            document.getElementById("ranking").value = ann.ranking;
 
-        // Configure the request type, URL, and asynchronous flag
-        xhrReviews.open(
-          "POST",
-          "https://rmcopypastetoolbackend.onrender.com/api/annotations/filter",
-          true
-        );
+            document.getElementById("reason").value = ann.reasoning;
 
-        // Set the request header for content-type
-        xhrReviews.setRequestHeader(
-          "Content-Type",
-          "application/json;charset=UTF-8"
-        );
+            document.querySelector(
+              `[name="rejected"][value="${ann.rejected}"]`
+            ).checked = true;
 
-        // Define the callback for when the request has completed
-        xhrReviews.onload = function () {
-          const response = JSON.parse(xhrReviews.responseText);
-          if (xhrReviews.status >= 200 && xhrReviews.status < 400) {
-            // The request was successful! Handle the response here.
+            if (ann.confidenceRating !== undefined)
+              document.querySelector(
+                `[name="confidence"][value="${ann.confidenceRating}"]`
+              ).checked = true;
 
-            const annotations = response.message;
-            const annotationListContainer =
-              document.getElementById("reviewList");
-            annotationListContainer.innerHTML = "";
-            annotations?.map((annotation) => {
-              if (annotation._id !== _id) {
-                // Create the main <li> element
-                const li = document.createElement("li");
-                li.className = "list-group-item";
+            currentAnnotationId = ann.annotationId;
+            currentEmailId = ann.annotatorEmail;
 
-                // Create the Batch # content
-                const annotationDetails = document.createElement("p");
-                annotationDetails.innerHTML = `<span class="mr-4"><strong> Annotation ID: </strong> ${
-                  annotation.annotationId
-                } </span><span class="mr-4"><strong> Date: </strong> ${formatDate(
-                  annotation.date
-                )} </span>  <br /> <span class="mr-4"><strong>Task Type:</strong> ${
-                  annotation.taskType
-                }</span><span class="mr-4"><strong> Annotator Email: </strong> ${
-                  annotation.annotatorEmail
-                } </span><br />`;
+            // fill completions
+            ann.completions.map((comp, idx) => {
+              const alpha = String.fromCharCode(idx + 65);
 
-                li.appendChild(annotationDetails);
+              // fill completion text
+              document.getElementById(`completion${alpha}`).value =
+                comp.completionText;
 
-                const batchStrong = document.createElement("strong");
-                batchStrong.textContent = "Batch #: ";
-                li.appendChild(batchStrong);
-                li.appendChild(document.createTextNode(annotation.batchNumber));
+              if (ann.rejected === false) {
+                // fill main mcq questions for Completions
+                Object.keys(comp.completionQuestions).map((Key, qidx) => {
+                  document.querySelector(
+                    `input[name="mcq${qidx + 1}${alpha}"][value="${
+                      comp.completionQuestions[Key]
+                    }"]`
+                  ).checked = true;
+                });
 
-                li.appendChild(document.createTextNode(" | "));
+                // fill Q1 justification URL
+                document.getElementById(
+                  `completion${alpha}JustificationQ1`
+                ).value = comp.completionReasoningURLs[`urlForQ1${alpha}`];
 
-                // Create the Prompt content
-                const promptStrong = document.createElement("strong");
-                promptStrong.textContent = "Prompt: ";
-                li.appendChild(promptStrong);
-                li.appendChild(
-                  document.createTextNode(
-                    annotation.prompt.slice(0, 200) + " ......."
-                  )
-                );
+                // fill Q2 justification output / errors
+                document.getElementById(
+                  `completion${alpha}JustificationQ2`
+                ).value = comp.completionReasoningURLs[`urlForQ2${alpha}`];
 
-                const lineBreak = document.createElement("br");
-                li.appendChild(lineBreak);
+                if (Object.keys(comp.completionReasoning).length === 3) {
+                  let ques = ["1", "2", "6"];
 
-                // Create the open button
-                const btn = document.createElement("button");
-                btn.className = "btn btn-primary mt-2";
-                btn.textContent = "Open";
-                btn.onclick = function () {
-                  openAnnotationDetails(annotation._id);
-                };
-                li.appendChild(btn);
+                  Object.keys(comp.completionReasoning).map((k, jidx) => {
+                    let i = ques[jidx],
+                      selectElement;
+                    if (comp.completionQuestions[`Q${i}`] === "1") {
+                      // make the selections visible
+                      $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                        .next(".btn-group")
+                        .show();
+                      let arr = comp.completionReasoning[k].split(", ");
 
-                // append li to annotation list
-                annotationListContainer.appendChild(li);
+                      // pre select the choices
+                      arr.map((reason) => {
+                        $(
+                          `#justificationReasonYesCompletion${alpha}Q${i}`
+                        ).multiselect("select", reason);
+                      });
+                    } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                      // hide the URL boxes
+                      $(`#completion${alpha}JustificationQ${i}`).hide();
+                      // make the selections visible
+                      $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                        .next(".btn-group")
+                        .show();
+                      let arr = comp.completionReasoning[k].split(", ");
+
+                      // pre select the choices
+                      arr.map((reason) => {
+                        $(
+                          `#justificationReasonNoCompletion${alpha}Q${i}`
+                        ).multiselect("select", reason);
+                      });
+                    } else {
+                      // return;
+                    }
+                  });
+                } else if (Object.keys(comp.completionReasoning).length === 2) {
+                  let ques = ["1", "2"];
+
+                  Object.keys(comp.completionReasoning).map((k, jidx) => {
+                    let i = ques[jidx],
+                      selectElement;
+                    if (comp.completionQuestions[`Q${i}`] === "1") {
+                      // make the selections visible
+                      $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                        .next(".btn-group")
+                        .show();
+                      let arr = comp.completionReasoning[k].split(", ");
+
+                      // pre select the choices
+                      arr.map((reason) => {
+                        $(
+                          `#justificationReasonYesCompletion${alpha}Q${i}`
+                        ).multiselect("select", reason);
+                      });
+                    } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                      // hide the URL boxes
+                      $(`#completion${alpha}JustificationQ${i}`).hide();
+                      // make the selections visible
+                      $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                        .next(".btn-group")
+                        .show();
+                      let arr = comp.completionReasoning[k].split(", ");
+
+                      // pre select the choices
+                      arr.map((reason) => {
+                        $(
+                          `#justificationReasonNoCompletion${alpha}Q${i}`
+                        ).multiselect("select", reason);
+                      });
+                    } else {
+                      // return;
+                    }
+                  });
+                }
+              } else {
+                document.getElementById("runChecksBtn").style.display = "none";
+                if (
+                  view !== "true" &&
+                  localStorage.getItem("annotatorRole") === "primary"
+                ) {
+                  document.getElementById("submitBtn").style.display = "none";
+                } else {
+                  document.getElementById("submitBtn").style.display =
+                    "inline-block";
+                }
+                rejectedItems.forEach((element) => {
+                  element.style.display = "block";
+                });
+                nonRejectedItems.forEach((element) => {
+                  element.style.display = "none";
+                });
+
+                // make the selections visible
+                $(`#rejectionReasonDropdown`).next(".btn-group").show();
+                let arr = ann?.reasonForRejection?.split(", ");
+
+                // pre select the choices
+                arr.map((reason) => {
+                  $(`#rejectionReasonDropdown`).multiselect("select", reason);
+                  // if rejection reason is others
+                  if (
+                    reason !== "Docstring is not present" &&
+                    reason !==
+                      "Docstring is unclear and confusing and hence intent/ask of the prompt is unclear" &&
+                    reason !==
+                      "Prompt is of custom project and unable to understand" &&
+                    reason !==
+                      "No supporting document available for the standard or custom code method/function" &&
+                    reason !==
+                      "Multiple docstrings are present but not able to use ANY of the docstrings to address the ask" &&
+                    reason !==
+                      "Though docstring is present and clear - the intent/ask of the prompt is unclear" &&
+                    reason !== "Others ---followed by a textbox"
+                  ) {
+                    document.getElementById("otherReasonTextbox").value =
+                      reason;
+                  }
+                });
+
+                document.querySelector(
+                  `input[name="confirmRejection"][value="${ann?.rejectionConfirmedByReviewer}"]`
+                ).checked = true;
               }
             });
-          } else {
-            // The request failed with a status code outside the range [200, 400).
-            // Handle the error here.
-            console.error(
-              "Request failed: " +
-                xhrReviews.status +
-                " " +
-                xhrReviews.statusText
-            );
-            showFailAlertDashboard(response.message);
           }
-        };
 
-        // Define the callback for network errors
-        xhrReviews.onerror = function () {
-          console.error("Network error occurred.");
-          showFailAlertDashboard(xhrReviews.message);
-        };
-
-        var dataAnnotations = JSON.stringify({
-          field: "annotationId",
-          value: currentAnnotationId,
-        });
-
-        xhrReviews.send(dataAnnotations);
+          getAnnotationsWithSameId();
+        }
       } else {
         showFailAlertCreateAnnotation("Some error occurred");
         setTimeout(() => {
@@ -1837,7 +1897,7 @@ function submitAnnotation() {
     // Send POST request
 
     fetch(
-      `https://rmcopypastetoolbackend.onrender.com/api/annotations/${endpoint}`,
+      APIURL + `/api/annotations/${endpoint}`,
 
       {
         method,
@@ -2412,3 +2472,67 @@ function runChecks() {
     }
   }
 }
+
+const logPromptAndCompletions = () => {
+  let payload = {
+    prompt: document.getElementById("prompt").value.trim(),
+    compA: document.getElementById("completionA").value,
+    compB: document.getElementById("completionB").value,
+    compC: document.getElementById("completionC").value,
+    role: localStorage.getItem("annotatorRole"),
+    annotatorEmail,
+  };
+
+  if (
+    payload.prompt != "" &&
+    payload.compA != "" &&
+    payload.compB != "" &&
+    payload.compC != ""
+  ) {
+    // console.log(payload);
+    let endpoint = "logAnnotation",
+      method = "POST";
+    fetch(
+      APIURL + `/api/annotations/${endpoint}`,
+
+      {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.logged === false) {
+          const annotationId = data.message[0].annotationId;
+          const secondaryCount = data.message.filter((x) =>
+              x.taskType.includes("Review")
+            ).length,
+            primaryCount = data.message.filter(
+              (x) => !x.taskType.includes("Review")
+            ).length;
+          console.log({
+            annotationId,
+            secondaryCount,
+            primaryCount,
+          });
+          document.getElementById(
+            "loggedAnnotationShitBody"
+          ).innerHTML = `<b>${secondaryCount}</b> secondary annotation(s) and <b>${primaryCount}</b> primary annotation(s) found for given prompt and completions, with the annotation Id <b>${annotationId}</b>`;
+        } else {
+          const annotationId = data.message.annotationId;
+          console.log(data);
+          // const annotationId = data.message[0].annotationId;
+          document.getElementById(
+            "loggedAnnotationShitBody"
+          ).innerHTML = `Primary annotation logged with annotation Id <b>${annotationId}</b>`;
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  } else {
+    console.log("Prompt or Completion text missing");
+  }
+};
