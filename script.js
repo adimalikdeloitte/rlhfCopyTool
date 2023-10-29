@@ -1,5 +1,5 @@
-const APIURL = "https://rmcopypastetoolbackend.onrender.com";
-// const APIURL = "http://localhost:3000";
+// const APIURL = "https://rmcopypastetoolbackend.onrender.com";
+const APIURL = "http://localhost:3000";
 
 function showFailAlert(message) {
   const alertHTML = `
@@ -2533,6 +2533,9 @@ const logPromptAndCompletions = () => {
       })
       .catch((error) => console.error("Error:", error));
   } else {
-    console.log("Prompt or Completion text missing");
+    // console.log("Prompt or Completion text missing");
+    document.getElementById(
+      "loggedAnnotationShitBody"
+    ).innerHTML = `Prompt or Completion text missing`;
   }
 };
