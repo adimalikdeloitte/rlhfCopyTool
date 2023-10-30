@@ -2615,9 +2615,7 @@ const logPromptAndCompletions = () => {
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.logged === false) {
-          const annotationId = data.message[0].annotationId;
           const secondaryCount = data.message.filter((x) =>
               x.taskType.includes("Review")
             ).length,
@@ -2625,12 +2623,20 @@ const logPromptAndCompletions = () => {
               (x) => !x.taskType.includes("Review")
             ).length;
 
-          document.getElementById(
-            "loggedAnnotationShitBody"
-          ).innerHTML = `<b>${secondaryCount}</b> secondary annotation(s) and <b>${primaryCount}</b> primary annotation(s) found for given prompt and completions, with the annotation Id <b>${annotationId}</b>`;
+          if (secondaryCount === 0) {
+            document.getElementById(
+              "loggedAnnotationShitBody"
+            ).innerHTML = `Prompt and Completions already exist. <br />No review found, you cannot edit the data before the review.`;
+          } else {
+            const mongoId = data.message.filter((x) =>
+              x.taskType.includes("Review")
+            )[0]?._id;
+            document.getElementById(
+              "loggedAnnotationShitBody"
+            ).innerHTML = `Review found for this set of prompt and completions, you can edit the file here: <br /><br /> <a class="btn btn-primary" href='./create_annotation.html?id=${mongoId}'>Edit as new</a>`;
+          }
         } else {
           const annotationId = data.message.annotationId;
-          console.log(data);
           // const annotationId = data.message[0].annotationId;
           document.getElementById(
             "loggedAnnotationShitBody"
