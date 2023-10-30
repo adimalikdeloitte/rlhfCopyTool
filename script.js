@@ -1276,14 +1276,13 @@ if (_id != null) {
       if (data.success === true) {
         let ann = data.message;
 
-        console.log(ann);
-
         if (
           ann.ranking === "" &&
           ann.reasoning === "" &&
           ann.rejected === false
         ) {
           document.getElementById("prompt").value = ann.prompt;
+
           ann.completions.map((comp, idx) => {
             const alpha = String.fromCharCode(idx + 65);
 
@@ -1302,6 +1301,8 @@ if (_id != null) {
             localStorage.getItem("annotatorRole") === "primary"
           ) {
             // fill top level data
+            $("#batchDropdownButton").text(ann.batchNumber);
+
             document.querySelector(
               `[name="language"][value="${ann.language}"]`
             ).checked = true;
@@ -1328,6 +1329,54 @@ if (_id != null) {
                       }"]`
                     ).checked = true;
                   });
+
+                // fill Q1 justification URL
+                document.getElementById(
+                  `completion${alpha}JustificationQ1`
+                ).value = comp.completionReasoningURLs[`urlForQ1${alpha}`];
+
+                // fill Q2 justification output / errors
+                document.getElementById(
+                  `completion${alpha}JustificationQ2`
+                ).value = comp.completionReasoningURLs[`urlForQ2${alpha}`];
+
+                let ques = ["1", "2"];
+
+                Object.keys(comp.completionReasoning).map((k, jidx) => {
+                  let i = ques[jidx],
+                    selectElement;
+                  if (comp.completionQuestions[`Q${i}`] === "1") {
+                    // make the selections visible
+                    $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                      .next(".btn-group")
+                      .show();
+                    let arr = comp.completionReasoning[k].split(", ");
+
+                    // pre select the choices
+                    arr.map((reason) => {
+                      $(
+                        `#justificationReasonYesCompletion${alpha}Q${i}`
+                      ).multiselect("select", reason);
+                    });
+                  } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                    // hide the URL boxes
+                    $(`#completion${alpha}JustificationQ${i}`).hide();
+                    // make the selections visible
+                    $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                      .next(".btn-group")
+                      .show();
+                    let arr = comp.completionReasoning[k].split(", ");
+
+                    // pre select the choices
+                    arr.map((reason) => {
+                      $(
+                        `#justificationReasonNoCompletion${alpha}Q${i}`
+                      ).multiselect("select", reason);
+                    });
+                  } else {
+                    // return;
+                  }
+                });
               });
             } else {
               console.log("Rejected annotation");
