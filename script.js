@@ -1281,6 +1281,7 @@ if (_id != null) {
           ann.reasoning === "" &&
           ann.rejected === false
         ) {
+          $("#batchDropdownButton").text(ann.batchNumber);
           document.getElementById("prompt").value = ann.prompt;
 
           ann.completions.map((comp, idx) => {
@@ -1300,6 +1301,67 @@ if (_id != null) {
             localStorage.getItem("annotatorEmail") != ann.annotatorEmail &&
             localStorage.getItem("annotatorRole") === "primary"
           ) {
+            setTimeout(() => {
+              showSuccessAlertCreateAnnotation(
+                "Q1 and Q2 MCQs are disabled as they are already filled by the Super Annotator"
+              );
+            }, 5000);
+
+            // disabling q1 and q2 of all 3 completions
+            document
+              .querySelectorAll(
+                'input[name="mcq1A"][value="1"], input[name="mcq1A"][value="2"]'
+              )
+              .forEach((el) => (el.disabled = true));
+            document
+              .querySelectorAll(
+                'input[name="mcq2A"][value="1"], input[name="mcq2A"][value="2"], input[name="mcq2A"][value="3"]'
+              )
+              .forEach((el) => (el.disabled = true));
+
+            document
+              .querySelectorAll(
+                'input[name="mcq1B"][value="1"], input[name="mcq1B"][value="2"]'
+              )
+              .forEach((el) => (el.disabled = true));
+            document
+              .querySelectorAll(
+                'input[name="mcq2B"][value="1"], input[name="mcq2B"][value="2"], input[name="mcq2B"][value="3"]'
+              )
+              .forEach((el) => (el.disabled = true));
+
+            document
+              .querySelectorAll(
+                'input[name="mcq1C"][value="1"], input[name="mcq1C"][value="2"]'
+              )
+              .forEach((el) => (el.disabled = true));
+            document
+              .querySelectorAll(
+                'input[name="mcq2C"][value="1"], input[name="mcq2C"][value="2"], input[name="mcq2C"][value="3"]'
+              )
+              .forEach((el) => (el.disabled = true));
+
+            document.getElementById(
+              "collapseCompletionAJustificationQ1"
+            ).disabled = true;
+
+            // Find all buttons with the "btn" and "btn-primary" classes
+            let buttons = document.querySelectorAll("button.btn.btn-primary");
+
+            for (let btn of buttons) {
+              // Check if the button has the desired content
+              if (
+                btn.textContent.trim() === "Provide justification for Q1" ||
+                btn.textContent.trim() === "Provide justification for Q2"
+              ) {
+                btn.disabled = true;
+                btn.classList.add("disabled");
+              }
+            }
+
+            // disabling code end
+            // -------------------------------------------------------------------------
+
             // fill top level data
             $("#batchDropdownButton").text(ann.batchNumber);
 
@@ -1961,14 +2023,11 @@ function submitAnnotation() {
       .then((data) => {
         showSuccessAlertCreateAnnotation(alertMessage);
 
-        // setTimeout(() => {
-        //   window.location.href = redirect;
-        // }, 3000);
+        setTimeout(() => {
+          window.location.href = redirect;
+        }, 3000);
       })
-
       .catch((error) => console.error("Error:", error));
-
-    console.log(formData);
   }
 }
 
@@ -2529,6 +2588,7 @@ const logPromptAndCompletions = () => {
     compB: document.getElementById("completionB").value,
     compC: document.getElementById("completionC").value,
     role: localStorage.getItem("annotatorRole"),
+    batchNumber: $("#batchDropdownButton").text().trim(),
     annotatorEmail,
   };
 
@@ -2536,7 +2596,8 @@ const logPromptAndCompletions = () => {
     payload.prompt != "" &&
     payload.compA != "" &&
     payload.compB != "" &&
-    payload.compC != ""
+    payload.compC != "" &&
+    payload.batchNumber !== ""
   ) {
     // console.log(payload);
     let endpoint = "logAnnotation",
@@ -2563,11 +2624,7 @@ const logPromptAndCompletions = () => {
             primaryCount = data.message.filter(
               (x) => !x.taskType.includes("Review")
             ).length;
-          console.log({
-            annotationId,
-            secondaryCount,
-            primaryCount,
-          });
+
           document.getElementById(
             "loggedAnnotationShitBody"
           ).innerHTML = `<b>${secondaryCount}</b> secondary annotation(s) and <b>${primaryCount}</b> primary annotation(s) found for given prompt and completions, with the annotation Id <b>${annotationId}</b>`;
