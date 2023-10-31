@@ -1766,7 +1766,16 @@
           class="btn btn-success mb-3"
           onclick="runChecks()"
         >
-          Run Checks
+          Run Annotation Checks
+        </button>
+
+        <button
+          type="button"
+          id="validationChecksBtn"
+          class="btn btn-success mb-3"
+          onclick="validationChecks()"
+        >
+          Validation Cheks
         </button>
 
         <button
@@ -1779,11 +1788,18 @@
           Submit
         </button>
         <br />
-        <strong>* Please run checks to enable the submit button</strong>
+        <strong id="runChecksWarningLine"
+          >* Please run checks to enable the submit button</strong
+        >
       </form>
 
-      <h3>Checks</h3>
+      <h3 style="display: none" id="checksHeading">Checks</h3>
       <ul id="errorList"></ul>
+      <br />
+      <br />
+      <h3 style="display: none" id="validationChecksHeading">
+        Validation Checks
+      </h3>
       <br />
       <br />
       <!-- Bootstrap Modal -->

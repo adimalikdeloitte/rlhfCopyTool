@@ -1341,23 +1341,125 @@ if (_id != null) {
               )
               .forEach((el) => (el.disabled = true));
 
+            // disable the url boxes
+
             document.getElementById(
-              "collapseCompletionAJustificationQ1"
+              "completionAJustificationQ1"
+            ).disabled = true;
+            document.getElementById(
+              "completionAJustificationQ2"
+            ).disabled = true;
+            document.getElementById(
+              "completionBJustificationQ1"
+            ).disabled = true;
+            document.getElementById(
+              "completionBJustificationQ2"
+            ).disabled = true;
+            document.getElementById(
+              "completionCJustificationQ1"
+            ).disabled = true;
+            document.getElementById(
+              "completionCJustificationQ2"
             ).disabled = true;
 
-            // Find all buttons with the "btn" and "btn-primary" classes
-            let buttons = document.querySelectorAll("button.btn.btn-primary");
+            // Completion A justification dropdown disabled
+            $(`#justificationReasonYesCompletionAQ1`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
 
-            for (let btn of buttons) {
-              // Check if the button has the desired content
-              if (
-                btn.textContent.trim() === "Provide justification for Q1" ||
-                btn.textContent.trim() === "Provide justification for Q2"
-              ) {
-                btn.disabled = true;
-                btn.classList.add("disabled");
-              }
-            }
+            $(`#justificationReasonNoCompletionAQ1`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonYesCompletionAQ2`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonNoCompletionAQ2`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            // Completion B justification dropdown disabled
+            $(`#justificationReasonYesCompletionBQ1`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonNoCompletionBQ1`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonYesCompletionBQ2`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonNoCompletionBQ2`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            // Completion C justification dropdown disabled
+            $(`#justificationReasonYesCompletionCQ1`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonNoCompletionCQ1`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonYesCompletionCQ2`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
+
+            $(`#justificationReasonNoCompletionCQ2`)
+              .next(".btn-group")
+              .find('input[type="checkbox"]')
+              .each(function () {
+                $(this).prop("disabled", true);
+                $(this).closest("li").addClass("disabled");
+              });
 
             // disabling code end
             // -------------------------------------------------------------------------
@@ -1442,6 +1544,51 @@ if (_id != null) {
               });
             } else {
               console.log("Rejected annotation");
+              document.querySelector(
+                `[name="language"][value="${ann.language}"]`
+              ).checked = true;
+
+              $("#batchDropdownButton").text(ann.batchNumber);
+
+              document.getElementById("prompt").value = ann.prompt;
+
+              document.querySelector(
+                `[name="taskType"][value="${ann.taskType}"]`
+              ).checked = true;
+
+              document.querySelector(
+                `[name="rejected"][value="${ann.rejected}"]`
+              ).checked = true;
+
+              // make the selections visible
+              $(`#rejectionReasonDropdown`).next(".btn-group").show();
+              let arr = ann?.reasonForRejection?.split(", ");
+
+              // pre select the choices
+              arr.map((reason) => {
+                $(`#rejectionReasonDropdown`).multiselect("select", reason);
+                // if rejection reason is others
+                if (
+                  reason !== "Docstring is not present" &&
+                  reason !==
+                    "Docstring is unclear and confusing and hence intent/ask of the prompt is unclear" &&
+                  reason !==
+                    "Prompt is of custom project and unable to understand" &&
+                  reason !==
+                    "No supporting document available for the standard or custom code method/function" &&
+                  reason !==
+                    "Multiple docstrings are present but not able to use ANY of the docstrings to address the ask" &&
+                  reason !==
+                    "Though docstring is present and clear - the intent/ask of the prompt is unclear" &&
+                  reason !== "Others ---followed by a textbox"
+                ) {
+                  document.getElementById("otherReasonTextbox").value = reason;
+                }
+              });
+
+              document.querySelector(
+                `input[name="confirmRejection"][value="${ann?.rejectionConfirmedByReviewer}"]`
+              ).checked = true;
             }
 
             currentAnnotationId = ann.annotationId;
@@ -2297,6 +2444,268 @@ function checkRankingString() {
   return rankingErrors;
 }
 
+if (view === null) {
+  document.getElementById("runChecksWarningLine").innerText =
+    "Please click on the Run Checks Button to enable the submit button.";
+} else {
+  document.getElementById("runChecksWarningLine").innerText =
+    "You have opened the file in View Only Mode, you won't be able to submit the annotation from this page.";
+}
+
+const completionArrayForLinesOfCode = [
+  {
+    answer: document.getElementById("completionA").value,
+    questions: [
+      {
+        question: "Does the code/text follows the instructions given?",
+        answer: document.querySelector('input[name="mcq1A"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+        },
+      },
+      {
+        question: "Is the code executable?",
+        answer: document.querySelector('input[name="mcq2A"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Is the code well commented?",
+        answer: document.querySelector('input[name="mcq3A"]:checked').value,
+        options: {
+          1: "means code is not documented at all",
+          2: "means code contain certain comments, but not enough",
+          3: "means code is excessively documented ",
+          4: "means code is well-documented (well-commented , indentation , proper logger statements )",
+          5: "NA (code doesn't exist or comments not required)",
+        },
+      },
+      {
+        question: "Are the variable names understandable in the code?",
+        answer: "1",
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Does the code cover exceptional handling?",
+        answer: document.querySelector('input[name="mcq5A"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Is text explanation clear or aligned well with the code?",
+        answer: document.querySelector('input[name="mcq6A"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+        },
+      },
+      {
+        question:
+          "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
+        // answer: document.getElementById("rankingCompletionA").value,
+        answer: document.querySelector('input[name="mcq7A"]:checked').value,
+      },
+    ],
+  },
+  {
+    answer: document.getElementById("completionB").value,
+    questions: [
+      {
+        question: "Does the code/text follows the instructions given?",
+        answer: document.querySelector('input[name="mcq1B"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+        },
+      },
+      {
+        question: "Is the code executable?",
+        answer: document.querySelector('input[name="mcq2B"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Is the code well commented?",
+        answer: document.querySelector('input[name="mcq3B"]:checked').value,
+        options: {
+          1: "means code is not documented at all",
+          2: "means code contain certain comments, but not enough",
+          3: "means code is excessively documented ",
+          4: "means code is well-documented (well-commented , indentation , proper logger statements )",
+          5: "NA (code doesn't exist or comments not required)",
+        },
+      },
+      {
+        question: "Are the variable names understandable in the code?",
+        answer: "1",
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Does the code cover exceptional handling?",
+        answer: document.querySelector('input[name="mcq5B"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Is text explanation clear or aligned well with the code?",
+        answer: document.querySelector('input[name="mcq6B"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+        },
+      },
+      {
+        question:
+          "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
+        // answer: document.getElementById("rankingCompletionB").value,
+        answer: document.querySelector('input[name="mcq7B"]:checked').value,
+      },
+    ],
+  },
+  {
+    answer: document.getElementById("completionC").value,
+    questions: [
+      {
+        question: "Does the code/text follows the instructions given?",
+        answer: document.querySelector('input[name="mcq1C"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+        },
+      },
+      {
+        question: "Is the code executable?",
+        answer: document.querySelector('input[name="mcq2C"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Is the code well commented?",
+        answer: document.querySelector('input[name="mcq3C"]:checked').value,
+        options: {
+          1: "means code is not documented at all",
+          2: "means code contain certain comments, but not enough",
+          3: "means code is excessively documented ",
+          4: "means code is well-documented (well-commented , indentation , proper logger statements )",
+          5: "NA (code doesn't exist or comments not required)",
+        },
+      },
+      {
+        question: "Are the variable names understandable in the code?",
+        answer: "1",
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Does the code cover exceptional handling?",
+        answer: document.querySelector('input[name="mcq5C"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+          3: "NA (code doesn't exist)",
+        },
+      },
+      {
+        question: "Is text explanation clear or aligned well with the code?",
+        answer: document.querySelector('input[name="mcq6C"]:checked').value,
+        options: {
+          1: "yes",
+          2: "no",
+        },
+      },
+      {
+        question:
+          "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
+        // answer: document.getElementById("rankingCompletionC").value,
+        answer: document.querySelector('input[name="mcq7C"]:checked').value,
+      },
+    ],
+  },
+];
+
+function validationChecks() {
+  if (checkEmpty()) {
+    showSuccessAlertCreateAnnotation("Validation checks successful !");
+    if (view === null) {
+      document.getElementById("submitBtn").style.display = "inline-block";
+    }
+
+    const payload = {
+      annotationId: currentAnnotationId,
+      completions: [
+        {
+          completionQuestions: {
+            Q3: document.querySelector('input[name="mcq5A"]:checked').value,
+            Q4: document.querySelector('input[name="mcq6A"]:checked').value,
+            Q5: document.querySelector('input[name="mcq7A"]:checked').value,
+          },
+        },
+        {
+          completionQuestions: {
+            Q3: document.querySelector('input[name="mcq5B"]:checked').value,
+            Q4: document.querySelector('input[name="mcq6B"]:checked').value,
+            Q5: document.querySelector('input[name="mcq7B"]:checked').value,
+          },
+        },
+        {
+          completionQuestions: {
+            Q3: document.querySelector('input[name="mcq5C"]:checked').value,
+            Q4: document.querySelector('input[name="mcq6C"]:checked').value,
+            Q5: document.querySelector('input[name="mcq7C"]:checked').value,
+          },
+        },
+      ],
+    };
+
+    let endpoint = "validateWithSecondary",
+      method = "POST";
+    fetch(APIURL + `/api/annotations/${endpoint}`, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.message);
+        document.getElementById("validationChecksHeading").style.display =
+          "block";
+        document.getElementById(
+          "validationChecksHeading"
+        ).innerText += ` - ${data.message}`;
+      })
+      .catch((error) => console.error("Error:", error));
+  }
+}
+
 function runChecks() {
   if (checkEmpty()) {
     showSuccessAlertCreateAnnotation("Run checks successful !");
@@ -2306,6 +2715,8 @@ function runChecks() {
 
     const errorListContainer = document.getElementById("errorList");
     errorListContainer.innerHTML = "";
+
+    document.getElementById("checksHeading").style.display = "block";
 
     // array of objects required for ratings check and number of lines of code vs comments check
     const completionArrayForLinesOfCode = [
