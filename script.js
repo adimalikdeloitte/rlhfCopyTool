@@ -2992,7 +2992,7 @@ function runChecks() {
   }
 }
 
-const logPromptAndCompletions = () => {
+function logPromptAndCompletions() {
   let payload = {
     prompt: document.getElementById("prompt").value.trim(),
     compA: document.getElementById("completionA").value,
@@ -3061,4 +3061,4 @@ const logPromptAndCompletions = () => {
       "loggedAnnotationShitBody"
     ).innerHTML = `Prompt or Completion text missing`;
   }
-};
+}
