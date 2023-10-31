@@ -2712,7 +2712,19 @@ function validationChecks() {
           "block";
         document.getElementById(
           "validationChecksHeading"
-        ).innerText += ` - ${data.message}`;
+        ).innerText += ` - Similarity with Super Annotator - ${data.message.similarity}%`;
+
+        const errorListContainer = document.getElementById(
+          "validationErrorList"
+        );
+        errorListContainer.innerHTML = "";
+
+        data?.message?.comments?.map((err) => {
+          const errorItem = document.createElement("li");
+          errorItem.innerText = err;
+          errorItem.style.color = "red";
+          errorListContainer.appendChild(errorItem);
+        });
       })
       .catch((error) => console.error("Error:", error));
   }
