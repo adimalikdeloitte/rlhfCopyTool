@@ -1560,6 +1560,18 @@ if (_id != null) {
                 `[name="rejected"][value="${ann.rejected}"]`
               ).checked = true;
 
+              rejectedItems.forEach((element) => {
+                element.style.display = "block";
+              });
+              nonRejectedItems.forEach((element) => {
+                element.style.display = "none";
+              });
+
+              document.getElementById("runChecksBtn").style.display = "none";
+              document.getElementById("validationChecksBtn").style.display =
+                "none";
+              document.getElementById("submitBtn").style.display = "block";
+
               // make the selections visible
               $(`#rejectionReasonDropdown`).next(".btn-group").show();
               let arr = ann?.reasonForRejection?.split(", ");
