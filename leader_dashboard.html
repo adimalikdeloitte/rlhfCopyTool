@@ -410,7 +410,11 @@
                 record.rejected === true
                   ? "<strong class='text-danger'>Rejected</strong>"
                   : "<strong class='text-success'>Not Rejected</strong>"
-              }</span><hr />`;
+              }</span><br /><span class="mr-2">Task Type: <strong>${
+                record.taskType
+              }</strong></span><br /><span class="mr-2">Date and Time: <strong>${new Date(
+                record.date
+              ).toUTCString()}</strong></span><hr />`;
             });
 
             modalContent.innerHTML = s;
