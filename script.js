@@ -208,7 +208,10 @@ function checkPromptStatus() {
     });
 }
 
-if (localStorage.getItem("annotatorRole") !== "primary") {
+if (
+  window.location.href.includes("create_annotation") &&
+  localStorage.getItem("annotatorRole") !== "primary"
+) {
   document.getElementById("validationChecksBtn").style.display = "none";
 }
 
@@ -2472,12 +2475,13 @@ function checkRankingString() {
   return rankingErrors;
 }
 
-if (view === null) {
+if (window.location.href.includes("create_annotation") && view === null) {
   document.getElementById("runChecksWarningLine").innerText =
     "Please click on the Run Checks Button to enable the submit button.";
 } else {
-  document.getElementById("runChecksWarningLine").innerText =
-    "You have opened the file in View Only Mode, you won't be able to submit the annotation from this page.";
+  if (window.location.href.includes("create_annotation"))
+    document.getElementById("runChecksWarningLine").innerText =
+      "You have opened the file in View Only Mode, you won't be able to submit the annotation from this page.";
 }
 
 const completionArrayForLinesOfCode = [
