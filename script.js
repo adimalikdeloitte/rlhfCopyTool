@@ -208,6 +208,10 @@ function checkPromptStatus() {
     });
 }
 
+if (localStorage.getItem("annotatorRole") !== "primary") {
+  document.getElementById("validationChecksBtn").style.display = "none";
+}
+
 function editAnnotation(annotationId) {
   // TODO: Navigate to the annotation details page using the batch ID
   window.location.href = "create_annotation.html?id=" + annotationId; // Sample redirect
