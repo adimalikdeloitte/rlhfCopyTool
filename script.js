@@ -1145,6 +1145,18 @@ let currentEmailId;
 
 if (view !== null) {
   document.getElementById("submitBtn").style.display = "none";
+} else {
+  setTimeout(() => {
+    if (localStorage.annotatorRole === "primary") {
+      document.querySelector(`[name="taskType"][value="fresh"]`).checked = true;
+    }
+
+    if (localStorage.annotatorRole === "secondary") {
+      document.querySelector(
+        `[name="taskType"][value="S1Review"]`
+      ).checked = true;
+    }
+  }, 3000);
 }
 
 const getAnnotationsWithSameId = () => {
