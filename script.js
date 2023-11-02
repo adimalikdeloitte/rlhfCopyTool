@@ -184,7 +184,7 @@ function removeExtraSpacesFromEmptyLines(str) {
 }
 
 function checkPromptStatus() {
-  // console.log({ prompt: document.getElementById("prompt")?.value?.trim() });
+  // console.log({ prompt: document.getElementById("prompt").value?.trim() });
   fetch(APIURL + `/api/annotations/filter/?page=1`, {
     method: "POST",
     headers: {
@@ -193,7 +193,7 @@ function checkPromptStatus() {
     body: JSON.stringify({
       field: "prompt",
       value: removeExtraSpacesFromEmptyLines(
-        document.getElementById("prompt")?.value?.trim()
+        document.getElementById("prompt").value?.trim()
       ),
     }),
   })
@@ -815,23 +815,19 @@ function checkEmpty() {
     emptyFields.push("Task Type");
   }
 
-  if ($('input[name="language"]:checked').length <= 0) {
-    emptyFields.push("Language");
-  }
-
   if ($(`input[name="rejected"]:checked`).length <= 0) {
     emptyFields.push("Rejection");
   }
 
-  if (document.getElementById("completionA").value === "") {
+  if (document.getElementById("completionA")?.value === "") {
     emptyFields.push("Completion A text");
   }
 
-  if (document.getElementById("completionB").value === "") {
+  if (document.getElementById("completionB")?.value === "") {
     emptyFields.push("Completion B text");
   }
 
-  if (document.getElementById("completionC").value === "") {
+  if (document.getElementById("completionC")?.value === "") {
     emptyFields.push("Completion C text");
   }
 
@@ -1150,20 +1146,23 @@ let view = params["view"];
 let currentAnnotationId;
 let currentEmailId;
 
-if (view !== null) {
+if (window.location.href.includes("create_annotation") && view !== null) {
   document.getElementById("submitBtn").style.display = "none";
 } else {
-  setTimeout(() => {
-    if (localStorage.annotatorRole === "primary") {
-      document.querySelector(`[name="taskType"][value="fresh"]`).checked = true;
-    }
+  if (window.location.href.includes("create_annotation"))
+    setTimeout(() => {
+      if (localStorage.annotatorRole === "primary") {
+        document.querySelector(
+          `[name="taskType"][value="fresh"]`
+        ).checked = true;
+      }
 
-    if (localStorage.annotatorRole === "secondary") {
-      document.querySelector(
-        `[name="taskType"][value="S1Review"]`
-      ).checked = true;
-    }
-  }, 3000);
+      if (localStorage.annotatorRole === "secondary") {
+        document.querySelector(
+          `[name="taskType"][value="S1Review"]`
+        ).checked = true;
+      }
+    }, 3000);
 }
 
 const getAnnotationsWithSameId = () => {
@@ -1486,10 +1485,6 @@ if (_id != null) {
             // fill top level data
             $("#batchDropdownButton").text(ann.batchNumber);
 
-            document.querySelector(
-              `[name="language"][value="${ann.language}"]`
-            ).checked = true;
-
             document.getElementById("prompt").value = ann.prompt;
             ann.completions.map((comp, idx) => {
               const alpha = String.fromCharCode(idx + 65);
@@ -1563,9 +1558,6 @@ if (_id != null) {
               });
             } else {
               console.log("Rejected annotation");
-              document.querySelector(
-                `[name="language"][value="${ann.language}"]`
-              ).checked = true;
 
               $("#batchDropdownButton").text(ann.batchNumber);
 
@@ -1628,9 +1620,6 @@ if (_id != null) {
             getAnnotationsWithSameId();
           } else {
             // fill top level data
-            document.querySelector(
-              `[name="language"][value="${ann.language}"]`
-            ).checked = true;
 
             $("#batchDropdownButton").text(ann.batchNumber);
 
@@ -1845,40 +1834,47 @@ function submitAnnotation() {
       completionC;
 
     if (
-      document.querySelector('input[name="rejected"]:checked').value === "false"
+      document.querySelector('input[name="rejected"]:checked')?.value ===
+      "false"
     ) {
       // file not rejected, submit annotations accordingly
       // reasoning completion A
-      if (document.querySelector('input[name="mcq1A"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq1A"]:checked')?.value === "1"
+      ) {
         reasonForQ1A = $("#justificationReasonYesCompletionAQ1")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq1A"]:checked').value === "2"
+        document.querySelector('input[name="mcq1A"]:checked')?.value === "2"
       ) {
         reasonForQ1A = $("#justificationReasonNoCompletionAQ1")
           .val()
           .join(", ");
       }
 
-      if (document.querySelector('input[name="mcq2A"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq2A"]:checked')?.value === "1"
+      ) {
         reasonForQ2A = $("#justificationReasonYesCompletionAQ2")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq2A"]:checked').value === "2"
+        document.querySelector('input[name="mcq2A"]:checked')?.value === "2"
       ) {
         reasonForQ2A = $("#justificationReasonNoCompletionAQ2")
           .val()
           .join(", ");
       }
 
-      if (document.querySelector('input[name="mcq6A"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq6A"]:checked')?.value === "1"
+      ) {
         reasonForQ6A = $("#justificationReasonYesCompletionAQ6")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq6A"]:checked').value === "2"
+        document.querySelector('input[name="mcq6A"]:checked')?.value === "2"
       ) {
         reasonForQ6A = $("#justificationReasonNoCompletionAQ6")
           .val()
@@ -1886,36 +1882,42 @@ function submitAnnotation() {
       }
 
       // reasoning completion B
-      if (document.querySelector('input[name="mcq1B"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq1B"]:checked')?.value === "1"
+      ) {
         reasonForQ1B = $("#justificationReasonYesCompletionBQ1")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq1B"]:checked').value === "2"
+        document.querySelector('input[name="mcq1B"]:checked')?.value === "2"
       ) {
         reasonForQ1B = $("#justificationReasonNoCompletionBQ1")
           .val()
           .join(", ");
       }
 
-      if (document.querySelector('input[name="mcq2B"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq2B"]:checked')?.value === "1"
+      ) {
         reasonForQ2B = $("#justificationReasonYesCompletionBQ2")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq2B"]:checked').value === "2"
+        document.querySelector('input[name="mcq2B"]:checked')?.value === "2"
       ) {
         reasonForQ2B = $("#justificationReasonNoCompletionBQ2")
           .val()
           .join(", ");
       }
 
-      if (document.querySelector('input[name="mcq6B"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq6B"]:checked')?.value === "1"
+      ) {
         reasonForQ6B = $("#justificationReasonYesCompletionBQ6")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq6B"]:checked').value === "2"
+        document.querySelector('input[name="mcq6B"]:checked')?.value === "2"
       ) {
         reasonForQ6B = $("#justificationReasonNoCompletionBQ6")
           .val()
@@ -1923,36 +1925,42 @@ function submitAnnotation() {
       }
 
       // reasoning completion C
-      if (document.querySelector('input[name="mcq1C"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq1C"]:checked')?.value === "1"
+      ) {
         reasonForQ1C = $("#justificationReasonYesCompletionCQ1")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq1C"]:checked').value === "2"
+        document.querySelector('input[name="mcq1C"]:checked')?.value === "2"
       ) {
         reasonForQ1C = $("#justificationReasonNoCompletionCQ1")
           .val()
           .join(", ");
       }
 
-      if (document.querySelector('input[name="mcq2C"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq2C"]:checked')?.value === "1"
+      ) {
         reasonForQ2C = $("#justificationReasonYesCompletionCQ2")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq2C"]:checked').value === "2"
+        document.querySelector('input[name="mcq2C"]:checked')?.value === "2"
       ) {
         reasonForQ2C = $("#justificationReasonNoCompletionCQ2")
           .val()
           .join(", ");
       }
 
-      if (document.querySelector('input[name="mcq6C"]:checked').value === "1") {
+      if (
+        document.querySelector('input[name="mcq6C"]:checked')?.value === "1"
+      ) {
         reasonForQ6C = $("#justificationReasonYesCompletionCQ6")
           .val()
           .join(", ");
       } else if (
-        document.querySelector('input[name="mcq6C"]:checked').value === "2"
+        document.querySelector('input[name="mcq6C"]:checked')?.value === "2"
       ) {
         reasonForQ6C = $("#justificationReasonNoCompletionCQ6")
           .val()
@@ -1960,16 +1968,16 @@ function submitAnnotation() {
       }
 
       completionA = {
-        completionText: document.getElementById("completionA").value,
+        completionText: document.getElementById("completionA")?.value,
         completionQuestions: {
-          Q1: document.querySelector('input[name="mcq1A"]:checked').value,
-          Q2: document.querySelector('input[name="mcq2A"]:checked').value,
-          Q3: document.querySelector('input[name="mcq3A"]:checked').value,
+          Q1: document.querySelector('input[name="mcq1A"]:checked')?.value,
+          Q2: document.querySelector('input[name="mcq2A"]:checked')?.value,
+          Q3: document.querySelector('input[name="mcq3A"]:checked')?.value,
           Q4: "1",
-          Q5: document.querySelector('input[name="mcq5A"]:checked').value,
-          Q6: document.querySelector('input[name="mcq6A"]:checked').value,
-          // rank: document.getElementById("rankingCompletionA").value,
-          Q7: document.querySelector('input[name="mcq7A"]:checked').value,
+          Q5: document.querySelector('input[name="mcq5A"]:checked')?.value,
+          Q6: document.querySelector('input[name="mcq6A"]:checked')?.value,
+          // rank: document.getElementById("rankingCompletionA")?.value,
+          Q7: document.querySelector('input[name="mcq7A"]:checked')?.value,
         },
         completionReasoning: {
           reasonForQ1A,
@@ -1983,16 +1991,16 @@ function submitAnnotation() {
       };
 
       completionB = {
-        completionText: document.getElementById("completionB").value,
+        completionText: document.getElementById("completionB")?.value,
         completionQuestions: {
-          Q1: document.querySelector('input[name="mcq1B"]:checked').value,
-          Q2: document.querySelector('input[name="mcq2B"]:checked').value,
-          Q3: document.querySelector('input[name="mcq3B"]:checked').value,
+          Q1: document.querySelector('input[name="mcq1B"]:checked')?.value,
+          Q2: document.querySelector('input[name="mcq2B"]:checked')?.value,
+          Q3: document.querySelector('input[name="mcq3B"]:checked')?.value,
           Q4: "1",
-          Q5: document.querySelector('input[name="mcq5B"]:checked').value,
-          Q6: document.querySelector('input[name="mcq6B"]:checked').value,
-          // rank: document.getElementById("rankingCompletionB").value,
-          Q7: document.querySelector('input[name="mcq7B"]:checked').value,
+          Q5: document.querySelector('input[name="mcq5B"]:checked')?.value,
+          Q6: document.querySelector('input[name="mcq6B"]:checked')?.value,
+          // rank: document.getElementById("rankingCompletionB")?.value,
+          Q7: document.querySelector('input[name="mcq7B"]:checked')?.value,
         },
         completionReasoning: {
           reasonForQ1B,
@@ -2006,16 +2014,16 @@ function submitAnnotation() {
       };
 
       completionC = {
-        completionText: document.getElementById("completionC").value,
+        completionText: document.getElementById("completionC")?.value,
         completionQuestions: {
-          Q1: document.querySelector('input[name="mcq1C"]:checked').value,
-          Q2: document.querySelector('input[name="mcq2C"]:checked').value,
-          Q3: document.querySelector('input[name="mcq3C"]:checked').value,
+          Q1: document.querySelector('input[name="mcq1C"]:checked')?.value,
+          Q2: document.querySelector('input[name="mcq2C"]:checked')?.value,
+          Q3: document.querySelector('input[name="mcq3C"]:checked')?.value,
           Q4: "1",
-          Q5: document.querySelector('input[name="mcq5C"]:checked').value,
-          Q6: document.querySelector('input[name="mcq6C"]:checked').value,
-          // rank: document.getElementById("rankingCompletionC").value,
-          Q7: document.querySelector('input[name="mcq7C"]:checked').value,
+          Q5: document.querySelector('input[name="mcq5C"]:checked')?.value,
+          Q6: document.querySelector('input[name="mcq6C"]:checked')?.value,
+          // rank: document.getElementById("rankingCompletionC")?.value,
+          Q7: document.querySelector('input[name="mcq7C"]:checked')?.value,
         },
         completionReasoning: {
           reasonForQ1C,
@@ -2032,27 +2040,26 @@ function submitAnnotation() {
       formData = {
         date: new Date(),
         annotatorEmail: annotatorEmail,
-        language: document.querySelector('input[name="language"]:checked')
-          .value,
+        language: localStorage.getItem("language"),
         batchNumber: $("#batchDropdownButton").text().trim(),
         prompt: document.getElementById("prompt").value.trim(),
         taskType: document.querySelector('input[name="taskType"]:checked')
           .value,
         completions: [completionA, completionB, completionC],
         ranking: document.getElementById("ranking").value,
-        reasoning: document.getElementById("reason").value,
+        reasoning: document.getElementById("reason")?.value,
         rejected:
-          document.querySelector('input[name="rejected"]:checked').value ===
+          document.querySelector('input[name="rejected"]:checked')?.value ===
           "true",
         confidenceRating: document.querySelector(
           'input[name="confidence"]:checked'
-        ).value,
+        )?.value,
       };
     } else if (
-      document.querySelector('input[name="rejected"]:checked').value === "true"
+      document.querySelector('input[name="rejected"]:checked')?.value === "true"
     ) {
       completionA = {
-        completionText: document.getElementById("completionA").value,
+        completionText: document.getElementById("completionA")?.value,
         completionQuestions: {
           Q1: null,
           Q2: null,
@@ -2060,7 +2067,7 @@ function submitAnnotation() {
           Q4: null,
           Q5: null,
           Q6: null,
-          // rank: document.getElementById("rankingCompletionA").value,
+          // rank: document.getElementById("rankingCompletionA")?.value,
           Q7: null,
         },
         completionReasoning: {
@@ -2075,7 +2082,7 @@ function submitAnnotation() {
       };
 
       completionB = {
-        completionText: document.getElementById("completionB").value,
+        completionText: document.getElementById("completionB")?.value,
         completionQuestions: {
           Q1: null,
           Q2: null,
@@ -2083,7 +2090,7 @@ function submitAnnotation() {
           Q4: null,
           Q5: null,
           Q6: null,
-          // rank: document.getElementById("rankingCompletionB").value,
+          // rank: document.getElementById("rankingCompletionB")?.value,
           Q7: null,
         },
         completionReasoning: {
@@ -2098,7 +2105,7 @@ function submitAnnotation() {
       };
 
       completionC = {
-        completionText: document.getElementById("completionC").value,
+        completionText: document.getElementById("completionC")?.value,
         completionQuestions: {
           Q1: null,
           Q2: null,
@@ -2106,7 +2113,7 @@ function submitAnnotation() {
           Q4: null,
           Q5: null,
           Q6: null,
-          // rank: document.getElementById("rankingCompletionC").value,
+          // rank: document.getElementById("rankingCompletionC")?.value,
           Q7: null,
         },
         completionReasoning: {
@@ -2125,17 +2132,16 @@ function submitAnnotation() {
         formData = {
           date: new Date(),
           annotatorEmail: annotatorEmail,
-          language: document.querySelector('input[name="language"]:checked')
-            .value,
+          language: localStorage.getItem("language"),
           batchNumber: $("#batchDropdownButton").text().trim(),
           prompt: document.getElementById("prompt").value.trim(),
           taskType: document.querySelector('input[name="taskType"]:checked')
             .value,
           completions: [completionA, completionB, completionC],
           ranking: document.getElementById("ranking").value,
-          reasoning: document.getElementById("reason").value,
+          reasoning: document.getElementById("reason")?.value,
           rejected:
-            document.querySelector('input[name="rejected"]:checked').value ===
+            document.querySelector('input[name="rejected"]:checked')?.value ===
             "true",
           reasonForRejection:
             $("#rejectionReasonDropdown").val().join(", ") +
@@ -2146,17 +2152,16 @@ function submitAnnotation() {
         formData = {
           date: new Date(),
           annotatorEmail: annotatorEmail,
-          language: document.querySelector('input[name="language"]:checked')
-            .value,
+          language: localStorage.getItem("language"),
           batchNumber: $("#batchDropdownButton").text().trim(),
           prompt: document.getElementById("prompt").value.trim(),
           taskType: document.querySelector('input[name="taskType"]:checked')
             .value,
           completions: [completionA, completionB, completionC],
           ranking: document.getElementById("ranking").value,
-          reasoning: document.getElementById("reason").value,
+          reasoning: document.getElementById("reason")?.value,
           rejected:
-            document.querySelector('input[name="rejected"]:checked').value ===
+            document.querySelector('input[name="rejected"]:checked')?.value ===
             "true",
           reasonForRejection:
             $("#rejectionReasonDropdown").val().join(", ") +
@@ -2164,7 +2169,7 @@ function submitAnnotation() {
             $("#otherReasonTextbox").val(),
           rejectionConfirmedByReviewer: document.querySelector(
             'input[name="confirmRejection"]:checked'
-          ).value,
+          )?.value,
         };
       }
     }
@@ -2228,9 +2233,7 @@ function checkAbbreviations(reasonForRanking) {
 }
 
 function checkLinesOfCode(completions) {
-  const languageChoice = document.querySelector(
-    'input[name="language"]:checked'
-  ).value;
+  const languageChoice = localStorage.getItem("language");
   const max = 100;
 
   var loc = [];
@@ -2435,12 +2438,12 @@ function checkRating(completions) {
 }
 
 function checkSameRatingVsRanking() {
-  // const ratingA = document.getElementById("rankingCompletionA").value;
-  // const ratingB = document.getElementById("rankingCompletionB").value;
-  // const ratingC = document.getElementById("rankingCompletionC").value;
-  const ratingA = document.querySelector('input[name="mcq7A"]:checked').value;
-  const ratingB = document.querySelector('input[name="mcq7B"]:checked').value;
-  const ratingC = document.querySelector('input[name="mcq7C"]:checked').value;
+  // const ratingA = document.getElementById("rankingCompletionA")?.value;
+  // const ratingB = document.getElementById("rankingCompletionB")?.value;
+  // const ratingC = document.getElementById("rankingCompletionC")?.value;
+  const ratingA = document.querySelector('input[name="mcq7A"]:checked')?.value;
+  const ratingB = document.querySelector('input[name="mcq7B"]:checked')?.value;
+  const ratingC = document.querySelector('input[name="mcq7C"]:checked')?.value;
   const ranking = document.getElementById("ranking").value;
 
   if (
@@ -2486,11 +2489,11 @@ if (window.location.href.includes("create_annotation") && view === null) {
 
 const completionArrayForLinesOfCode = [
   {
-    answer: document.getElementById("completionA").value,
+    answer: document.getElementById("completionA")?.value,
     questions: [
       {
         question: "Does the code/text follows the instructions given?",
-        answer: document.querySelector('input[name="mcq1A"]:checked').value,
+        answer: document.querySelector('input[name="mcq1A"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2498,7 +2501,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is the code executable?",
-        answer: document.querySelector('input[name="mcq2A"]:checked').value,
+        answer: document.querySelector('input[name="mcq2A"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2507,7 +2510,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is the code well commented?",
-        answer: document.querySelector('input[name="mcq3A"]:checked').value,
+        answer: document.querySelector('input[name="mcq3A"]:checked')?.value,
         options: {
           1: "means code is not documented at all",
           2: "means code contain certain comments, but not enough",
@@ -2527,7 +2530,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Does the code cover exceptional handling?",
-        answer: document.querySelector('input[name="mcq5A"]:checked').value,
+        answer: document.querySelector('input[name="mcq5A"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2536,7 +2539,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is text explanation clear or aligned well with the code?",
-        answer: document.querySelector('input[name="mcq6A"]:checked').value,
+        answer: document.querySelector('input[name="mcq6A"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2545,17 +2548,17 @@ const completionArrayForLinesOfCode = [
       {
         question:
           "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-        // answer: document.getElementById("rankingCompletionA").value,
-        answer: document.querySelector('input[name="mcq7A"]:checked').value,
+        // answer: document.getElementById("rankingCompletionA")?.value,
+        answer: document.querySelector('input[name="mcq7A"]:checked')?.value,
       },
     ],
   },
   {
-    answer: document.getElementById("completionB").value,
+    answer: document.getElementById("completionB")?.value,
     questions: [
       {
         question: "Does the code/text follows the instructions given?",
-        answer: document.querySelector('input[name="mcq1B"]:checked').value,
+        answer: document.querySelector('input[name="mcq1B"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2563,7 +2566,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is the code executable?",
-        answer: document.querySelector('input[name="mcq2B"]:checked').value,
+        answer: document.querySelector('input[name="mcq2B"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2572,7 +2575,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is the code well commented?",
-        answer: document.querySelector('input[name="mcq3B"]:checked').value,
+        answer: document.querySelector('input[name="mcq3B"]:checked')?.value,
         options: {
           1: "means code is not documented at all",
           2: "means code contain certain comments, but not enough",
@@ -2592,7 +2595,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Does the code cover exceptional handling?",
-        answer: document.querySelector('input[name="mcq5B"]:checked').value,
+        answer: document.querySelector('input[name="mcq5B"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2601,7 +2604,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is text explanation clear or aligned well with the code?",
-        answer: document.querySelector('input[name="mcq6B"]:checked').value,
+        answer: document.querySelector('input[name="mcq6B"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2610,17 +2613,17 @@ const completionArrayForLinesOfCode = [
       {
         question:
           "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-        // answer: document.getElementById("rankingCompletionB").value,
-        answer: document.querySelector('input[name="mcq7B"]:checked').value,
+        // answer: document.getElementById("rankingCompletionB")?.value,
+        answer: document.querySelector('input[name="mcq7B"]:checked')?.value,
       },
     ],
   },
   {
-    answer: document.getElementById("completionC").value,
+    answer: document.getElementById("completionC")?.value,
     questions: [
       {
         question: "Does the code/text follows the instructions given?",
-        answer: document.querySelector('input[name="mcq1C"]:checked').value,
+        answer: document.querySelector('input[name="mcq1C"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2628,7 +2631,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is the code executable?",
-        answer: document.querySelector('input[name="mcq2C"]:checked').value,
+        answer: document.querySelector('input[name="mcq2C"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2637,7 +2640,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is the code well commented?",
-        answer: document.querySelector('input[name="mcq3C"]:checked').value,
+        answer: document.querySelector('input[name="mcq3C"]:checked')?.value,
         options: {
           1: "means code is not documented at all",
           2: "means code contain certain comments, but not enough",
@@ -2657,7 +2660,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Does the code cover exceptional handling?",
-        answer: document.querySelector('input[name="mcq5C"]:checked').value,
+        answer: document.querySelector('input[name="mcq5C"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2666,7 +2669,7 @@ const completionArrayForLinesOfCode = [
       },
       {
         question: "Is text explanation clear or aligned well with the code?",
-        answer: document.querySelector('input[name="mcq6C"]:checked').value,
+        answer: document.querySelector('input[name="mcq6C"]:checked')?.value,
         options: {
           1: "yes",
           2: "no",
@@ -2675,8 +2678,8 @@ const completionArrayForLinesOfCode = [
       {
         question:
           "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-        // answer: document.getElementById("rankingCompletionC").value,
-        answer: document.querySelector('input[name="mcq7C"]:checked').value,
+        // answer: document.getElementById("rankingCompletionC")?.value,
+        answer: document.querySelector('input[name="mcq7C"]:checked')?.value,
       },
     ],
   },
@@ -2694,23 +2697,23 @@ function validationChecks() {
       completions: [
         {
           completionQuestions: {
-            Q3: document.querySelector('input[name="mcq3A"]:checked').value,
-            Q5: document.querySelector('input[name="mcq5A"]:checked').value,
-            Q6: document.querySelector('input[name="mcq6A"]:checked').value,
+            Q3: document.querySelector('input[name="mcq3A"]:checked')?.value,
+            Q5: document.querySelector('input[name="mcq5A"]:checked')?.value,
+            Q6: document.querySelector('input[name="mcq6A"]:checked')?.value,
           },
         },
         {
           completionQuestions: {
-            Q3: document.querySelector('input[name="mcq3B"]:checked').value,
-            Q5: document.querySelector('input[name="mcq5B"]:checked').value,
-            Q6: document.querySelector('input[name="mcq6B"]:checked').value,
+            Q3: document.querySelector('input[name="mcq3B"]:checked')?.value,
+            Q5: document.querySelector('input[name="mcq5B"]:checked')?.value,
+            Q6: document.querySelector('input[name="mcq6B"]:checked')?.value,
           },
         },
         {
           completionQuestions: {
-            Q3: document.querySelector('input[name="mcq3C"]:checked').value,
-            Q5: document.querySelector('input[name="mcq5C"]:checked').value,
-            Q6: document.querySelector('input[name="mcq6C"]:checked').value,
+            Q3: document.querySelector('input[name="mcq3C"]:checked')?.value,
+            Q5: document.querySelector('input[name="mcq5C"]:checked')?.value,
+            Q6: document.querySelector('input[name="mcq6C"]:checked')?.value,
           },
         },
       ],
@@ -2765,11 +2768,12 @@ function runChecks() {
     // array of objects required for ratings check and number of lines of code vs comments check
     const completionArrayForLinesOfCode = [
       {
-        answer: document.getElementById("completionA").value,
+        answer: document.getElementById("completionA")?.value,
         questions: [
           {
             question: "Does the code/text follows the instructions given?",
-            answer: document.querySelector('input[name="mcq1A"]:checked').value,
+            answer: document.querySelector('input[name="mcq1A"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2777,7 +2781,8 @@ function runChecks() {
           },
           {
             question: "Is the code executable?",
-            answer: document.querySelector('input[name="mcq2A"]:checked').value,
+            answer: document.querySelector('input[name="mcq2A"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2786,7 +2791,8 @@ function runChecks() {
           },
           {
             question: "Is the code well commented?",
-            answer: document.querySelector('input[name="mcq3A"]:checked').value,
+            answer: document.querySelector('input[name="mcq3A"]:checked')
+              ?.value,
             options: {
               1: "means code is not documented at all",
               2: "means code contain certain comments, but not enough",
@@ -2806,7 +2812,8 @@ function runChecks() {
           },
           {
             question: "Does the code cover exceptional handling?",
-            answer: document.querySelector('input[name="mcq5A"]:checked').value,
+            answer: document.querySelector('input[name="mcq5A"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2816,7 +2823,8 @@ function runChecks() {
           {
             question:
               "Is text explanation clear or aligned well with the code?",
-            answer: document.querySelector('input[name="mcq6A"]:checked').value,
+            answer: document.querySelector('input[name="mcq6A"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2825,17 +2833,19 @@ function runChecks() {
           {
             question:
               "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-            // answer: document.getElementById("rankingCompletionA").value,
-            answer: document.querySelector('input[name="mcq7A"]:checked').value,
+            // answer: document.getElementById("rankingCompletionA")?.value,
+            answer: document.querySelector('input[name="mcq7A"]:checked')
+              ?.value,
           },
         ],
       },
       {
-        answer: document.getElementById("completionB").value,
+        answer: document.getElementById("completionB")?.value,
         questions: [
           {
             question: "Does the code/text follows the instructions given?",
-            answer: document.querySelector('input[name="mcq1B"]:checked').value,
+            answer: document.querySelector('input[name="mcq1B"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2843,7 +2853,8 @@ function runChecks() {
           },
           {
             question: "Is the code executable?",
-            answer: document.querySelector('input[name="mcq2B"]:checked').value,
+            answer: document.querySelector('input[name="mcq2B"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2852,7 +2863,8 @@ function runChecks() {
           },
           {
             question: "Is the code well commented?",
-            answer: document.querySelector('input[name="mcq3B"]:checked').value,
+            answer: document.querySelector('input[name="mcq3B"]:checked')
+              ?.value,
             options: {
               1: "means code is not documented at all",
               2: "means code contain certain comments, but not enough",
@@ -2872,7 +2884,8 @@ function runChecks() {
           },
           {
             question: "Does the code cover exceptional handling?",
-            answer: document.querySelector('input[name="mcq5B"]:checked').value,
+            answer: document.querySelector('input[name="mcq5B"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2882,7 +2895,8 @@ function runChecks() {
           {
             question:
               "Is text explanation clear or aligned well with the code?",
-            answer: document.querySelector('input[name="mcq6B"]:checked').value,
+            answer: document.querySelector('input[name="mcq6B"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2891,17 +2905,19 @@ function runChecks() {
           {
             question:
               "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-            // answer: document.getElementById("rankingCompletionB").value,
-            answer: document.querySelector('input[name="mcq7B"]:checked').value,
+            // answer: document.getElementById("rankingCompletionB")?.value,
+            answer: document.querySelector('input[name="mcq7B"]:checked')
+              ?.value,
           },
         ],
       },
       {
-        answer: document.getElementById("completionC").value,
+        answer: document.getElementById("completionC")?.value,
         questions: [
           {
             question: "Does the code/text follows the instructions given?",
-            answer: document.querySelector('input[name="mcq1C"]:checked').value,
+            answer: document.querySelector('input[name="mcq1C"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2909,7 +2925,8 @@ function runChecks() {
           },
           {
             question: "Is the code executable?",
-            answer: document.querySelector('input[name="mcq2C"]:checked').value,
+            answer: document.querySelector('input[name="mcq2C"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2918,7 +2935,8 @@ function runChecks() {
           },
           {
             question: "Is the code well commented?",
-            answer: document.querySelector('input[name="mcq3C"]:checked').value,
+            answer: document.querySelector('input[name="mcq3C"]:checked')
+              ?.value,
             options: {
               1: "means code is not documented at all",
               2: "means code contain certain comments, but not enough",
@@ -2938,7 +2956,8 @@ function runChecks() {
           },
           {
             question: "Does the code cover exceptional handling?",
-            answer: document.querySelector('input[name="mcq5C"]:checked').value,
+            answer: document.querySelector('input[name="mcq5C"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2948,7 +2967,8 @@ function runChecks() {
           {
             question:
               "Is text explanation clear or aligned well with the code?",
-            answer: document.querySelector('input[name="mcq6C"]:checked').value,
+            answer: document.querySelector('input[name="mcq6C"]:checked')
+              ?.value,
             options: {
               1: "yes",
               2: "no",
@@ -2957,15 +2977,16 @@ function runChecks() {
           {
             question:
               "Rate the completion from 1-7. 1 being poor and 7 being excellent:",
-            // answer: document.getElementById("rankingCompletionC").value,
-            answer: document.querySelector('input[name="mcq7C"]:checked').value,
+            // answer: document.getElementById("rankingCompletionC")?.value,
+            answer: document.querySelector('input[name="mcq7C"]:checked')
+              ?.value,
           },
         ],
       },
     ];
 
     // check for non ascii characters
-    if (hasNonAsciiCharacters(document.getElementById("reason").value)) {
+    if (hasNonAsciiCharacters(document.getElementById("reason")?.value)) {
       const errorItem = document.createElement("li");
       errorItem.innerText = "Reason for ranking contains non ascii characters";
       errorItem.style.color = "red";
@@ -2974,7 +2995,7 @@ function runChecks() {
 
     // check abbreviations
     const abbreviationsCaught = checkAbbreviations(
-      document.getElementById("reason").value
+      document.getElementById("reason")?.value
     );
     if (abbreviationsCaught.length !== 0) {
       const errorItem = document.createElement("li");
@@ -3039,9 +3060,9 @@ function runChecks() {
 function logPromptAndCompletions() {
   let payload = {
     prompt: document.getElementById("prompt").value.trim(),
-    compA: document.getElementById("completionA").value,
-    compB: document.getElementById("completionB").value,
-    compC: document.getElementById("completionC").value,
+    compA: document.getElementById("completionA")?.value,
+    compB: document.getElementById("completionB")?.value,
+    compC: document.getElementById("completionC")?.value,
     role: localStorage.getItem("annotatorRole"),
     batchNumber: $("#batchDropdownButton").text().trim(),
     annotatorEmail,
@@ -3052,6 +3073,7 @@ function logPromptAndCompletions() {
     payload.compA != "" &&
     payload.compB != "" &&
     payload.compC != "" &&
+    payload.batchNumber !== "Select a batch" &&
     payload.batchNumber !== ""
   ) {
     // console.log(payload);
@@ -3103,6 +3125,6 @@ function logPromptAndCompletions() {
     // console.log("Prompt or Completion text missing");
     document.getElementById(
       "loggedAnnotationShitBody"
-    ).innerHTML = `Prompt or Completion text missing`;
+    ).innerHTML = `Prompt, Completion or Batch Number missing`;
   }
 }
