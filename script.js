@@ -1294,6 +1294,12 @@ if (_id != null) {
       if (data.success === true) {
         let ann = data.message;
 
+        // show the current annotation ID
+        document.getElementById("workingAnnotationIdContainer").style.display =
+          "block";
+        document.getElementById("workingAnnotationId").innerText =
+          ann.annotationId;
+
         if (
           ann.ranking === "" &&
           ann.reasoning === "" &&
