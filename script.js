@@ -558,7 +558,7 @@ $(document).ready(function () {
         } else if (this.value === "2") {
           $("#justificationReasonYesCompletionAQ1").next(".btn-group").hide();
           $("#justificationReasonNoCompletionAQ1").next(".btn-group").show();
-          $("#completionAJustificationQ1").hide();
+          $("#completionAJustificationQ1").show();
         }
       }
     });
@@ -579,7 +579,7 @@ $(document).ready(function () {
         } else if (this.value === "2") {
           $("#justificationReasonYesCompletionAQ2").next(".btn-group").hide();
           $("#justificationReasonNoCompletionAQ2").next(".btn-group").show();
-          $("#completionAJustificationQ2").hide();
+          $("#completionAJustificationQ2").show();
         } else {
           $("#justificationReasonYesCompletionAQ2").next(".btn-group").hide();
           $("#justificationReasonNoCompletionAQ2").next(".btn-group").hide();
@@ -623,7 +623,7 @@ $(document).ready(function () {
         } else if (this.value === "2") {
           $("#justificationReasonYesCompletionBQ1").next(".btn-group").hide();
           $("#justificationReasonNoCompletionBQ1").next(".btn-group").show();
-          $("#completionBJustificationQ1").hide();
+          $("#completionBJustificationQ1").show();
         }
       }
     });
@@ -644,7 +644,7 @@ $(document).ready(function () {
         } else if (this.value === "2") {
           $("#justificationReasonYesCompletionBQ2").next(".btn-group").hide();
           $("#justificationReasonNoCompletionBQ2").next(".btn-group").show();
-          $("#completionBJustificationQ2").hide();
+          $("#completionBJustificationQ2").show();
         } else {
           $("#justificationReasonYesCompletionBQ2").next(".btn-group").hide();
           $("#justificationReasonNoCompletionBQ2").next(".btn-group").hide();
@@ -688,7 +688,7 @@ $(document).ready(function () {
         } else if (this.value === "2") {
           $("#justificationReasonYesCompletionCQ1").next(".btn-group").hide();
           $("#justificationReasonNoCompletionCQ1").next(".btn-group").show();
-          $("#completionCJustificationQ1").hide();
+          $("#completionCJustificationQ1").show();
         }
       }
     });
@@ -709,7 +709,7 @@ $(document).ready(function () {
         } else if (this.value === "2") {
           $("#justificationReasonYesCompletionCQ2").next(".btn-group").hide();
           $("#justificationReasonNoCompletionCQ2").next(".btn-group").show();
-          $("#completionCJustificationQ2").hide();
+          $("#completionCJustificationQ2").show();
         } else {
           $("#justificationReasonYesCompletionCQ2").next(".btn-group").hide();
           $("#justificationReasonNoCompletionCQ2").next(".btn-group").hide();
@@ -827,9 +827,9 @@ function checkEmpty() {
     emptyFields.push("Completion B text");
   }
 
-  if (document.getElementById("completionC")?.value === "") {
-    emptyFields.push("Completion C text");
-  }
+  // if (document.getElementById("completionC")?.value === "") {
+  //   emptyFields.push("Completion C text");
+  // }
 
   if (
     document.querySelector('input[name="rejected"]:checked')?.value === "false"
@@ -850,11 +850,11 @@ function checkEmpty() {
       }
     }
 
-    for (let i = 1; i <= 7; i++) {
-      if ($(`input[name="mcq${i}C"]:checked`).length <= 0) {
-        emptyFields.push(`MCQ ${i} of Completion C`);
-      }
-    }
+    // for (let i = 1; i <= 7; i++) {
+    //   if ($(`input[name="mcq${i}C"]:checked`).length <= 0) {
+    //     emptyFields.push(`MCQ ${i} of Completion C`);
+    //   }
+    // }
 
     if ($("#ranking").val() === "") {
       emptyFields.push("Ranking");
@@ -999,71 +999,71 @@ function checkEmpty() {
     }
 
     // selected yes for Q1 C
-    if (document.querySelector('input[name="mcq1C"]:checked')?.value === "1") {
-      if ($("#completionCJustificationQ1").val() === "") {
-        emptyFields.push("Completion C Q1 Justification URL");
-      }
+    // if (document.querySelector('input[name="mcq1C"]:checked')?.value === "1") {
+    //   if ($("#completionCJustificationQ1").val() === "") {
+    //     emptyFields.push("Completion C Q1 Justification URL");
+    //   }
 
-      if (
-        $("#completionCJustificationQ1").val().toLowerCase() === "na" ||
-        $("#completionCJustificationQ1").val().toLowerCase() ===
-          "not applicable" ||
-        $("#completionCJustificationQ1").val().toLowerCase() === "null" ||
-        $("#completionCJustificationQ1").val().toLowerCase() === "none" ||
-        $("#completionCJustificationQ1").val().toLowerCase() ===
-          "no comments" ||
-        $("#completionCJustificationQ1").val().toLowerCase() === "blank"
-      ) {
-        emptyFields.push(
-          "Keyword not allowed in the URL section of Completion C"
-        );
-      }
+    //   if (
+    //     $("#completionCJustificationQ1").val().toLowerCase() === "na" ||
+    //     $("#completionCJustificationQ1").val().toLowerCase() ===
+    //       "not applicable" ||
+    //     $("#completionCJustificationQ1").val().toLowerCase() === "null" ||
+    //     $("#completionCJustificationQ1").val().toLowerCase() === "none" ||
+    //     $("#completionCJustificationQ1").val().toLowerCase() ===
+    //       "no comments" ||
+    //     $("#completionCJustificationQ1").val().toLowerCase() === "blank"
+    //   ) {
+    //     emptyFields.push(
+    //       "Keyword not allowed in the URL section of Completion C"
+    //     );
+    //   }
 
-      if ($("#justificationReasonYesCompletionCQ1").val().join(", ") === "") {
-        emptyFields.push("Completion C Q1 Justification Reasons");
-      }
-    }
+    //   if ($("#justificationReasonYesCompletionCQ1").val().join(", ") === "") {
+    //     emptyFields.push("Completion C Q1 Justification Reasons");
+    //   }
+    // }
 
     // selected no for Q1 C
-    if (document.querySelector('input[name="mcq1C"]:checked')?.value === "2") {
-      if ($("#justificationReasonNoCompletionCQ1").val().join(", ") === "") {
-        emptyFields.push("Completion C Q1 Justification Reasons");
-      }
-    }
+    // if (document.querySelector('input[name="mcq1C"]:checked')?.value === "2") {
+    //   if ($("#justificationReasonNoCompletionCQ1").val().join(", ") === "") {
+    //     emptyFields.push("Completion C Q1 Justification Reasons");
+    //   }
+    // }
 
     // selected yes for Q2 C
-    if (document.querySelector('input[name="mcq2C"]:checked')?.value === "1") {
-      if ($("#completionCJustificationQ2").val() === "") {
-        emptyFields.push(
-          "Completion C Q2 Justification OUTPUT/ERROR not provided"
-        );
-      }
+    // if (document.querySelector('input[name="mcq2C"]:checked')?.value === "1") {
+    //   if ($("#completionCJustificationQ2").val() === "") {
+    //     emptyFields.push(
+    //       "Completion C Q2 Justification OUTPUT/ERROR not provided"
+    //     );
+    //   }
 
-      if ($("#justificationReasonYesCompletionCQ2").val().join(", ") === "") {
-        emptyFields.push("Completion C Q2 Justification Reasons");
-      }
-    }
+    //   if ($("#justificationReasonYesCompletionCQ2").val().join(", ") === "") {
+    //     emptyFields.push("Completion C Q2 Justification Reasons");
+    //   }
+    // }
 
     // selected no for Q2 C
-    if (document.querySelector('input[name="mcq2C"]:checked')?.value === "2") {
-      if ($("#justificationReasonNoCompletionCQ2").val().join(", ") === "") {
-        emptyFields.push("Completion C Q2 Justification Reasons");
-      }
-    }
+    // if (document.querySelector('input[name="mcq2C"]:checked')?.value === "2") {
+    //   if ($("#justificationReasonNoCompletionCQ2").val().join(", ") === "") {
+    //     emptyFields.push("Completion C Q2 Justification Reasons");
+    //   }
+    // }
 
     // selected yes for Q6 C
-    if (document.querySelector('input[name="mcq6C"]:checked')?.value === "1") {
-      if ($("#justificationReasonYesCompletionCQ6").val().join(", ") === "") {
-        emptyFields.push("Completion C Q6 Justification Reasons");
-      }
-    }
+    // if (document.querySelector('input[name="mcq6C"]:checked')?.value === "1") {
+    //   if ($("#justificationReasonYesCompletionCQ6").val().join(", ") === "") {
+    //     emptyFields.push("Completion C Q6 Justification Reasons");
+    //   }
+    // }
 
     // selected no for Q6 C
-    if (document.querySelector('input[name="mcq6C"]:checked')?.value === "2") {
-      if ($("#justificationReasonNoCompletionCQ6").val().join(", ") === "") {
-        emptyFields.push("Completion C Q6 Justification Reasons");
-      }
-    }
+    // if (document.querySelector('input[name="mcq6C"]:checked')?.value === "2") {
+    //   if ($("#justificationReasonNoCompletionCQ6").val().join(", ") === "") {
+    //     emptyFields.push("Completion C Q6 Justification Reasons");
+    //   }
+    // }
   } else if (
     document.querySelector('input[name="rejected"]:checked')?.value === "true"
   ) {
@@ -1544,7 +1544,7 @@ if (_id != null) {
                     });
                   } else if (comp.completionQuestions[`Q${i}`] === "2") {
                     // hide the URL boxes
-                    $(`#completion${alpha}JustificationQ${i}`).hide();
+                    $(`#completion${alpha}JustificationQ${i}`).show();
                     // make the selections visible
                     $(`#justificationReasonNoCompletion${alpha}Q${i}`)
                       .next(".btn-group")
@@ -1662,11 +1662,13 @@ if (_id != null) {
               if (ann.rejected === false) {
                 // fill main mcq questions for Completions
                 Object.keys(comp.completionQuestions).map((Key, qidx) => {
-                  document.querySelector(
-                    `input[name="mcq${qidx + 1}${alpha}"][value="${
-                      comp.completionQuestions[Key]
-                    }"]`
-                  ).checked = true;
+                  if (comp.completionQuestions[Key] !== "") {
+                    document.querySelector(
+                      `input[name="mcq${qidx + 1}${alpha}"][value="${
+                        comp.completionQuestions[Key]
+                      }"]`
+                    ).checked = true;
+                  }
                 });
 
                 // fill Q1 justification URL
@@ -1700,7 +1702,7 @@ if (_id != null) {
                       });
                     } else if (comp.completionQuestions[`Q${i}`] === "2") {
                       // hide the URL boxes
-                      $(`#completion${alpha}JustificationQ${i}`).hide();
+                      $(`#completion${alpha}JustificationQ${i}`).show();
                       // make the selections visible
                       $(`#justificationReasonNoCompletion${alpha}Q${i}`)
                         .next(".btn-group")
@@ -1738,7 +1740,45 @@ if (_id != null) {
                       });
                     } else if (comp.completionQuestions[`Q${i}`] === "2") {
                       // hide the URL boxes
-                      $(`#completion${alpha}JustificationQ${i}`).hide();
+                      $(`#completion${alpha}JustificationQ${i}`).show();
+                      // make the selections visible
+                      $(`#justificationReasonNoCompletion${alpha}Q${i}`)
+                        .next(".btn-group")
+                        .show();
+                      let arr = comp.completionReasoning[k].split(", ");
+
+                      // pre select the choices
+                      arr.map((reason) => {
+                        $(
+                          `#justificationReasonNoCompletion${alpha}Q${i}`
+                        ).multiselect("select", reason);
+                      });
+                    } else {
+                      // return;
+                    }
+                  });
+                } else if (Object.keys(comp.completionReasoning).length === 1) {
+                  let ques = ["1"];
+
+                  Object.keys(comp.completionReasoning).map((k, jidx) => {
+                    let i = ques[jidx],
+                      selectElement;
+                    if (comp.completionQuestions[`Q${i}`] === "1") {
+                      // make the selections visible
+                      $(`#justificationReasonYesCompletion${alpha}Q${i}`)
+                        .next(".btn-group")
+                        .show();
+                      let arr = comp.completionReasoning[k].split(", ");
+
+                      // pre select the choices
+                      arr.map((reason) => {
+                        $(
+                          `#justificationReasonYesCompletion${alpha}Q${i}`
+                        ).multiselect("select", reason);
+                      });
+                    } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                      // hide the URL boxes
+                      $(`#completion${alpha}JustificationQ${i}`).show();
                       // make the selections visible
                       $(`#justificationReasonNoCompletion${alpha}Q${i}`)
                         .next(".btn-group")
@@ -1817,7 +1857,7 @@ if (_id != null) {
         }, 3000);
       }
     })
-    .catch((error) => console.error("Error:", error));
+    .catch((error) => console.log(error));
 }
 
 function submitAnnotation() {
@@ -2019,28 +2059,52 @@ function submitAnnotation() {
         },
       };
 
-      completionC = {
-        completionText: document.getElementById("completionC")?.value,
-        completionQuestions: {
-          Q1: document.querySelector('input[name="mcq1C"]:checked')?.value,
-          Q2: document.querySelector('input[name="mcq2C"]:checked')?.value,
-          Q3: document.querySelector('input[name="mcq3C"]:checked')?.value,
-          Q4: "1",
-          Q5: document.querySelector('input[name="mcq5C"]:checked')?.value,
-          Q6: document.querySelector('input[name="mcq6C"]:checked')?.value,
-          // rank: document.getElementById("rankingCompletionC")?.value,
-          Q7: document.querySelector('input[name="mcq7C"]:checked')?.value,
-        },
-        completionReasoning: {
-          reasonForQ1C,
-          reasonForQ2C,
-          reasonForQ6C,
-        },
-        completionReasoningURLs: {
-          urlForQ1C: $("#completionCJustificationQ1").val(),
-          urlForQ2C: $("#completionCJustificationQ2").val(),
-        },
-      };
+      if (document.getElementById("completionC")?.value?.trim() === "") {
+        completionC = {
+          completionText: "",
+          completionQuestions: {
+            Q1: "",
+            Q2: "",
+            Q3: "",
+            Q4: "",
+            Q5: "",
+            Q6: "",
+            Q7: "",
+          },
+          completionReasoning: {
+            reasonForQ1C: "",
+            reasonForQ2C: "",
+            reasonForQ6C: "",
+          },
+          completionReasoningURLs: {
+            urlForQ1C: "",
+            urlForQ2C: "",
+          },
+        };
+      } else {
+        completionC = {
+          completionText: document.getElementById("completionC")?.value,
+          completionQuestions: {
+            Q1: document.querySelector('input[name="mcq1C"]:checked')?.value,
+            Q2: document.querySelector('input[name="mcq2C"]:checked')?.value,
+            Q3: document.querySelector('input[name="mcq3C"]:checked')?.value,
+            Q4: "1",
+            Q5: document.querySelector('input[name="mcq5C"]:checked')?.value,
+            Q6: document.querySelector('input[name="mcq6C"]:checked')?.value,
+            // rank: document.getElementById("rankingCompletionC")?.value,
+            Q7: document.querySelector('input[name="mcq7C"]:checked')?.value,
+          },
+          completionReasoning: {
+            reasonForQ1C,
+            reasonForQ2C,
+            reasonForQ6C,
+          },
+          completionReasoningURLs: {
+            urlForQ1C: $("#completionCJustificationQ1").val(),
+            urlForQ2C: $("#completionCJustificationQ2").val(),
+          },
+        };
+      }
 
       // Collect form data
       formData = {
@@ -3078,7 +3142,6 @@ function logPromptAndCompletions() {
     payload.prompt != "" &&
     payload.compA != "" &&
     payload.compB != "" &&
-    payload.compC != "" &&
     payload.batchNumber !== "Select a batch" &&
     payload.batchNumber !== ""
   ) {
