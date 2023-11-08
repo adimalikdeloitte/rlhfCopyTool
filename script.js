@@ -1507,11 +1507,13 @@ if (_id != null) {
                 Object.keys(comp.completionQuestions)
                   .slice(0, 2)
                   .map((Key, qidx) => {
-                    document.querySelector(
-                      `input[name="mcq${qidx + 1}${alpha}"][value="${
-                        comp.completionQuestions[Key]
-                      }"]`
-                    ).checked = true;
+                    if (comp.completionQuestions[Key] !== "") {
+                      document.querySelector(
+                        `input[name="mcq${qidx + 1}${alpha}"][value="${
+                          comp.completionQuestions[Key]
+                        }"]`
+                      ).checked = true;
+                    }
                   });
 
                 // fill Q1 justification URL
@@ -2762,6 +2764,8 @@ function validationChecks() {
       document.getElementById("submitBtn").style.display = "inline-block";
     }
 
+    console.log(currentAnnotationId);
+
     const payload = {
       annotationId: currentAnnotationId,
       completions: [
@@ -2781,9 +2785,15 @@ function validationChecks() {
         },
         {
           completionQuestions: {
-            Q3: document.querySelector('input[name="mcq3C"]:checked')?.value,
-            Q5: document.querySelector('input[name="mcq5C"]:checked')?.value,
-            Q6: document.querySelector('input[name="mcq6C"]:checked')?.value,
+            Q3:
+              document.querySelector('input[name="mcq3C"]:checked')?.value ||
+              "",
+            Q5:
+              document.querySelector('input[name="mcq5C"]:checked')?.value ||
+              "",
+            Q6:
+              document.querySelector('input[name="mcq6C"]:checked')?.value ||
+              "",
           },
         },
       ],
