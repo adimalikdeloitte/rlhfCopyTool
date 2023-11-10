@@ -2775,6 +2775,7 @@ function validationChecks() {
             Q3: document.querySelector('input[name="mcq3A"]:checked')?.value,
             Q5: document.querySelector('input[name="mcq5A"]:checked')?.value,
             Q6: document.querySelector('input[name="mcq6A"]:checked')?.value,
+            Q7: document.querySelector('input[name="mcq7A"]:checked')?.value,
           },
         },
         {
@@ -2782,6 +2783,7 @@ function validationChecks() {
             Q3: document.querySelector('input[name="mcq3B"]:checked')?.value,
             Q5: document.querySelector('input[name="mcq5B"]:checked')?.value,
             Q6: document.querySelector('input[name="mcq6B"]:checked')?.value,
+            Q7: document.querySelector('input[name="mcq7B"]:checked')?.value,
           },
         },
         {
@@ -2794,6 +2796,9 @@ function validationChecks() {
               "",
             Q6:
               document.querySelector('input[name="mcq6C"]:checked')?.value ||
+              "",
+            Q7:
+              document.querySelector('input[name="mcq7C"]:checked')?.value ||
               "",
           },
         },
