@@ -3144,23 +3144,22 @@ function runChecks() {
 }
 
 function logPromptAndCompletions() {
+  let bn = $("#batchDropdownButton").text().trim();
+  if (bn === "Select a batch") {
+    bn = "";
+  }
+
   let payload = {
     prompt: document.getElementById("prompt").value.trim(),
     compA: document.getElementById("completionA")?.value,
     compB: document.getElementById("completionB")?.value,
     compC: document.getElementById("completionC")?.value,
     role: localStorage.getItem("annotatorRole"),
-    batchNumber: $("#batchDropdownButton").text().trim(),
+    batchNumber: bn,
     annotatorEmail,
   };
 
-  if (
-    payload.prompt != "" &&
-    payload.compA != "" &&
-    payload.compB != "" &&
-    payload.batchNumber !== "Select a batch" &&
-    payload.batchNumber !== ""
-  ) {
+  if (payload.prompt != "" && payload.compA != "" && payload.compB != "") {
     // console.log(payload);
     let endpoint = "logAnnotation",
       method = "POST";
