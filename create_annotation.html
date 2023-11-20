@@ -50,92 +50,91 @@
         </div>
       </div>
 
-      <div id="workingAnnotationIdContainer" style="display: none">
+      <div id="annotationInfoContainer" style="display: none">
         You are working on Annotation ID:
         <strong id="workingAnnotationId"></strong>
+        <br />
+        <br />
+        Complexity of annotation:
+        <strong id="annotationComplexity"></strong>
         <br />
         <br />
       </div>
 
       <form id="annotationForm">
-        <div class="dropdown">
-          <button
-            class="btn btn-outline-dark dropdown-toggle mb-3"
-            type="button"
-            id="batchDropdownButton"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            Select a batch
-          </button>
-          <div
-            class="dropdown-menu"
-            aria-labelledby="batchDropdownButton"
-            id="batchDropdownMenu"
-          >
-            <!-- Items will be added here dynamically -->
-          </div>
-        </div>
+        <div class="row">
+          <div class="col-6">
+            <div class="dropdown">
+              <button
+                class="btn btn-outline-dark dropdown-toggle mb-3"
+                type="button"
+                id="batchDropdownButton"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+              >
+                Select a batch
+              </button>
+              <div
+                class="dropdown-menu"
+                aria-labelledby="batchDropdownButton"
+                id="batchDropdownMenu"
+              >
+                <!-- Items will be added here dynamically -->
+              </div>
+            </div>
 
-        <label>Task Type</label>
-        <div class="form-group">
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="taskType"
-              value="fresh"
-            />
-            <label class="form-check-label">Fresh</label>
+            <label>Task Type</label>
+            <div class="form-group">
+              <div class="form-check form-check-inline">
+                <input class="" type="radio" name="taskType" value="fresh" />
+                <label class="form-check-label">Fresh</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="" type="radio" name="taskType" value="re-work" />
+                <label class="form-check-label">Re-Work</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="" type="radio" name="taskType" value="S1Review" />
+                <label class="form-check-label">S1 Review</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="" type="radio" name="taskType" value="S2Review" />
+                <label class="form-check-label">S2 Review</label>
+              </div>
+            </div>
           </div>
-          <div class="form-check form-check-inline">
+          <div class="col-6">
+            <strong style="font-size: large" class="mb-2">
+              Enter Keywords to search the relevant annotations
+            </strong>
             <input
-              class="form-check-input"
-              type="radio"
-              name="taskType"
-              value="re-work"
+              required
+              id="keywords"
+              type="text"
+              class="w-100 p-2"
+              style="border-radius: 5px"
+              placeholder="Enter comma separated keywords to search"
+              value=""
             />
-            <label class="form-check-label">Re-Work</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="taskType"
-              value="S1Review"
-            />
-            <label class="form-check-label">S1 Review</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="taskType"
-              value="S2Review"
-            />
-            <label class="form-check-label">S2 Review</label>
+
+            <i>Example: python, django, numpy, tensorflow</i>
+            <div style="text-align: right">
+              <a href="#" class="btn btn-primary" onclick="searchKeywords()">
+                Search
+              </a>
+            </div>
           </div>
         </div>
 
         <label>Reject this annotation?</label>
         <div class="form-group">
           <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="rejected"
-              value="true"
-            />
+            <input class="" type="radio" name="rejected" value="true" />
             <label class="form-check-label">Yes</label>
           </div>
           <div class="form-check form-check-inline">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="rejected"
-              value="false"
-            />
+            <input class="" type="radio" name="rejected" value="false" />
             <label class="form-check-label">No</label>
           </div>
           <br />
@@ -160,13 +159,6 @@
             >
               Log Prompt and Completions
             </button>
-
-            <br />
-            <br />
-            <marquee style="color: green"
-              >* Note: Completion C data is now optional, you can skip it if it
-              doesn't exist</marquee
-            >
 
             <div
               class="modal fade"
@@ -234,21 +226,11 @@
                       >Does the code/text follows the instructions given?</label
                     >
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq1A"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq1A" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq1A"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq1A" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                   </div>
@@ -352,30 +334,15 @@
                   <div class="col-6">
                     <label>Is the code executable?</label>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2A"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq2A" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2A"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq2A" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2A"
-                        value="3"
-                      />
+                      <input class="" type="radio" name="mcq2A" value="3" />
                       <label class="form-check-label">NA</label>
                     </div>
                   </div>
@@ -451,30 +418,15 @@
                 <div class="mt-3">
                   <label>Is the code well commented?</label>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3A"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq3A" value="1" />
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3A"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq3A" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3A"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq3A" value="3" />
                     <label class="form-check-label">NA</label>
                   </div>
                 </div>
@@ -483,9 +435,9 @@
                   <label
                     >Are the variable names understandable in the code?</label
                   >
-                  <div class="form-check">
+                  <div class="">
                     <input
-                      class="form-check-input"
+                      class=""
                       type="radio"
                       checked
                       name="mcq4A"
@@ -493,22 +445,12 @@
                     />
                     <label class="form-check-label">Yes</label>
                   </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq4A"
-                      value="2"
-                    />
+                  <div class="">
+                    <input class="" type="radio" name="mcq4A" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
-                  <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq4A"
-                      value="3"
-                    />
+                  <div class="">
+                    <input class="" type="radio" name="mcq4A" value="3" />
                     <label class="form-check-label"
                       >NA (code doesn't exist)</label
                     >
@@ -518,30 +460,15 @@
                 <div class="mt-3">
                   <label>Does the code cover exceptional handling?</label>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5A"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq5A" value="1" />
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5A"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq5A" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5A"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq5A" value="3" />
                     <label class="form-check-label"
                       >NA (code doesn't exist)</label
                     >
@@ -555,30 +482,15 @@
                       code?</label
                     >
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6A"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq6A" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6A"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq6A" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6A"
-                        value="3"
-                      />
+                      <input class="" type="radio" name="mcq6A" value="3" />
                       <label class="form-check-label">NA</label>
                     </div>
                   </div>
@@ -647,30 +559,15 @@
                 <div class="mt-3">
                   <label>Rate the completion:</label>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7A"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq7A" value="1" />
                     <label class="form-check-label">1</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7A"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq7A" value="2" />
                     <label class="form-check-label">2</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7A"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq7A" value="3" />
                     <label class="form-check-label">3</label>
                   </div>
                 </div>
@@ -698,21 +595,11 @@
                       >Does the code/text follows the instructions given?</label
                     >
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq1B"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq1B" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq1B"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq1B" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                   </div>
@@ -816,30 +703,15 @@
                   <div class="col-6">
                     <label>Is the code executable?</label>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2B"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq2B" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2B"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq2B" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2B"
-                        value="3"
-                      />
+                      <input class="" type="radio" name="mcq2B" value="3" />
                       <label class="form-check-label">NA</label>
                     </div>
                   </div>
@@ -915,30 +787,15 @@
                 <div class="mt-3">
                   <label>Is the code well commented?</label>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3B"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq3B" value="1" />
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3B"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq3B" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3B"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq3B" value="3" />
                     <label class="form-check-label">NA</label>
                   </div>
                 </div>
@@ -949,7 +806,7 @@
                   >
                   <div class="form-check">
                     <input
-                      class="form-check-input"
+                      class=""
                       type="radio"
                       checked
                       name="mcq4B"
@@ -958,21 +815,11 @@
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq4B"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq4B" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq4B"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq4B" value="3" />
                     <label class="form-check-label"
                       >NA (code doesn't exist)</label
                     >
@@ -982,30 +829,15 @@
                 <div class="mt-3">
                   <label>Does the code cover exceptional handling?</label>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5B"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq5B" value="1" />
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5B"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq5B" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5B"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq5B" value="3" />
                     <label class="form-check-label"
                       >NA (code doesn't exist)</label
                     >
@@ -1019,30 +851,15 @@
                       code?</label
                     >
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6B"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq6B" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6B"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq6B" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6B"
-                        value="3"
-                      />
+                      <input class="" type="radio" name="mcq6B" value="3" />
                       <label class="form-check-label">NA</label>
                     </div>
                   </div>
@@ -1111,30 +928,15 @@
                 <div class="mt-3">
                   <label>Rate the completion:</label>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7B"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq7B" value="1" />
                     <label class="form-check-label">1</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7B"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq7B" value="2" />
                     <label class="form-check-label">2</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7B"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq7B" value="3" />
                     <label class="form-check-label">3</label>
                   </div>
                 </div>
@@ -1162,21 +964,11 @@
                       >Does the code/text follows the instructions given?</label
                     >
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq1C"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq1C" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq1C"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq1C" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                   </div>
@@ -1280,30 +1072,15 @@
                   <div class="col-6">
                     <label>Is the code executable?</label>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2C"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq2C" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2C"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq2C" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq2C"
-                        value="3"
-                      />
+                      <input class="" type="radio" name="mcq2C" value="3" />
                       <label class="form-check-label">NA</label>
                     </div>
                   </div>
@@ -1380,30 +1157,15 @@
                 <div class="mt-3">
                   <label>Is the code well commented?</label>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3C"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq3C" value="1" />
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3C"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq3C" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq3C"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq3C" value="3" />
                     <label class="form-check-label">NA</label>
                   </div>
                 </div>
@@ -1414,7 +1176,7 @@
                   >
                   <div class="form-check">
                     <input
-                      class="form-check-input"
+                      class=""
                       type="radio"
                       checked
                       name="mcq4C"
@@ -1423,21 +1185,11 @@
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq4C"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq4C" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq4C"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq4C" value="3" />
                     <label class="form-check-label"
                       >NA (code doesn't exist)</label
                     >
@@ -1447,30 +1199,15 @@
                 <div class="mt-3">
                   <label>Does the code cover exceptional handling?</label>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5C"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq5C" value="1" />
                     <label class="form-check-label">Yes</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5C"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq5C" value="2" />
                     <label class="form-check-label">No</label>
                   </div>
                   <div class="form-check">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq5C"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq5C" value="3" />
                     <label class="form-check-label"
                       >NA (code doesn't exist)</label
                     >
@@ -1484,30 +1221,15 @@
                       code?</label
                     >
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6C"
-                        value="1"
-                      />
+                      <input class="" type="radio" name="mcq6C" value="1" />
                       <label class="form-check-label">Yes</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6C"
-                        value="2"
-                      />
+                      <input class="" type="radio" name="mcq6C" value="2" />
                       <label class="form-check-label">No</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="radio"
-                        name="mcq6C"
-                        value="3"
-                      />
+                      <input class="" type="radio" name="mcq6C" value="3" />
                       <label class="form-check-label">NA</label>
                     </div>
                   </div>
@@ -1576,30 +1298,15 @@
                 <div class="mt-3">
                   <label>Rate the completion:</label>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7C"
-                      value="1"
-                    />
+                    <input class="" type="radio" name="mcq7C" value="1" />
                     <label class="form-check-label">1</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7C"
-                      value="2"
-                    />
+                    <input class="" type="radio" name="mcq7C" value="2" />
                     <label class="form-check-label">2</label>
                   </div>
                   <div class="form-check form-check-inline">
-                    <input
-                      class="form-check-input"
-                      type="radio"
-                      name="mcq7C"
-                      value="3"
-                    />
+                    <input class="" type="radio" name="mcq7C" value="3" />
                     <label class="form-check-label">3</label>
                   </div>
                 </div>
@@ -1630,30 +1337,15 @@
             <div class="mt-3">
               <label>Are you confident with your answers?</label>
               <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="confidence"
-                  value="Yes"
-                />
+                <input class="" type="radio" name="confidence" value="Yes" />
                 <label class="form-check-label">Yes</label>
               </div>
               <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="confidence"
-                  value="No"
-                />
+                <input class="" type="radio" name="confidence" value="No" />
                 <label class="form-check-label">No</label>
               </div>
               <div class="form-check form-check-inline">
-                <input
-                  class="form-check-input"
-                  type="radio"
-                  name="confidence"
-                  value="Maybe"
-                />
+                <input class="" type="radio" name="confidence" value="Maybe" />
                 <label class="form-check-label">Maybe</label>
               </div>
             </div>
@@ -1722,7 +1414,7 @@
               <div class="form-group">
                 <div class="form-check form-check-inline">
                   <input
-                    class="form-check-input"
+                    class=""
                     type="radio"
                     name="confirmRejection"
                     value="true"
@@ -1731,7 +1423,7 @@
                 </div>
                 <div class="form-check form-check-inline">
                   <input
-                    class="form-check-input"
+                    class=""
                     type="radio"
                     name="confirmRejection"
                     value="false"
@@ -1797,6 +1489,28 @@
               </button>
             </div>
             <div class="modal-body" id="checkStatusPromptModalContent">
+              <!-- Content from the backend will be inserted here -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bootstrap Modal -->
+      <div class="modal fade" id="keywordsModal">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Matching Annotations</h4>
+              <button type="button" class="close" data-dismiss="modal">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body" id="keywordsModalContent">
               <!-- Content from the backend will be inserted here -->
             </div>
             <div class="modal-footer">
@@ -1894,6 +1608,79 @@
       // Usage:
       // let selectedBatch = getSelectedBatch();
       // console.log(selectedBatch);
+
+      function searchKeywords() {
+        const keywordsModalContainer = document.getElementById(
+          "keywordsModalContent"
+        );
+
+        keywordsModalContainer.innerHTML = "";
+        const keywordString = document
+          .getElementById("keywords")
+          ?.value?.trim();
+        if (keywordString !== "") {
+          const keywordsArray = keywordString.split(",");
+          for (let i = 0; i < keywordsArray.length; i++) {
+            keywordsArray[i] = keywordsArray[i].trim();
+          }
+
+          fetch(APIURL + `/api/annotations/searchWithKeyword`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json", // Set the content type to JSON
+            },
+            body: JSON.stringify({ keywords: keywordsArray }),
+          })
+            .then((response) => {
+              return response.json();
+            })
+            .then((data) => {
+              if (data?.message?.length === 0) {
+                keywordsModalContainer.innerHTML = "No annotations here";
+              }
+              data.message.forEach((record) => {
+                const createBox = document.createElement("div");
+                createBox.classList.add("p-3");
+                createBox.classList.add("mb-3");
+                createBox.style.border = "1px solid gray";
+                createBox.style.borderRadius = "5px";
+
+                createBox.innerHTML = `<div class="row mb-2 align-items-center">
+                  <div class="col-6">
+                    <span>Annotation ID: <strong>${record.annotationId}</strong></span>
+                  </div>
+                  <div class="col-2">
+                    <span class="badge badge-info">${record.annotatorEmail}</span>
+                  </div>
+                  <div class="col-2">
+                    <span class="badge badge-info">${record.batchNumber}</span>
+                  </div>
+                  <div class="col-2">
+                    <span class="badge badge-info">${record.language}</span>
+                  </div>
+                  </div>
+                  <div class="row align-items-center">
+                  <div class="col-10">
+                    <pre style="border: 1px solid gray">${record.prompt}</pre>
+                  </div>
+                  <div class="col-2">
+                    <a target="_blank" href="/create_annotation.html?id=${record._id}&view=true" class="btn btn-dark">Open annotation</a>
+                  </div>
+                  </div>`;
+                keywordsModalContainer.appendChild(createBox);
+              });
+
+              // Open the modal
+              $("#keywordsModal").modal("show");
+            })
+            .catch((error) => {
+              console.log(error);
+
+              // Open the modal
+              $("#keywordsModal").modal("show");
+            });
+        }
+      }
     </script>
   </body>
 </html>
