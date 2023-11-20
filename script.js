@@ -1295,10 +1295,12 @@ if (_id != null) {
         let ann = data.message;
 
         // show the current annotation ID
-        document.getElementById("workingAnnotationIdContainer").style.display =
+        document.getElementById("annotationInfoContainer").style.display =
           "block";
         document.getElementById("workingAnnotationId").innerText =
           ann.annotationId;
+        document.getElementById("annotationComplexity").innerText =
+          ann?.complexity || "Not Available";
 
         if (
           ann.ranking === "" &&
