@@ -1621,7 +1621,7 @@
         if (keywordString !== "") {
           const keywordsArray = keywordString.split(",");
           for (let i = 0; i < keywordsArray.length; i++) {
-            keywordsArray[i] = keywordsArray[i].trim();
+            keywordsArray[i] = keywordsArray[i].trim().toLowerCase();
           }
 
           fetch(APIURL + `/api/annotations/searchWithKeyword`, {
