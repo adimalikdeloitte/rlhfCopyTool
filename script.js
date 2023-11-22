@@ -1687,6 +1687,7 @@ if (_id != null) {
                 ).value = comp.completionReasoningURLs[`urlForQ2${alpha}`];
 
                 if (Object.keys(comp.completionReasoning).length === 3) {
+                  console.log("three");
                   let ques = ["1", "2", "6"];
 
                   Object.keys(comp.completionReasoning).map((k, jidx) => {
@@ -1725,12 +1726,14 @@ if (_id != null) {
                     }
                   });
                 } else if (Object.keys(comp.completionReasoning).length === 2) {
+                  console.log("two");
                   let ques = ["1", "2"];
 
                   Object.keys(comp.completionReasoning).map((k, jidx) => {
                     let i = ques[jidx],
                       selectElement;
-                    if (comp.completionQuestions[`Q${i}`] === "1") {
+
+                    if (comp.completionQuestions[`Q${i}`] === 1) {
                       // make the selections visible
                       $(`#justificationReasonYesCompletion${alpha}Q${i}`)
                         .next(".btn-group")
@@ -1743,7 +1746,7 @@ if (_id != null) {
                           `#justificationReasonYesCompletion${alpha}Q${i}`
                         ).multiselect("select", reason);
                       });
-                    } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                    } else if (comp.completionQuestions[`Q${i}`] === 2) {
                       // hide the URL boxes
                       $(`#completion${alpha}JustificationQ${i}`).show();
                       // make the selections visible
@@ -1763,12 +1766,13 @@ if (_id != null) {
                     }
                   });
                 } else if (Object.keys(comp.completionReasoning).length === 1) {
+                  console.log("one");
                   let ques = ["1"];
 
                   Object.keys(comp.completionReasoning).map((k, jidx) => {
                     let i = ques[jidx],
                       selectElement;
-                    if (comp.completionQuestions[`Q${i}`] === "1") {
+                    if (comp.completionQuestions[`Q${i}`] === 1) {
                       // make the selections visible
                       $(`#justificationReasonYesCompletion${alpha}Q${i}`)
                         .next(".btn-group")
@@ -1781,7 +1785,7 @@ if (_id != null) {
                           `#justificationReasonYesCompletion${alpha}Q${i}`
                         ).multiselect("select", reason);
                       });
-                    } else if (comp.completionQuestions[`Q${i}`] === "2") {
+                    } else if (comp.completionQuestions[`Q${i}`] === 2) {
                       // hide the URL boxes
                       $(`#completion${alpha}JustificationQ${i}`).show();
                       // make the selections visible
@@ -2841,8 +2845,16 @@ function validationChecks() {
   }
 }
 
-function runChecks() {
+function runChecks(
+  annotationId,
+  annotatorEmail,
+  batchNumber,
+  language,
+  taskType
+) {
   if (checkEmpty()) {
+    const errorArrayForBackend = [];
+    const warningArrayForBackend = [];
     showSuccessAlertCreateAnnotation("Run checks successful !");
     if (view === null) {
       document.getElementById("submitBtn").style.display = "inline-block";
@@ -3079,6 +3091,9 @@ function runChecks() {
       errorItem.innerText = "Reason for ranking contains non ascii characters";
       errorItem.style.color = "red";
       errorListContainer.appendChild(errorItem);
+      errorArrayForBackend.push(
+        "Reason for ranking contains non ascii characters"
+      );
     }
 
     // check abbreviations
@@ -3091,6 +3106,11 @@ function runChecks() {
       errorItem.innerText = `Reason for ranking contains the following abbreviations: ${abbreviationsCaught.join(
         ", "
       )}`;
+      errorArrayForBackend.push(
+        `Reason for ranking contains the following abbreviations: ${abbreviationsCaught.join(
+          ", "
+        )}`
+      );
       errorListContainer.appendChild(errorItem);
     }
 
@@ -3100,6 +3120,7 @@ function runChecks() {
       errorItem.innerText = err;
       errorItem.style.color = "red";
       errorListContainer.appendChild(errorItem);
+      errorArrayForBackend.push(err);
     });
 
     // correct ranking string check
@@ -3110,6 +3131,7 @@ function runChecks() {
         errorItem.innerText = err;
         errorItem.style.color = "red";
         errorListContainer.appendChild(errorItem);
+        errorArrayForBackend.push(err);
       });
     }
 
@@ -3130,6 +3152,8 @@ function runChecks() {
       listItem.style.color = "orange";
       listItem.innerText = check;
 
+      warningArrayForBackend.push(check);
+
       document.getElementById("errorList").appendChild(listItem);
     });
 
@@ -3140,8 +3164,50 @@ function runChecks() {
       listItem.innerText =
         "You have marked same rating for all the completions and also ranked them same. Provide justification before submitting.";
 
+      warningArrayForBackend.push(
+        "You have marked same rating for all the completions and also ranked them same. Provide justification before submitting"
+      );
+
       document.getElementById("errorList").appendChild(listItem);
     }
+
+    console.log({
+      annotationId,
+      annotatorEmail,
+      batchNumber,
+      language,
+      taskType,
+      errorsArr: errorArrayForBackend,
+      warningsArr: warningArrayForBackend,
+    });
+
+    fetch(APIURL + `/api/runCheckLogs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json", // Set the content type to JSON
+      },
+      body: JSON.stringify({
+        annotationId,
+        annotatorEmail,
+        batchNumber,
+        language,
+        taskType,
+        errorsArr: errorArrayForBackend,
+        warningsArr: warningArrayForBackend,
+      }),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+
+        // Open the modal
+        $("#keywordsModal").modal("show");
+      });
   }
 }
 
