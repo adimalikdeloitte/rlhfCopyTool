@@ -137,35 +137,19 @@ function openModalWithData(data) {
   if (typeof data === "string") {
     s = `No matching prompt found !`;
   } else {
-    if (localStorage.getItem("annotatorRole") === "primary") {
-      data.forEach((record) => {
-        s += `<span class="mr-2">Task Type: <strong>${
-          record.taskType
-        }</strong></span><br /><span class="mr-2">${
-          record.rejected === true
-            ? "<strong class='text-danger'>Rejected</strong>"
-            : "<strong class='text-success'>Not Rejected</strong>"
-        }</span><pre style="border: 1px solid gray">${
-          record.prompt
-        }</pre><hr />`;
-      });
-    } else {
-      data.forEach((record) => {
-        s += `<span class="mr-2">Annotation ID: <strong>${
-          record.annotationId
-        }</strong></span><br /><span class="mr-2">Annotator Email: <strong>${
-          record.annotatorEmail
-        }</strong></span><br /><span class="mr-2">Task Type: <strong>${
-          record.taskType
-        }</strong></span><br /><span class="mr-2">${
-          record.rejected === true
-            ? "<strong class='text-danger'>Rejected</strong>"
-            : "<strong class='text-success'>Not Rejected</strong>"
-        }</span><pre style="border: 1px solid gray">${
-          record.prompt
-        }</pre><hr />`;
-      });
-    }
+    data.forEach((record) => {
+      s += `<span class="mr-2">Annotation ID: <strong>${
+        record.annotationId
+      }</strong></span><br /><span class="mr-2">Annotator Email: <strong>${
+        record.annotatorEmail
+      }</strong></span><br /><span class="mr-2">Task Type: <strong>${
+        record.taskType
+      }</strong></span><br /><span class="mr-2">${
+        record.rejected === true
+          ? "<strong class='text-danger'>Rejected</strong>"
+          : "<strong class='text-success'>Not Rejected</strong>"
+      }</span><pre style="border: 1px solid gray">${record.prompt}</pre><hr />`;
+    });
   }
 
   modalContent.innerHTML = s;
